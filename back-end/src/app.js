@@ -50,4 +50,10 @@ app.get("/", (req, res) => {
     res.status(200).send("Servidor inicial");
 });
 
+app.delete("/codigos/:id", (req, res) => {
+  const index = buscarCodigo(req.params.id);
+  codigos.splice(index, 1);
+  res.status(200).send("código removido com sucesso");
+});
+
 export default app;
