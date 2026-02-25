@@ -40,6 +40,12 @@ app.get("/codigos/:id", (req, res) => {
     res.status(200).json(codigos[index]);
 })
 
+app.put("/codigos/:id", (req, res) => {
+  const index = buscarCodigo(req.params.id);
+  codigos[index].linguagem = req.body.linguagem;
+  res.status(200).json(codigos);
+});
+
 app.get("/", (req, res) => {
     res.status(200).send("Servidor inicial");
 });
