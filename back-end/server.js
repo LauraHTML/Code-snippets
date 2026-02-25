@@ -1,18 +1,7 @@
-import http from "http";
-const porta = 8080;
+import app from "./src/app.js";
 
-const rotas = { 
-    "/": "Rota base",
-    "/codigo":"Códigos salvos",
-    "/linguagens":"linguagens usadas"
-}
+const porta = 3000;
 
-
-const server = http.createServer((req,res) => {
-    res.writeHead(200, {"Content-Type":"text/plain"});
-    res.end(rotas[req.url]);
+app.listen(porta, () => {
+  console.log("servidor rodando!");
 });
-
-server.listen(porta, () => {
-    console.log("Servidor rodando")
-})
