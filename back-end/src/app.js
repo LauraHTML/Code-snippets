@@ -1,5 +1,6 @@
 import express from "express";
 import conectaDatabase from "./config/dbConnect.js";
+import codigo from "./models/Codigo.js";
 
 const conexao = await conectaDatabase();
 
@@ -14,40 +15,23 @@ conexao.once("open", () => {
 const app = express();
 app.use(express.json());
 
-const codigos = [
-    {
-        id: 1,
-        codigo: 'console.log("hello world")',
-        linguagem: 'javaScript',
-    },
-    {
-        id: 2,
-        codigo: '$dia = segunda',
-        linguagem: 'php',
-    }
-]
 
 app.use(express.json());
 
-app.get("/codigos", (req, res) => {
-    res.status(200).json(codigos)
+app.get("/codigos", async (req, res) => {
+  const listaCodigos = await codigo.find({});
+  res.status(200).json(listaCodigos);
+});
+
+app.get("/codigos/:id", (req, res) => {
+    const index = buscarCodigo(req.params.id);
+    res.status(200).json(codigos[index]);
 })
 
 app.post("/codigos", (req, res) => {
     codigos.push(req.body);
     res.status(201).send("codigo adicionado com sucesso");
 });
-
-function buscarCodigo(id) {
-    return codigos.findIndex(codigo => {
-        return codigo.id === Number(id);
-    })
-}
-
-app.get("/codigos/:id", (req, res) => {
-    const index = buscarCodigo(req.params.id);
-    res.status(200).json(codigos[index]);
-})
 
 app.put("/codigos/:id", (req, res) => {
   const index = buscarCodigo(req.params.id);
