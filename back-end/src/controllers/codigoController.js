@@ -21,12 +21,12 @@ class CodigoController {
     }
   };
 
-    static async cadastrarLivro (req, res) {
+    static async inserirCodigo (req, res) {
     try {
-      const novoLivro = await livro.create(req.body);
-      res.status(201).json({ message: "criado com sucesso", livro: novoLivro });
+      const novoCodigo = await codigo.create(req.body);
+      res.status(201).json({ message: "criado com sucesso", codigo: novoCodigo });
     } catch (erro) {
-      res.status(500).json({ message: `${erro.message} - falha ao cadastrar livro` });
+      res.status(500).json({ message: `${erro.message} - falha ao inserir novo código` });
     }
   }
 
