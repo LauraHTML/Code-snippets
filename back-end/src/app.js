@@ -1,7 +1,6 @@
 import express from "express";
 import conectaDatabase from "./config/dbConnect.js";
 import routes from "./routes/index.js";
-
 const conexao = await conectaDatabase();
 
 conexao.on("error" , (erro) => {
