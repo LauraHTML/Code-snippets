@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 
+
 const codigosSchema = new mongoose.Schema({
   id: { type: mongoose.Schema.Types.ObjectId },
   titulo: { type: String, required: true },
   codigo: { type: String },
   linguagem: { type: String },
-  tags: { type: [String] },
+  tags: [ObjectId],
   favoritado: { type: Boolean },
   dataCriacao: {
     type: Date,

@@ -5,8 +5,8 @@ const routes = express.Router();
 
 routes.get("/codigos", CodigoController.listarCodigos);
 routes.get("/codigos/:id", CodigoController.listarCodigoPorId);
-routes.post("/livros", CodigoController.inserirCodigo);
-routes.put("/livros", CodigoController.atualizarCodigo);
-routes.delete("/livros", CodigoController.excluirCodigo);
+routes.post("/codigos", CodigoController.inserirCodigo);
+routes.put("/codigos/:id", CodigoController.atualizarCodigo);
+routes.delete("/codigos/:id", CodigoController.excluirCodigo);
 
 export default routes;
