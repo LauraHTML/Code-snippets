@@ -21,6 +21,16 @@ class CodigoController {
     }
   };
 
+  static async atualizarCodigo (req, res) {
+    try {
+      const id = req.params.id;
+      await codigo.findByIdAndUpdate(id, req.body);
+      res.status(200).json({message: "Código atualizado com sucesso!"});
+    } catch (erro) {
+      res.status(500).json({ message: `${erro.message} - falha ao atualizar código` });
+    }
+  };
+
     static async inserirCodigo (req, res) {
     try {
       const novoCodigo = await codigo.create(req.body);
