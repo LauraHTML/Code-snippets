@@ -19,6 +19,8 @@ import {
   IconUsers,
 } from "@tabler/icons-react"
 
+import { Tag, Braces,Keyboard  } from "lucide-react";
+
 import { NavDocuments } from "@/components/nav-documents"
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
@@ -41,24 +43,24 @@ const data = {
   },
   navMain: [
     {
-      title: "Dashboard",
+      title: "Todos os códigos",
       url: "#",
-      icon: IconDashboard,
+      icon: IconFolder,
     },
     {
-      title: "Lifecycle",
+      title: "Favoritos",
       url: "#",
       icon: IconListDetails,
     },
     {
-      title: "Analytics",
+      title: "Tags",
       url: "#",
-      icon: IconChartBar,
+      icon: Tag,
     },
     {
-      title: "Projects",
+      title: "Linguagens",
       url: "#",
-      icon: IconFolder,
+      icon: Braces,
     },
     {
       title: "Team",
@@ -161,8 +163,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+                <Keyboard className="!size-5" />
+                <span className="text-base font-semibold">Code</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -170,8 +172,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+       
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
