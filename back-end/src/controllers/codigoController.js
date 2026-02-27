@@ -31,6 +31,16 @@ class CodigoController {
     }
   };
 
+  static async excluirCodigo (req, res) {
+    try {
+      const id = req.params.id;
+      await codigo.findByIdAndDelete(id);
+      res.status(200).json({message: "Código excluido com sucesso!"});
+    } catch (erro) {
+      res.status(500).json({ message: `${erro.message} - falha ao excluir código` });
+    }
+  };
+
     static async inserirCodigo (req, res) {
     try {
       const novoCodigo = await codigo.create(req.body);

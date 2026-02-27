@@ -7,10 +7,13 @@ const codigosSchema = new mongoose.Schema({
   linguagem: { type: String },
   tags: { type: [String] },
   favoritado: { type: Boolean },
-  dataCriacao: { type: Date }
+  dataCriacao: {
+    type: Date,
+    default: Date.now
+  }
 }, { versionKey: false }
 , { collection: "codigos"});
 
-const codigo = mongoose.model("codigos", codigosSchema);
+const codigo = mongoose.model("codigos", codigosSchema, "codigos");
 
 export default codigo;
