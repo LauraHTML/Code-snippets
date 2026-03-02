@@ -1,10 +1,10 @@
-import { ModalNovoCodigo } from "@/components/Organisms/modalNovoCodigo"
+import { ModalCodeEditor } from "@/components/Organisms/modalCodeEditor" 
 
 export default function Modal(){
     return(<>
 
     <div className="olla">
-        <ModalNovoCodigo />
+        <ModalCodeEditor />
     </div>
     </>)
 }
