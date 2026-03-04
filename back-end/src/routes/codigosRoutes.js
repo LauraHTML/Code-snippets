@@ -4,6 +4,7 @@ import CodigoController from "../controllers/codigoController.js";
 const routes = express.Router();
 
 routes.get("/codigos", CodigoController.listarCodigos);
+routes.get("/codigos/busca", CodigoController.buscarCodigoPorTitulo);
 routes.get("/codigos/:id", CodigoController.listarCodigoPorId);
 routes.post("/codigos", CodigoController.inserirCodigo);
 routes.put("/codigos/:id", CodigoController.atualizarCodigo);

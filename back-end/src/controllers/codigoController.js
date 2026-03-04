@@ -1,4 +1,5 @@
 import codigo from "../models/Codigo.js";
+import { tags } from "../models/Tags.js";
 
 class CodigoController {
 
@@ -42,11 +43,25 @@ class CodigoController {
   };
 
     static async inserirCodigo (req, res) {
+      const novoCodigo = req.body;
     try {
-      const novoCodigo = await codigo.create(req.body);
-      res.status(201).json({ message: "criado com sucesso", codigo: novoCodigo });
+      const tagEncontrada = await tags.findById(novoCodigo.tags);
+      const codigoCompleto = { ...novoCodigo, tags: {...tagEncontrada._doc}}
+      const codigoCriado = await codigo.create(codigoCompleto);
+      res.status(201).json({ message: "criado com sucesso", codigo: codigoCriado });
     } catch (erro) {
       res.status(500).json({ message: `${erro.message} - falha ao inserir novo código` });
+    }
+  }
+
+  static async buscarCodigoPorTitulo (req,res) {
+      const titulo = req.query.titulo;
+    try {
+      const codigoPorTitulo = await codigo.find({ titulo: titulo});
+      res.status(200).json(codigoPorTitulo);
+    }
+    catch(erro){
+      res.status(500).json({ message: `${erro.message} - falha na busca`})
     }
   }
 
