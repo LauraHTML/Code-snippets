@@ -2,6 +2,7 @@ import express from "express";
 import conectaDatabase from "./config/dbConnect.js";
 import routes from "./routes/index.js";
 const conexao = await conectaDatabase();
+import cors from "cors"
 
 conexao.on("error" , (erro) => {
     console.error("Erro de conexão",erro);
