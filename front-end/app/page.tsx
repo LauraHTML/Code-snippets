@@ -1,17 +1,56 @@
-import { AppSidebar } from "@/components/app-sidebar"
-import { ChartAreaInteractive } from "@/components/chart-area-interactive"
-import { DataTable } from "@/components/data-table"
-import { SectionCards } from "@/components/section-cards"
-import { TagsSection } from "@/components/Organisms/tagsSection"
-import { SiteHeader } from "@/components/site-header"
+"use client";
+
+import { useEffect, useState } from "react";
+
+import { AppSidebar } from "@/components/app-sidebar";
+
+export interface Snippet {
+  _id: string
+  titulo: string
+  linguagem: string
+  codigo: string
+  tags?: string | { titulo: string; cor: string; _id: string }[]
+  dataCriacao: string
+}
+
+
+import { ChartAreaInteractive } from "@/components/chart-area-interactive";
+import { Tabela } from "@/components/data-table";
+import { SectionCards } from "@/components/section-cards";
+import { TagsSection } from "@/components/Organisms/tagsSection";
+import { SiteHeader } from "@/components/site-header";
 import {
   SidebarInset,
   SidebarProvider,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
-import data from "./data.json"
 
-export default function Page() {
+export default function Home() {
+
+  const [snippets, setSnippets] = useState<Snippet[]>([])
+
+  useEffect(() => {
+    async function fetchSnippets() {
+      try {
+        const res = await fetch("http://localhost:8080/codigos")
+
+        if (!res.ok) {
+          throw new Error("Erro na resposta da API")
+
+        }
+
+        const data: Snippet[] = await res.json()
+        setSnippets(data)
+
+      } catch (error) {
+        console.error("Erro detalhado:", error)
+      }
+
+    }
+    fetchSnippets()
+  }, [])
+
+
   return (
     <SidebarProvider
       style={
@@ -29,9 +68,17 @@ export default function Page() {
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
               <TagsSection />
               <div className="px-4 lg:px-6">
-                {/* grafico */}
+                <div>
+                  <p>olalal</p>
+                  {snippets.map(snippet => (
+                    <div key={snippet._id}>
+                      <h2>{snippet.titulo}</h2>
+                      <p>{snippet.linguagem}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <DataTable data={data} />
+              <Tabela data={snippets} />
             </div>
           </div>
         </div>

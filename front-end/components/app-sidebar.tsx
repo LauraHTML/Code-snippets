@@ -48,11 +48,6 @@ const data = {
       icon: IconFolder,
     },
     {
-      title: "Favoritos",
-      url: "#",
-      icon: IconListDetails,
-    },
-    {
       title: "Tags",
       url: "#",
       icon: Tag,
