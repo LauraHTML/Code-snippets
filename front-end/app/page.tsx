@@ -3,19 +3,11 @@
 import { useEffect, useState } from "react";
 
 import { AppSidebar } from "@/components/app-sidebar";
+import { Tabela } from "@/components/tabela";
 
-export interface Snippet {
-  _id: string
-  titulo: string
-  linguagem: string
-  codigo: string
-  tags?: string | { titulo: string; cor: string; _id: string }[]
-  dataCriacao: string
-}
-
+import { columns, TSnippets } from "@/components/colunas"
 
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
-import { Tabela } from "@/components/data-table";
 import { SectionCards } from "@/components/section-cards";
 import { TagsSection } from "@/components/Organisms/tagsSection";
 import { SiteHeader } from "@/components/site-header";
@@ -27,7 +19,7 @@ import {
 
 export default function Home() {
 
-  const [snippets, setSnippets] = useState<Snippet[]>([])
+  const [snippets, setSnippets] = useState<TSnippets[]>([])
 
   useEffect(() => {
     async function fetchSnippets() {
@@ -39,7 +31,8 @@ export default function Home() {
 
         }
 
-        const data: Snippet[] = await res.json()
+        const data: TSnippets[] = await res.json()
+        console.log(data)
         setSnippets(data)
 
       } catch (error) {
@@ -68,17 +61,9 @@ export default function Home() {
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
               <TagsSection />
               <div className="px-4 lg:px-6">
-                <div>
-                  <p>olalal</p>
-                  {snippets.map(snippet => (
-                    <div key={snippet._id}>
-                      <h2>{snippet.titulo}</h2>
-                      <p>{snippet.linguagem}</p>
-                    </div>
-                  ))}
-                </div>
+               
               </div>
-              <Tabela data={snippets} />
+              <Tabela columns={columns} data={snippets} />
             </div>
           </div>
         </div>
