@@ -15,6 +15,8 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar";
 
+import { TagsTeste } from "@/components/Molecules/tags"
+
 export interface Tags {
    _id: string,
   titulo: string,
@@ -67,7 +69,6 @@ export default function Home() {
               <div className="px-4 lg:px-5">
                <Tabela columns={columns} data={snippets} />
               </div>
-              
             </div>
           </div>
         </div>

@@ -2,6 +2,17 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
+import { MoreHorizontal } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -54,4 +65,31 @@ export const columns: ColumnDef<TSnippets>[] = [
             )
         }
     },
+    {
+    id: "actions",           // ← ID especial (não usa accessorKey)
+    enableHiding: false,     // ← Impede que o usuário esconda essa coluna
+    cell: ({ row }) => {
+      const payment = row.original  // ← Acesso aos dados da linha
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon-xs">
+              <span className="sr-only">Abrir menu</span>
+              <MoreHorizontal />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(payment.id)}
+            >
+              Copiar ID
+            </DropdownMenuItem>
+            <DropdownMenuItem>Ver detalhes</DropdownMenuItem>
+            <DropdownMenuItem>Excluir</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    },
+    }
 ]
