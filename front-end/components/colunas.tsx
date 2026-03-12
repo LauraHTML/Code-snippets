@@ -1,8 +1,11 @@
+//colunas
+
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { MoreHorizontal } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -14,8 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+
 export type TSnippets = {
     _id: string
     titulo: string
@@ -26,6 +28,29 @@ export type TSnippets = {
 }
 
 export const columns: ColumnDef<TSnippets>[] = [
+  //selecionar
+    {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Selecionar tudo"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Selecionar linha"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
     {
         accessorKey: "titulo",
         header: "Titulo",
@@ -66,10 +91,10 @@ export const columns: ColumnDef<TSnippets>[] = [
         }
     },
     {
-    id: "actions",           // ← ID especial (não usa accessorKey)
-    enableHiding: false,     // ← Impede que o usuário esconda essa coluna
+    id: "actions",           
+    enableHiding: false,    
     cell: ({ row }) => {
-      const payment = row.original  // ← Acesso aos dados da linha
+      const codigps = row.original  // ← Acesso aos dados da linha
 
       return (
         <DropdownMenu>
@@ -81,7 +106,7 @@ export const columns: ColumnDef<TSnippets>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(codigps.id)}
             >
               Copiar ID
             </DropdownMenuItem>
@@ -90,6 +115,6 @@ export const columns: ColumnDef<TSnippets>[] = [
           </DropdownMenuContent>
         </DropdownMenu>
       )
-    },
-    }
+    }},
+    
 ]

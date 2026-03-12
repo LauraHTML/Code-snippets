@@ -1,7 +1,10 @@
 "use client";
+import * as React from "react"
 import { useEffect, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile"
 
 import { SectionCards } from "@/components/section-cards"
+import { ControlePaginacao } from "@/components/Molecules/paginacao"
 
 export interface Tags {
     _id: string,
@@ -11,6 +14,14 @@ export interface Tags {
 
 export function TagsSection() {
     const [tags, setTags] = useState<Tags[]>([])
+    const isMobile = useIsMobile()
+    const [itemsPorPagina, setItemsPorPagina] = useState<number>(4)
+
+    React.useEffect(() => {
+        if (isMobile) {
+          setItemsPorPagina(2)
+        }
+      }, [isMobile])
 
     useEffect(() => {
         async function fetchTags() {
@@ -35,17 +46,21 @@ export function TagsSection() {
 
     return (
         <>
-            <div className="py-3 px-4">
-                <h1 className="text-xl">Tags</h1>
-                <div className="gap-3 bg-card p-4 rounded-xl">
-                    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-5 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs @xl/main:grid-cols-5 @5xl/main:grid-cols-4"> 
-                    
-                    {tags.map((tag) => (
-                        <SectionCards key={tag._id} TituloTag={tag.titulo} />
-                    ))}
-                </div>
+        <div className="px-4 lg:px-5">
+            <div className="bg-card p-4 rounded-md border">
+                <h1 className="text-xl mb-3">Tags</h1>
+                <div className="gap-3 rounded-xl">
+                        <ControlePaginacao
+                            items={tags}
+                            renderItem={(tag) => (
+                                <SectionCards key={tag._id} TituloTag={tag.titulo} />
+                            )}
+                            itemsPerPage={itemsPorPagina}
+                        />
                 </div>
             </div>
+        </div>
+            
         </>
     )
 }
