@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 
 import { AppSidebar } from "@/components/app-sidebar";
 import { Tabela } from "@/components/tabela";
-
-import { columns, TSnippets } from "@/components/colunas"
+import { columns, TCodigos } from "@/components/colunas";
 
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { SectionCards } from "@/components/section-cards";
@@ -15,8 +14,6 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar";
 
-import { TagsTeste } from "@/components/Molecules/tags"
-
 export interface Tags {
    _id: string,
   titulo: string,
@@ -25,7 +22,7 @@ export interface Tags {
 
 export default function Home() {
 
-  const [snippets, setSnippets] = useState<TSnippets[]>([])
+  const [codigos, setCodigos] = useState<TCodigos[]>([])
 
   useEffect(() => {
     async function fetchSnippets() {
@@ -37,9 +34,9 @@ export default function Home() {
 
         }
 
-        const data: TSnippets[] = await res.json()
+        const data: TCodigos[] = await res.json()
         console.log(data)
-        setSnippets(data)
+        setCodigos(data)
 
       } catch (error) {
         console.error("Erro detalhado:", error)

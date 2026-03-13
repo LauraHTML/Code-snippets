@@ -23,17 +23,15 @@ import { string } from "zod";
   php: "<?php\n\n$name = 'Alex';\necho $name;\n",
 };
 
-export function ModalNovoCodigo() {
+export function CodeEditor() {
     const [linguagem, setLinguagem] = useState("javascript")
-    const [valor, setValor] = useState<string>(code_snippets.javascript)
+    const [linguagemSelecionada, setLinguagemSelecionada] = useState<string>(code_snippets.javascript)
 
     const selecionado = (linguagem: string) => {
         setLinguagem(linguagem)
-        setValor(code_snippets[linguagem as keyof typeof code_snippets])
+        setLinguagemSelecionada(code_snippets[linguagem as keyof typeof code_snippets])
 
     }
-
-    console.log(linguagem)
     return (
         <>
             <Select onValueChange={selecionado}>
@@ -50,7 +48,7 @@ export function ModalNovoCodigo() {
                     </SelectGroup>
                 </SelectContent>
             </Select>
-            <Editor height="300px" language={linguagem} theme="vs-dark" value={valor} onChange={(valor) => setValor(valor || "")} />
+            <Editor height="300px" language={linguagem} theme="vs-dark" value={linguagemSelecionada} onChange={(linguagemSelecionada) => setLinguagemSelecionada(linguagemSelecionada || "")} />
         </>
     )
 }

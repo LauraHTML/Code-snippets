@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 
-export type TSnippets = {
+export type TCodigos = {
     _id: string
     titulo: string
     linguagem: string
@@ -27,7 +27,7 @@ export type TSnippets = {
     dataCriacao: string
 }
 
-export const columns: ColumnDef<TSnippets>[] = [
+export const columns: ColumnDef<TCodigos>[] = [
   //selecionar
     {
     id: "select",
