@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sidebar";
 
 //formulário
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { toast } from "sonner"
 import { Form } from "@/components/ui/form"
 import {
@@ -36,6 +36,13 @@ import {
 import { CodeEditor } from "@/components/Organisms/codeEditor";
 
 export default function NovoCodigo() {
+    const { register, handleSubmit, control, formState: { errors } } = useForm({
+        defaultValues: {
+            titulo: "",
+            tag: ""
+        }
+    });
+
     //linguagens
     const codeSnippets = {
         javascript: `\nfunction greet(name) {\n\tconsole.log("Hello, " + name + "!");\n}\n\ngreet("Alex");\n`,
@@ -50,14 +57,11 @@ export default function NovoCodigo() {
 
     //codigos
     const [codigos, setCodigos] = useState<TCodigos[]>([]);
-    const [tituloCodigo, setTituloCodigo] = useState<string>("")
     const [codigo, setCodigo] = useState<string>("");
     const [linguagem, setLinguagem] = useState("javascript")
 
 
     //tags
-    const [titulo, setTitulo] = useState<string>("");
-    const [tag, setTag] = useState<number>();
     const [novaTag, setNovaTag] = useState<string>("")
     const [listaTags, setListaTags] = useState([])
 
@@ -72,16 +76,28 @@ export default function NovoCodigo() {
                 })
             });
             if (res.ok) {
-                console.log("Tag adicionada com sucesso!")
+                toast.success("Tag criada com sucesso", {
+                    position: "top-center", style: {
+                        '--normal-bg':
+                            'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
+                        '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
+                        '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
+                    } as React.CSSProperties
+                })
+
                 const handleAdicionarTagLista = (novaTag: string) => {
                     setListaTags((prevLista) => [...prevLista, novaTag]);
                 }
                 handleAdicionarTagLista(res)
             } else {
-                console.error("Erro ao adicionar tag", res)
+                console.error("Erro ao criar tag", res)
             }
         } catch (erro) {
-            console.error('Erro ao adicionar tag', erro)
+            toast.error("Erro ao criar tag", { position: "top-center",style: {
+            '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+            '--normal-text': 'var(--destructive)',
+            '--normal-border': 'var(--destructive)'
+          } as React.CSSProperties})
         }
 
     };
@@ -107,32 +123,78 @@ export default function NovoCodigo() {
     }, []);
 
 
-    const CriarCodigo = async () => {
+    const criarCodigo = async (data: any) => {
+        // se tag foi selecionada
+        if (!data.tag) {
+            toast.warning("Selecione uma tag", {
+                position: "top-center",
+                style: {
+                    '--normal-bg':
+                        'color-mix(in oklab, light-dark(var(--color-amber-600), var(--color-amber-400)) 10%, var(--background))',
+                    '--normal-text': 'light-dark(var(--color-amber-600), var(--color-amber-400))',
+                    '--normal-border': 'light-dark(var(--color-amber-600), var(--color-amber-400))'
+                } as React.CSSProperties
+            });
+            return;
+        }
+
+        // se código estiver vazio
+        if (!codigo.trim()) {
+            toast.warning("Adicione um código", {
+                    position: "top-center", style: {
+                        '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                        '--normal-text': 'var(--destructive)',
+                        '--normal-border': 'var(--destructive)'
+                    } as React.CSSProperties
+                });
+            return;
+        }
+
         try {
             const res = await fetch('http://localhost:8080/codigos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    titulo: tituloCodigo,
+                    titulo: data.titulo,
                     codigo: codigo,
                     linguagem: linguagem,
-                    tags: tag
+                    tags: data.tag
                 })
             });
             if (res.ok) {
+                toast.success("Código criado com sucesso!", {
+                    position: "top-center", style: {
+                        '--normal-bg':
+                            'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
+                        '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
+                        '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
+                    } as React.CSSProperties
+                })
                 console.log("Código criado com sucesso!")
             }
             else {
-                const erro = await res.json() 
+                const erro = await res.json()
+                toast.error("Erro ao criar código", {
+                    position: "top-center", style: {
+                        '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                        '--normal-text': 'var(--destructive)',
+                        '--normal-border': 'var(--destructive)'
+                    } as React.CSSProperties
+                });
                 console.error("Erro do servidor:", res.status, erro)
             }
         }
         catch (erro) {
+            toast.error("Erro ao criar código", { position: "top-center",
+            style: {
+            '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+            '--normal-text': 'var(--destructive)',
+            '--normal-border': 'var(--destructive)'
+          } as React.CSSProperties});
             console.error('Erro ao criar novo código', erro)
         }
     }
 
-    console.log(tag)
 
     return (<>
         <SidebarProvider
@@ -147,12 +209,16 @@ export default function NovoCodigo() {
                             <div className="px-4 lg:px-5">
 
                                 <Form>
-                                    <form className="space-y-8 w-full py-10 bg-card p-4 rounded-md border">
+                                    <form onSubmit={handleSubmit(criarCodigo)} className="space-y-8 w-full py-10 bg-card p-4 rounded-md border">
                                         <Field>
                                             <FieldLabel htmlFor="titulo">Título para o trecho de código</FieldLabel>
-                                            <Input id="titulo" value={tituloCodigo} onChange={(e) => setTituloCodigo(e.target.value)} placeholder="Ex: Exercício de python" />
+                                            <Input
+                                                id="titulo"
+                                                placeholder="Ex: Exercício de python"
+                                                {...register("titulo", { required: "Título é obrigatório" })}
+                                            />
                                             <FieldDescription>Dê um nome para o trecho de código.</FieldDescription>
-                                            <FieldError></FieldError>
+                                            {errors.titulo && <FieldError>{errors.titulo.message}</FieldError>}
                                         </Field>
                                         <Field>
                                             <FieldLabel htmlFor="tags">Tags</FieldLabel>
@@ -161,24 +227,31 @@ export default function NovoCodigo() {
                                                 <Button type="button" onClick={CriarTags}>Criar tag</Button>
                                             </div>
 
-                                            <Select onValueChange={setTag}>
-                                                <SelectTrigger className="w-[180px]">
-                                                    <SelectValue placeholder="Adicionar á lista" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectGroup>
-                                                        {listaTags && listaTags.length > 0 ? (
-                                                            listaTags.map((item, index) => (
-                                                                <SelectItem key={index} value={item._id}>{item.titulo}</SelectItem>
-                                                            ))) :
-                                                            (<p>Crie uma tag</p>)}
+                                            <Controller
+                                                name="tag"
+                                                control={control}
+                                                rules={{ required: "Selecione uma tag" }}
+                                                render={({ field }) => (
+                                                    <Select onValueChange={field.onChange} value={field.value}>
+                                                        <SelectTrigger className="w-[180px]">
+                                                            <SelectValue placeholder="Selecione uma tag" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectGroup>
+                                                                {listaTags && listaTags.length > 0 ? (
+                                                                    listaTags.map((item, index) => (
+                                                                        <SelectItem key={index} value={item._id}>{item.titulo}</SelectItem>
+                                                                    ))) :
+                                                                    (<p>Crie uma tag</p>)}
 
-                                                    </SelectGroup>
-                                                </SelectContent>
-                                            </Select>
+                                                            </SelectGroup>
+                                                        </SelectContent>
+                                                    </Select>
+                                                )}
+                                            />
 
                                             <FieldDescription>Use as tags para organizar seus códigos.</FieldDescription>
-                                            <FieldError></FieldError>
+                                            {errors.tag && <FieldError>{errors.tag.message}</FieldError>}
                                         </Field>
                                         <Field>
                                             <CodeEditor
@@ -190,7 +263,7 @@ export default function NovoCodigo() {
                                             />
                                             <FieldError></FieldError>
                                         </Field>
-                                        <Button type="button" onClick={CriarCodigo}>Enviar</Button>
+                                        <Button type="submit">Enviar</Button>
                                     </form>
                                 </Form>
                             </div>
