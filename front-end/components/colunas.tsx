@@ -127,7 +127,7 @@ export const columns = (onDelete: (id: string) => void): ColumnDef<TCodigos>[] =
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Excluir código?</AlertDialogTitle>
+                  <AlertDialogTitle>Excluir código ?</AlertDialogTitle>
                   <AlertDialogDescription>
                     Essa ação não pode ser desfeita. O código será excluído permanentemente. Tem certeza de que deseja continuar?
                   </AlertDialogDescription>
