@@ -5,9 +5,9 @@ Este projeto permite que os desenvolvedores salvem trechos de código úteis, os
 
 ## ✨ Features
 
-* Salve trechos de código (em breve)
+* Salve trechos de código
 * Organize trechos por linguagem de programação (em breve)
-* Adicione tags personalizadas (em breve)
+* Adicione tags personalizadas
 * Marque trechos como favoritos (em breve)
 * Visualize todos os trechos salvos em uma interface limpa
 * Exibição de código com destaque de sintaxe (em breve)
