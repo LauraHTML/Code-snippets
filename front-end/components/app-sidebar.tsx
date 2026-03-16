@@ -19,7 +19,7 @@ import {
   IconUsers,
 } from "@tabler/icons-react"
 
-import { Tag, Braces,Keyboard, Bookmark, FilePlus  } from "lucide-react";
+import { Tag, BookOpen,Keyboard, Bookmark, FilePlus, LayoutGrid, Code  } from "lucide-react";
 
 import { NavDocuments } from "@/components/nav-documents"
 import { NavMain } from "@/components/nav-main"
@@ -43,9 +43,14 @@ const data = {
   },
   navMain: [
     {
-      title: "Todos os códigos",
+      title: "Dashboard",
       url: "/",
-      icon: IconFolder,
+      icon: LayoutGrid,
+    },
+    {
+      title: "Códigos",
+      url: "#",
+      icon: Code,
     },
     {
       title: "Novo código",
@@ -53,19 +58,14 @@ const data = {
       icon: FilePlus,
     },
     {
-      title: "Tags",
-      url: "#",
-      icon: Tag,
-    },
-    {
-      title: "Linguagens",
-      url: "/linguagens",
-      icon: Braces,
-    },
-    {
-      title: "Favoritados",
+      title: "Favoritados (em breve)",
       url: "#",
       icon: Bookmark,
+    },
+    {
+      title: "ReadMe (em breve)",
+      url: "#",
+      icon: BookOpen,
     },
   ],
 }

@@ -14,9 +14,10 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar";
+import { LinguagensBadge } from "@/components/Molecules/linguagensBadge";
 
 export interface Tags {
-   _id: string,
+  _id: string,
   titulo: string,
   cor: string,
 }
@@ -32,7 +33,6 @@ export default function Home() {
 
         if (!res.ok) {
           throw new Error("Erro na resposta da API")
-
         }
 
         const data: TCodigos[] = await res.json()
@@ -52,7 +52,7 @@ export default function Home() {
     const res = await fetch(`http://localhost:8080/codigos/${id}`, {
       method: 'DELETE',
     });
-  
+
     if (res.ok) {
       toast.success("Código deletado com sucesso!", {
         position: "top-center", style: {
@@ -90,12 +90,25 @@ export default function Home() {
       <SidebarInset>
         <SiteHeader />
         <div className="flex flex-1 flex-col">
-          <div className="@container/main flex flex-1 flex-col gap-2">
+          <div className="@container/main flex flex-1 flex-col gap-2 px-4 lg:px-5">
+
+
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+
+              <div className="grid grid-cols-1 md:grid-cols-[50%_50%] gap-4">
               <TagsSection />
-              <div className="px-4 lg:px-5">
-               <Tabela columns={tableColumns} data={codigos} onDelete={DeletarCodigo} />
+                <div className="bg-card p-4 rounded-md border">
+                  <h1 className="text-xl mb-3">Linguagens utilizadas</h1>
+                  <div className="flex flex-row w-auto flex-wrap gap-3 rounded-xl">
+                    {codigos.map(codigo =>
+                      <LinguagensBadge key={codigo._id} linguagem={codigo.linguagem} />
+                    )}
+                  </div>
+                </div>
               </div>
+
+                <Tabela columns={tableColumns} data={codigos} onDelete={DeletarCodigo} />
+
             </div>
           </div>
         </div>

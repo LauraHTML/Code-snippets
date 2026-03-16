@@ -11,25 +11,15 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-export function SectionCards({ TituloTag }: { TituloTag?: string }) {
+interface TagsProps {
+  TituloTag: string;
+  corBadge: string;
+}
+
+export function BadgeTag({ TituloTag, corBadge}:TagsProps) {
   return (
 
-      <Card className="/card">
-        <CardHeader>
-          <CardDescription> </CardDescription>
-            <Tag className="size-8" />
-          <CardAction>
-            
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-               {TituloTag}
-            </CardTitle>
-          </div>
-        </CardFooter>
-      </Card>
+      <Badge style={{backgroundColor:corBadge}} className="text-background">{TituloTag}</Badge>
 
   )
 }

@@ -3,8 +3,7 @@ import * as React from "react"
 import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile"
 
-import { SectionCards } from "@/components/section-cards"
-import { ControlePaginacao } from "@/components/Molecules/paginacao"
+import { Badge } from "@/components/ui/badge";
 
 export interface Tags {
     _id: string,
@@ -46,20 +45,15 @@ export function TagsSection() {
 
     return (
         <>
-        <div className="px-4 lg:px-5">
             <div className="bg-card p-4 rounded-md border">
-                <h1 className="text-xl mb-3">Tags</h1>
-                <div className="gap-3 rounded-xl">
-                        <ControlePaginacao
-                            items={tags}
-                            renderItem={(tag) => (
-                                <SectionCards key={tag._id} TituloTag={tag.titulo} />
-                            )}
-                            itemsPerPage={itemsPorPagina}
-                        />
+                <h1 className="text-xl mb-3">Tags criadas</h1>
+                <div className="flex flex-row w-auto flex-wrap gap-3 rounded-xl">
+                    {tags.map((tag) => (
+                        <Badge style={{"backgroundColor":tag.cor}} className="text-background">{tag.titulo}</Badge>
+                    ))}
+                        
                 </div>
             </div>
-        </div>
             
         </>
     )
