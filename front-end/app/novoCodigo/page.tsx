@@ -57,7 +57,7 @@ export default function NovoCodigo() {
 
     //tags
     const [titulo, setTitulo] = useState<string>("");
-    const [tag, setTag] = useState<string>("");
+    const [tag, setTag] = useState<number>();
     const [novaTag, setNovaTag] = useState<string>("")
     const [listaTags, setListaTags] = useState([])
 
@@ -96,7 +96,6 @@ export default function NovoCodigo() {
                 }
 
                 const tags: Tags[] = await res.json()
-                console.log(tags)
                 setListaTags(tags)
 
             } catch (error) {
@@ -117,7 +116,7 @@ export default function NovoCodigo() {
                     titulo: tituloCodigo,
                     codigo: codigo,
                     linguagem: linguagem,
-                    tags: [tag.id]
+                    tags: tag
                 })
             });
             if (res.ok) {
@@ -132,6 +131,8 @@ export default function NovoCodigo() {
             console.error('Erro ao criar novo código', erro)
         }
     }
+
+    console.log(tag)
 
     return (<>
         <SidebarProvider
@@ -149,7 +150,7 @@ export default function NovoCodigo() {
                                     <form className="space-y-8 w-full py-10 bg-card p-4 rounded-md border">
                                         <Field>
                                             <FieldLabel htmlFor="titulo">Título para o trecho de código</FieldLabel>
-                                            <Input id="titulo" value={titulo} onChange={(e) => setTitulo(e.target.value)} placeholder="Ex: Exercício de python" />
+                                            <Input id="titulo" value={tituloCodigo} onChange={(e) => setTituloCodigo(e.target.value)} placeholder="Ex: Exercício de python" />
                                             <FieldDescription>Dê um nome para o trecho de código.</FieldDescription>
                                             <FieldError></FieldError>
                                         </Field>
@@ -168,7 +169,7 @@ export default function NovoCodigo() {
                                                     <SelectGroup>
                                                         {listaTags && listaTags.length > 0 ? (
                                                             listaTags.map((item, index) => (
-                                                                <SelectItem key={index} value={item.titulo}>{item.titulo}</SelectItem>
+                                                                <SelectItem key={index} value={item._id}>{item.titulo}</SelectItem>
                                                             ))) :
                                                             (<p>Crie uma tag</p>)}
 

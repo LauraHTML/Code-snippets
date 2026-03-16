@@ -40,8 +40,6 @@ export function CodeEditor({ codeSnippets, onChange }: CodeEditorProps) {
         onChange(lang);
     };
 
-    console.log(codigoUsuario)
-
     return (
         <>
             <Select onValueChange={selecionado}>
