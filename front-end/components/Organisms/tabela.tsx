@@ -13,16 +13,6 @@ import {
 } from "@tanstack/react-table"
 
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious
-} from '@/components/ui/pagination'
-
-import {
   Table,
   TableBody,
   TableCell,
@@ -34,9 +24,11 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  onDelete: (id: string) => void
 } 
 
 export function Tabela<TData, TValue>({
@@ -90,6 +82,7 @@ export function Tabela<TData, TValue>({
                   </TableHead>
                 )
               })}
+              
             </TableRow>
           ))}
         </TableHeader>

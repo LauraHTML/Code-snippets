@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 
 import { AppSidebar } from "@/components/app-sidebar";
-import { TCodigos } from "@/components/colunas"
 import { Tags } from "@/app/page"
 
 import { SiteHeader } from "@/components/site-header";
@@ -12,17 +11,17 @@ import {
 } from "@/components/ui/sidebar";
 
 //formulário
-import { useForm, Controller } from "react-hook-form"
-import { toast } from "sonner"
-import { Form } from "@/components/ui/form"
+import { useForm, Controller } from "react-hook-form";
+import { toast } from "sonner";
+import { Form } from "@/components/ui/form";
 import {
     Field,
     FieldLabel,
     FieldDescription,
     FieldError
 } from "@/components/ui/field"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 //criar tag
 import {
@@ -56,7 +55,6 @@ export default function NovoCodigo() {
 
 
     //codigos
-    const [codigos, setCodigos] = useState<TCodigos[]>([]);
     const [codigo, setCodigo] = useState<string>("");
     const [linguagem, setLinguagem] = useState("javascript")
 

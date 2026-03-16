@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 
 import { AppSidebar } from "@/components/app-sidebar";
-import { Tabela } from "@/components/tabela";
+import { Tabela } from "@/components/Organisms/tabela";
 import { columns, TCodigos } from "@/components/colunas";
+import { toast } from "sonner"
 
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { SectionCards } from "@/components/section-cards";
@@ -44,8 +45,37 @@ export default function Home() {
 
     }
     fetchSnippets()
+
   }, [])
 
+  const DeletarCodigo = async (id: string) => {
+    const res = await fetch(`http://localhost:8080/codigos/${id}`, {
+      method: 'DELETE',
+    });
+  
+    if (res.ok) {
+      toast.success("Código deletado com sucesso!", {
+        position: "top-center", style: {
+          '--normal-bg':
+            'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
+          '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
+          '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
+        } as React.CSSProperties
+      })
+      setCodigos(prev => prev.filter(c => c._id !== id))
+
+    } else {
+      toast.error("Erro ao deletar código", {
+        position: "top-center", style: {
+          '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+          '--normal-text': 'var(--destructive)',
+          '--normal-border': 'var(--destructive)'
+        } as React.CSSProperties
+      })
+    }
+  }
+
+  const tableColumns = columns(DeletarCodigo)
 
   return (
     <SidebarProvider
@@ -64,7 +94,7 @@ export default function Home() {
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
               <TagsSection />
               <div className="px-4 lg:px-5">
-               <Tabela columns={columns} data={codigos} />
+               <Tabela columns={tableColumns} data={codigos} onDelete={DeletarCodigo} />
               </div>
             </div>
           </div>
