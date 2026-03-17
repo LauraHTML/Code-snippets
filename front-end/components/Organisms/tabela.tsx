@@ -29,6 +29,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   onDelete: (id: string) => void
+  atualizar: (id: string, data: TValue) => void
 } 
 
 export function Tabela<TData, TValue>({

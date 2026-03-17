@@ -49,7 +49,7 @@ export function TagsSection() {
                 <h1 className="text-xl mb-3">Tags criadas</h1>
                 <div className="flex flex-row w-auto flex-wrap gap-3 rounded-xl">
                     {tags.map((tag) => (
-                        <Badge style={{"backgroundColor":tag.cor}} className="text-background">{tag.titulo}</Badge>
+                        <Badge key={tag._id} style={{"backgroundColor":tag.cor}} className="text-background">{tag.titulo}</Badge>
                     ))}
                         
                 </div>

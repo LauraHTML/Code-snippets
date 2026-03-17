@@ -3,11 +3,9 @@ import { useEffect, useState } from "react";
 
 import { AppSidebar } from "@/components/app-sidebar";
 import { Tabela } from "@/components/Organisms/tabela";
-import { columns, TCodigos } from "@/components/colunas";
+import { columns, TCodigos } from "@/components/Molecules/colunas";
 import { toast } from "sonner"
 
-import { ChartAreaInteractive } from "@/components/chart-area-interactive";
-import { SectionCards } from "@/components/section-cards";
 import { TagsSection } from "@/components/Organisms/tagsSection";
 import { SiteHeader } from "@/components/site-header";
 import {
@@ -75,6 +73,37 @@ export default function Home() {
     }
   }
 
+  const AtualizarCodigo = async (id: string, data:TCodigos) => {
+    const res = await fetch(`http://localhost:8080/codigos/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          
+        })
+    });
+
+    if (res.ok) {
+      toast.success("Código deletado com sucesso!", {
+        position: "top-center", style: {
+          '--normal-bg':
+            'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
+          '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
+          '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
+        } as React.CSSProperties
+      })
+      setCodigos(prev => prev.filter(c => c._id !== id))
+
+    } else {
+      toast.error("Erro ao deletar código", {
+        position: "top-center", style: {
+          '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+          '--normal-text': 'var(--destructive)',
+          '--normal-border': 'var(--destructive)'
+        } as React.CSSProperties
+      })
+    }
+  }
+
   const tableColumns = columns(DeletarCodigo)
 
   return (
@@ -107,7 +136,7 @@ export default function Home() {
                 </div>
               </div>
 
-                <Tabela columns={tableColumns} data={codigos} onDelete={DeletarCodigo} />
+                <Tabela columns={tableColumns} data={codigos} onDelete={DeletarCodigo} atualizar={AtualizarCodigo} />
 
             </div>
           </div>
