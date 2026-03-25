@@ -136,6 +136,17 @@ export default function NovoCodigo() {
             return;
         }
 
+        if (!linguagem.trim()) {
+            toast.warning("Adicione uma linguagem", {
+                position: "top-center", style: {
+                    '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                    '--normal-text': 'var(--destructive)',
+                    '--normal-border': 'var(--destructive)'
+                } as React.CSSProperties
+            });
+            return;
+        }
+
         // se código estiver vazio
         if (!codigo.trim()) {
             toast.warning("Adicione um código", {

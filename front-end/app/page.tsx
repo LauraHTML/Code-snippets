@@ -73,13 +73,18 @@ export default function Home() {
     }
   }
 
-  const AtualizarCodigo = async (id: string, data:TCodigos) => {
-    const res = await fetch(`http://localhost:8080/codigos/${id}`, {
+  const AtualizarCodigo = async (data: TCodigos) => {
+
+    console.log("ola")
+    const res = await fetch(`http://localhost:8080/codigos/${data._id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          
-        })
+      body: JSON.stringify({
+        titulo: data.titulo,
+        codigo: data.codigo,
+        linguagem: data.linguagem,
+        tags: data.tags
+      })
     });
 
     if (res.ok) {
@@ -91,7 +96,7 @@ export default function Home() {
           '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
         } as React.CSSProperties
       })
-      setCodigos(prev => prev.filter(c => c._id !== id))
+      setCodigos(prev => prev.filter(c => c._id !== data._id))
 
     } else {
       toast.error("Erro ao deletar código", {
@@ -104,7 +109,7 @@ export default function Home() {
     }
   }
 
-  const tableColumns = columns(DeletarCodigo)
+  const tableColumns = columns(AtualizarCodigo,DeletarCodigo)
 
   return (
     <SidebarProvider
@@ -125,7 +130,7 @@ export default function Home() {
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
 
               <div className="grid grid-cols-1 md:grid-cols-[50%_50%] gap-4">
-              <TagsSection />
+                <TagsSection />
                 <div className="bg-card p-4 rounded-md border">
                   <h1 className="text-xl mb-3">Linguagens utilizadas</h1>
                   <div className="flex flex-row w-auto flex-wrap gap-3 rounded-xl">
@@ -136,7 +141,7 @@ export default function Home() {
                 </div>
               </div>
 
-                <Tabela columns={tableColumns} data={codigos} onDelete={DeletarCodigo} atualizar={AtualizarCodigo} />
+              <Tabela columns={tableColumns} data={codigos} onDelete={DeletarCodigo} atualizar={AtualizarCodigo} />
 
             </div>
           </div>

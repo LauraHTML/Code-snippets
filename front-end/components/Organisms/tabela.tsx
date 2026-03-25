@@ -1,7 +1,8 @@
 "use client"
 
+import { useState } from "react";
 import * as React from "react"
-
+import { TCodigos } from "@/components/Molecules/colunas";
 import {
   ColumnDef,
   flexRender,
@@ -28,13 +29,20 @@ import { Button } from "@/components/ui/button"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  onDelete?: (id: string) => void
+  atualizar?: (codigo: TData) => void
+}
+
+export type TCodigosProps = TCodigos & {
   onDelete: (id: string) => void
-  atualizar: (id: string, data: TValue) => void
-} 
+  onAtualizar: (codigo: TCodigos) => void 
+}
 
 export function Tabela<TData, TValue>({
   columns,
   data,
+  onDelete,
+  atualizar,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -43,6 +51,10 @@ export function Tabela<TData, TValue>({
     const table = useReactTable({
     data,
     columns,
+    meta: {
+      onDelete,
+      atualizar,
+    },
     getCoreRowModel: getCoreRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
@@ -54,6 +66,7 @@ export function Tabela<TData, TValue>({
     },
 
   })
+
 
   return (
     <div className="overflow-hidden rounded-md border bg-card p-4">
@@ -77,13 +90,13 @@ export function Tabela<TData, TValue>({
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                   </TableHead>
                 )
               })}
-              
+
             </TableRow>
           ))}
         </TableHeader>
