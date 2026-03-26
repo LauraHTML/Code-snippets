@@ -6,20 +6,37 @@ import { Tabs as TabsPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
+const tabsVariants = cva(
+  "group/tabs flex gap-2 data-[orientation=horizontal]:flex-col w-full",
+  {
+    variants : {
+      variant: {
+        default: "group/tabs flex gap-2 data-[orientation=horizontal]:flex-col w-full",
+        login: "group/tabs flex gap-2 data-[orientation=horizontal]:flex-col w-full bg-secondary p-4" ,
+        cadastro: "group/tabs flex gap-2 data-[orientation=horizontal]:flex-col w-full bg-primary p-4 border border-card rounded-md" ,
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
+
 function Tabs({
   className,
+  variant = "default",
   orientation = "horizontal",
   ...props
-}: React.ComponentProps<typeof TabsPrimitive.Root>) {
+}: React.ComponentProps<typeof TabsPrimitive.Root>&
+  VariantProps<typeof tabsVariants> & {
+    asChild?: boolean
+  }) {
   return (
     <TabsPrimitive.Root
       data-slot="tabs"
       data-orientation={orientation}
       orientation={orientation}
-      className={cn(
-        "group/tabs flex gap-2 data-[orientation=horizontal]:flex-col w-full",
-        className
-      )}
+      className={cn(tabsVariants({variant ,className}))}
       {...props}
     />
   )
