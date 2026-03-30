@@ -12,8 +12,8 @@ const tabsVariants = cva(
     variants : {
       variant: {
         default: "group/tabs flex gap-2 data-[orientation=horizontal]:flex-col w-full",
-        login: "group/tabs flex gap-2 data-[orientation=horizontal]:flex-col w-full bg-secondary p-4" ,
-        cadastro: "group/tabs flex gap-2 data-[orientation=horizontal]:flex-col w-full bg-primary p-4 border border-card rounded-md" ,
+        login: "group/tabs flex gap-2 data-[orientation=horizontal]:flex-col w-full bg-white/30 backdrop-blur-sm p-4" ,
+        cadastro: "group/tabs flex gap-2 data-[orientation=horizontal]:flex-col w-full bg-white/30 backdrop-blur-sm p-4 border border-card rounded-md" ,
       },
     },
     defaultVariants: {

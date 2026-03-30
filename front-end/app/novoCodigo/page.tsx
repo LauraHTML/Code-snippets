@@ -38,7 +38,8 @@ export default function NovoCodigo() {
     const { register, handleSubmit, control, formState: { errors } } = useForm({
         defaultValues: {
             titulo: "",
-            tag: ""
+            tag: "",
+            codigo: ""
         }
     });
 
@@ -74,6 +75,7 @@ export default function NovoCodigo() {
                 })
             });
             if (res.ok) {
+                const tagCriada = await res.json()
                 toast.success("Tag criada com sucesso", {
                     position: "top-center", style: {
                         '--normal-bg':
@@ -84,18 +86,20 @@ export default function NovoCodigo() {
                 })
 
                 const handleAdicionarTagLista = (novaTag: string) => {
-                    setListaTags((prevLista) => [...prevLista, novaTag]);
+                    setListaTags((prevLista) => [...prevLista, tagCriada]);
                 }
-                handleAdicionarTagLista(res)
+                handleAdicionarTagLista(novaTag)
             } else {
                 console.error("Erro ao criar tag", res)
             }
         } catch (erro) {
-            toast.error("Erro ao criar tag", { position: "top-center",style: {
-            '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
-            '--normal-text': 'var(--destructive)',
-            '--normal-border': 'var(--destructive)'
-          } as React.CSSProperties})
+            toast.error("Erro ao criar tag", {
+                position: "top-center", style: {
+                    '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                    '--normal-text': 'var(--destructive)',
+                    '--normal-border': 'var(--destructive)'
+                } as React.CSSProperties
+            })
         }
 
     };
@@ -150,12 +154,12 @@ export default function NovoCodigo() {
         // se código estiver vazio
         if (!codigo.trim()) {
             toast.warning("Adicione um código", {
-                    position: "top-center", style: {
-                        '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
-                        '--normal-text': 'var(--destructive)',
-                        '--normal-border': 'var(--destructive)'
-                    } as React.CSSProperties
-                });
+                position: "top-center", style: {
+                    '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                    '--normal-text': 'var(--destructive)',
+                    '--normal-border': 'var(--destructive)'
+                } as React.CSSProperties
+            });
             return;
         }
 
@@ -194,12 +198,14 @@ export default function NovoCodigo() {
             }
         }
         catch (erro) {
-            toast.error("Erro ao criar código", { position: "top-center",
-            style: {
-            '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
-            '--normal-text': 'var(--destructive)',
-            '--normal-border': 'var(--destructive)'
-          } as React.CSSProperties});
+            toast.error("Erro ao criar código", {
+                position: "top-center",
+                style: {
+                    '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                    '--normal-text': 'var(--destructive)',
+                    '--normal-border': 'var(--destructive)'
+                } as React.CSSProperties
+            });
             console.error('Erro ao criar novo código', erro)
         }
     }
@@ -265,9 +271,9 @@ export default function NovoCodigo() {
                                         <Field>
                                             <CodeEditor
                                                 codeSnippets={codeSnippets}
-                                                onChange={(lang) => {
-                                                    setLinguagem(lang);
-                                                    setCodigo(codeSnippets[lang]);
+                                                onChange={(novoCodigo:string,novaLinguagem:string) => {
+                                                    setCodigo(novoCodigo);
+                                                    setLinguagem(novaLinguagem);
                                                 }}
                                             />
                                             <FieldError></FieldError>

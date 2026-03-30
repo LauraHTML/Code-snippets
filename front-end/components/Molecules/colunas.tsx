@@ -111,7 +111,6 @@ export const columns = ( atualizar: (codigos: TCodigos) => void, onDelete: (id: 
     enableHiding: false,
     cell: ({ row }) => {
       const codigos: TCodigos = row.original  // Dados da linha
-      console.log(codigos)
 
       return (
         <DropdownMenu>
@@ -122,7 +121,7 @@ export const columns = ( atualizar: (codigos: TCodigos) => void, onDelete: (id: 
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <ModalAtualizar atualizar={atualizar}/>
+            <ModalAtualizar atualizar={atualizar} codigoSelecionado={codigos}/>
             <DropdownMenuItem>
               
               </DropdownMenuItem>

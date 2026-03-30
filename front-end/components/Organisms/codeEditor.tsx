@@ -16,18 +16,20 @@ type Linguagem = 'javascript' | 'typescript' | 'python' | 'java' | 'csharp' | 'p
 
 interface CodeEditorProps {
     codeSnippets: Record<Linguagem, string>;
-    onChange: (lang: Linguagem) => void;
+    onChange: (codigo: string, lang: Linguagem) => void;
+    initialCode?: string;
+    initialLang?: Linguagem;
 }
 
-export function CodeEditor({ codeSnippets, onChange }: CodeEditorProps) {
-    const [linguagem, setLinguagem] = useState<Linguagem>("javascript");
-    const [codigoUsuario, setCodigoUsuario] = useState<string>(codeSnippets.javascript);
+export function CodeEditor({ codeSnippets, onChange, initialCode, initialLang }: CodeEditorProps) {
+    const [linguagem, setLinguagem] = useState<Linguagem>(initialLang ?? "javascript");
+    const [codigoUsuario, setCodigoUsuario] = useState<string>(initialCode ?? codeSnippets.javascript);
 
     const selecionado = (novaLinguagem: string) => {
         const lang = novaLinguagem as Linguagem;
         setLinguagem(lang);
         setCodigoUsuario(codeSnippets[lang]);
-        onChange(lang);
+        onChange(codeSnippets[lang], lang);
     };
 
     return (
@@ -47,7 +49,13 @@ export function CodeEditor({ codeSnippets, onChange }: CodeEditorProps) {
                     </SelectGroup>
                 </SelectContent>
             </Select>
-            <Editor height="300px" language={linguagem} theme="vs-dark" value={codigoUsuario} onChange={(value) => setCodigoUsuario(value || "")} />
+            <Editor height="300px" language={linguagem} theme="vs-dark" value={codigoUsuario}
+                onChange={(value) => {
+                    const novoCodigo = value || "";
+                    setCodigoUsuario(novoCodigo);
+                    onChange(novoCodigo, linguagem)
+                }}
+            />
         </>
     );
 }

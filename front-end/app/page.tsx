@@ -75,7 +75,6 @@ export default function Home() {
 
   const AtualizarCodigo = async (data: TCodigos) => {
 
-    console.log("ola")
     const res = await fetch(`http://localhost:8080/codigos/${data._id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -83,12 +82,12 @@ export default function Home() {
         titulo: data.titulo,
         codigo: data.codigo,
         linguagem: data.linguagem,
-        tags: data.tags
+        tags: [data.tags]
       })
     });
 
     if (res.ok) {
-      toast.success("Código deletado com sucesso!", {
+      toast.success("Código atualizado com sucesso!", {
         position: "top-center", style: {
           '--normal-bg':
             'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
@@ -96,10 +95,10 @@ export default function Home() {
           '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
         } as React.CSSProperties
       })
-      setCodigos(prev => prev.filter(c => c._id !== data._id))
+      setCodigos(prev => prev.map(c => c._id === data._id ? data : c))
 
     } else {
-      toast.error("Erro ao deletar código", {
+      toast.error("Erro ao atualizar código", {
         position: "top-center", style: {
           '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
           '--normal-text': 'var(--destructive)',
@@ -109,7 +108,7 @@ export default function Home() {
     }
   }
 
-  const tableColumns = columns(AtualizarCodigo,DeletarCodigo)
+  const tableColumns = columns(AtualizarCodigo, DeletarCodigo)
 
   return (
     <SidebarProvider
