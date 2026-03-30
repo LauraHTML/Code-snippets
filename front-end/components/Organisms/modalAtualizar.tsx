@@ -36,6 +36,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Pencil,Trash } from "lucide-react"
 import { CodeEditor } from "@/components/Organisms/codeEditor";
 
 interface ModalAtualizar {
@@ -165,7 +166,7 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
 
     return (<>
         <Dialog>
-            <DialogTrigger>Atualizar</DialogTrigger>
+            <DialogTrigger className="px-4 py-2 hover:bg-accent inline-flex items-center justify-center gap-2 [&_svg:not([class*='size-'])]:size-4"><Pencil />Atualizar</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Atualizar código selecionado</DialogTitle>

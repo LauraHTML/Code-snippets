@@ -16,6 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Pencil,Trash } from "lucide-react"
 
 //atualizar
 import { ModalAtualizar } from "../Organisms/modalAtualizar";
@@ -122,14 +123,11 @@ export const columns = ( atualizar: (codigos: TCodigos) => void, onDelete: (id: 
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <ModalAtualizar atualizar={atualizar} codigoSelecionado={codigos}/>
-            <DropdownMenuItem>
-              
-              </DropdownMenuItem>
 
             {/* confirmar deletar código */}
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant={"ghost"}>Excluir</Button>
+                <Button variant={"destructive"}><Trash />Excluir</Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
