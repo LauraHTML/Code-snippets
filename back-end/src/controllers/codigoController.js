@@ -48,7 +48,7 @@ class CodigoController {
       const tagEncontrada = await tags.findById(novoCodigo.tags);
       const codigoCompleto = { ...novoCodigo, tags: {...tagEncontrada._doc}}
       const codigoCriado = await codigo.create(codigoCompleto);
-      res.status(201).json({ message: "criado com sucesso", codigo: codigoCriado });
+      res.status(201).json({ message: "Código criado com sucesso", codigo: codigoCriado });
     } catch (erro) {
       res.status(500).json({ message: `${erro.message} - falha ao inserir novo código` });
     }
