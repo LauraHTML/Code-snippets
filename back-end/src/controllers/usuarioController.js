@@ -3,14 +3,19 @@ import jwt from 'jsonwebtoken';
 import usuario from '../models/Usuario.js';
 
 const JWT_CONFIG = {
-    secret: process.env.JWT_SECRET || 'seu-segredo-super-secreto',
+    secret: process.env.JWT_SECRET,
     expiresIn: '24h'
 };
 
 class UsuarioController {
     static async CadastrarUsuario(req, res) {
         try {
+
             const { nome, email, senha } = req.body;
+
+            if (!req.body) {
+                return res.status(400).json({ message: "Body não recebido" })
+            }
 
             if (!nome || nome.trim() === '') {
                 return res.status(400).json({ message: 'O nome é obrigatório' });
@@ -57,7 +62,7 @@ class UsuarioController {
             res.status(201).json({ message: "Usuário criado com sucesso", usuario: { nome: novoUsuario.nome, email: novoUsuario.email } });
         }
         catch (erro) {
-            res.status(500).json({ message: `${erro.message} - falha ao criar novo usuário` });
+            res.status(500).json({ message: `${erro} - falha ao criar novo usuário` });
         }
     }
 

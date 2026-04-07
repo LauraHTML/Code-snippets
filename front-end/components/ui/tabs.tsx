@@ -13,7 +13,7 @@ const tabsVariants = cva(
       variant: {
         default: "group/tabs flex gap-2 data-[orientation=horizontal]:flex-col w-full",
         login: "group/tabs flex gap-2 data-[orientation=horizontal]:flex-col w-full bg-white/30 backdrop-blur-sm p-4" ,
-        cadastro: "group/tabs flex gap-2 data-[orientation=horizontal]:flex-col w-full bg-white/30 backdrop-blur-sm p-4 border border-card rounded-md" ,
+        cadastro: "group/tabs flex gap-2 data-[orientation=horizontal]:flex-col w-full bg-background/30 backdrop-blur-sm p-4 border border-card rounded-lg" ,
       },
     },
     defaultVariants: {

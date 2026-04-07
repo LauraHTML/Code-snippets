@@ -5,5 +5,6 @@ const routes = express.Router();
 
 routes.post("/cadastro", UsuarioController.CadastrarUsuario);
 routes.post("/login", UsuarioController.Login);
+// routes.post("/auth/callback")
 
 export default routes;
