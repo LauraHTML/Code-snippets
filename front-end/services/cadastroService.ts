@@ -1,4 +1,4 @@
-export async function cadastro(email: string, senha: string, nome:string) {
+export async function cadastro(email: string, senha: string, nome: string) {
     try {
         const res = await fetch("http://localhost:8080/cadastro", {
             headers: {
@@ -8,15 +8,27 @@ export async function cadastro(email: string, senha: string, nome:string) {
             body: JSON.stringify({ email, senha, nome }),
         })
 
-        if (!res.ok) {
-            console.error(res)
-            throw new Error(`HTTP error ${res.status}`);
+        const dados = await res.json();
+
+        // Verificar se há erro na resposta
+        if (dados.status === 'erro' || dados.status === 'aviso') {
+            const erro = new Error(dados.mensagem);
+            (erro as any).titulo = dados.titulo;
+            (erro as any).status = dados.status;
+            throw erro;
         }
-8
-        return await res.json()
+
+        if (!res.ok) {
+            throw new Error(`Erro HTTP ${res.status}`);
+        }
+
+        return dados;
     }
-    catch(erro){
-        throw new Error(`${erro} - falha ao criar novo usuário`);
+    catch (erro: any) {
+        throw {
+            titulo: erro.titulo || 'Erro ao cadastrar',
+            mensagem: erro.message || 'Falha ao criar novo usuário',
+            status: erro.status || 'erro'
+        };
     }
- 
 }
