@@ -3,35 +3,40 @@ import jwt from 'jsonwebtoken';
 import usuario from '../models/Usuario.js';
 
 const JWT_CONFIG = {
-    secret: process.env.JWT_SECRET || 'seu-segredo-super-secreto',
+    secret: process.env.JWT_SECRET,
     expiresIn: '24h'
 };
 
 class UsuarioController {
     static async CadastrarUsuario(req, res) {
         try {
+
             const { nome, email, senha } = req.body;
 
+            if (!req.body) {
+                return res.status(400).json({ mensagem: "Body não recebido" })
+            }
+
             if (!nome || nome.trim() === '') {
-                return res.status(400).json({ message: 'O nome é obrigatório' });
+                return res.status(400).json({ status:'erro', titulo: 'O campo nome está vazio', mensagem: 'O nome é obrigatório' });
             }
             if (!email || email.trim() === '') {
-                return res.status(400).json({ message: 'O email é obrigatório' });
+                return res.status(400).json({ status:'erro', titulo: 'O campo email está vazio', mensagem: 'O email é obrigatório' });
             }
             if (!senha || senha.trim() === '') {
-                return res.status(400).json({ message: 'A senha é obrigatória' });
+                return res.status(400).json({ status:'erro', titulo: 'O campo senha está vazio', mensagem: 'A senha é obrigatória' });
             }
 
             //validar formato
             if (nome.length < 2) {
-                return res.status(400).json({ message: 'O nome deve ter pelo menos 2 caracteres' })
+                return res.status(400).json({ status:'erro', titulo: 'Nome curto' ,mensagem: 'O nome deve ter pelo menos 2 caracteres' })
             }
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
-                return res.status(400).json({ message: 'Formato de email inválido' });
+                return res.status(400).json({ status:'erro', titulo: 'Email inválido' ,mensagem: 'Formato de email inválido' });
             }
             if (senha.length < 6) {
-                return res.status(400).json({ mensagem: 'A senha deve ter pelo menos 6 caracteres' });
+                return res.status(400).json({ status:'aviso', titulo: 'Senha curta', mensagem: 'A senha deve ter pelo menos 6 caracteres' });
             }
 
             //usuário já existe?
@@ -39,7 +44,7 @@ class UsuarioController {
 
             if (buscaEmail) {
                 console.log('Usuário já existe no banco de dados');
-                return res.status(409).json({ mensagem: 'Email já cadastrado' });
+                return res.status(409).json({ status: 'aviso', titulo:'Email inválido', mensagem: 'Email já cadastrado' });
             }
 
             //hash da senha
@@ -54,10 +59,10 @@ class UsuarioController {
 
             await usuario.create(novoUsuario);
 
-            res.status(201).json({ message: "Usuário criado com sucesso", usuario: { nome: novoUsuario.nome, email: novoUsuario.email } });
+            res.status(201).json({ status:'sucesso', titulo:'Cadastro concluído', mensagem: "Usuário criado com sucesso", usuario: { nome: novoUsuario.nome, email: novoUsuario.email } });
         }
         catch (erro) {
-            res.status(500).json({ message: `${erro.message} - falha ao criar novo usuário` });
+            res.status(500).json({ status:'erro', titulo:'Não foi possível criar usuário', mensagem: `${erro} - falha ao criar novo usuário` });
         }
     }
 
@@ -79,7 +84,7 @@ class UsuarioController {
             const { senha: _, ...usuarioSemSenha } = usuarioEncontrado.toObject ? usuarioEncontrado.toObject() : usuarioEncontrado;
             return usuarioSemSenha;
         } catch (erro) {
-            console.error('Erro ao verificar credenciais:', erro);
+            console.error('Erro ao fazer login:', erro);
             throw erro;
         }
     }
@@ -89,22 +94,22 @@ class UsuarioController {
             const { email, senha } = req.body;
 
             if (!email || email.trim() === '') {
-                return res.status(400).json({ message: 'O email é obrigatório' });
+                return res.status(400).json({ status:'aviso',titulo:'Insira o seu email', mensagem: 'O email é obrigatório' });
             }
 
             if (!senha || senha.trim() === '') {
-                return res.status(400).json({ message: 'A senha é obrigatória' });
+                return res.status(400).json({ status:'aviso', titulo:'Insira a sua senha', mensagem: 'A senha é obrigatória' });
             }
 
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
-                return res.status(400).json({ message: 'Formato de email inválido' });
+                return res.status(400).json({ status:'aviso', titulo:'Formato de email inválido', mensagem: 'Formato de email inválido' });
             }
 
             const usuarioLogin = await UsuarioController.verificarCredenciais(email.trim(), senha);
 
             if (!usuarioLogin) {
-                return res.status(401).json({ message: 'Email ou senha incorretos' });
+                return res.status(401).json({ status:'erro', titulo:'Erro no email ou senha',mensagem: 'Email ou senha incorretos' });
             }
 
             // Gerar token JWT
@@ -119,7 +124,9 @@ class UsuarioController {
             );
 
             res.status(200).json({
-                message: 'Login realizado com sucesso',
+                status:'sucesso',
+                titulo: 'Login realizado com sucesso!',
+                mensagem: 'Login realizado com sucesso!!',
                 dados: {
                     token,
                     usuario: {
@@ -130,9 +137,10 @@ class UsuarioController {
                     }
                 }
             });
+            console.log("usuario logado com sucesso")
         } catch (erro) {
             console.error('Erro ao fazer login:', erro);
-            res.status(500).json({ message: `${erro.message} - não foi possível processar o login` });
+            res.status(500).json({ status: 'erro', titulo:'Erro no login', mensagem: `${erro.mensagem} - não foi possível processar o login` });
         }
     }
 }
