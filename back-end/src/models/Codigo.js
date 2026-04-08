@@ -3,6 +3,7 @@ import { tagsSchema } from "./Tags.js";
 
 const codigosSchema = new mongoose.Schema({
   id: { type: mongoose.Schema.Types.ObjectId },
+  idUsuario: { type: mongoose.Schema.Types.ObjectId, ref: "usuario",required: true},
   titulo: { type: String, required: true },
   codigo: { type: String },
   linguagem: { type: String },
