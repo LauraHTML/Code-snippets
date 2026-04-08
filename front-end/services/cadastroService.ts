@@ -1,4 +1,3 @@
-
 export async function cadastro(email: string, senha: string, nome:string) {
     try {
         const res = await fetch("http://localhost:8080/cadastro", {

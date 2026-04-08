@@ -1,14 +1,11 @@
-import { auth0 } from "@/lib/auth0";
-
-export async function login(email: string, senha: string, nome:string) {
+export async function login(email: string, senha: string) {
     try {
-        const token = await auth0.getAccessToken();
         const res = await fetch("http://localhost:8080/login", {
             headers: {
-                Authorization: `Bearer ${token}`
+                "Content-Type": "application/json"
             },
             method: "POST",
-            body: JSON.stringify({ email, senha, nome }),
+            body: JSON.stringify({ email, senha }),
         })
 
         if (!res.ok) {
