@@ -123,10 +123,11 @@ class UsuarioController {
                 { expiresIn: JWT_CONFIG.expiresIn }
             );
 
+            res.cookie('token', token,{ maxAge: 24 * 60 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production'})
             res.status(200).json({
                 status:'sucesso',
                 titulo: 'Login realizado com sucesso!',
-                mensagem: 'Login realizado com sucesso!!',
+                mensagem: 'Login realizado com sucesso!',
                 dados: {
                     token,
                     usuario: {

@@ -4,6 +4,7 @@ export async function login(email: string, senha: string) {
             headers: {
                 "Content-Type": "application/json"
             },
+            credentials: "include",
             method: "POST",
             body: JSON.stringify({ email, senha }),
         })

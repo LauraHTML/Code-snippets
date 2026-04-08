@@ -1,10 +1,11 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import conectaDatabase from "./config/dbConnect.js";
 import routes from "./routes/index.js";
 const conexao = await conectaDatabase();
 
-conexao.on("error" , (erro) => {
-    console.error("Erro de conexão",erro);
+conexao.on("error", (erro) => {
+    console.error("Erro de conexão", erro);
 });
 
 conexao.once("open", () => {
@@ -12,6 +13,9 @@ conexao.once("open", () => {
 });
 
 const app = express();
+
+// Middleware para parsear cookies
+app.use(cookieParser());
 
 routes(app);
 
