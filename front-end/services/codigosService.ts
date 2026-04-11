@@ -9,13 +9,13 @@ export async function listarCodigos() {
             }
         });
 
-        const dados = await res.json();
+        const codigos = await res.json();
 
-        if (dados.status === 'erro') {
+        if (codigos.status === 'erro') {
             throw {
-                titulo: dados.titulo || 'Erro ao listar',
-                mensagem: dados.mensagem || 'Falha ao buscar códigos',
-                status: dados.status
+                titulo: codigos.titulo || 'Erro ao listar',
+                mensagem: codigos.mensagem || 'Falha ao buscar códigos',
+                status: codigos.status
             };
         }
 
@@ -23,7 +23,7 @@ export async function listarCodigos() {
             throw new Error(`Erro HTTP ${res.status}`);
         }
 
-        return dados;
+        return codigos;
     } catch (erro: any) {
         throw {
             titulo: erro.titulo || 'Erro ao listar códigos',

@@ -5,6 +5,8 @@ import { cadastro } from "@/services/cadastroService"
 import { toast } from "sonner"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
+import { useRouter } from "next/navigation"
+
 import {
   Field,
   FieldContent,
@@ -27,6 +29,7 @@ import {
 } from "@tabler/icons-react"
 
 export default function Home() {
+  const router = useRouter()
 
   const [email, setEmail] = useState<string>("")
   const [nome, setNome] = useState<string>("")
@@ -63,6 +66,9 @@ export default function Home() {
       setNome("")
       setEmail("")
       setSenha("")
+
+      router.replace("/codigos")
+      
     } catch (erro: any) {
       toast.error(`Erro no cadastro: ${erro.titulo}`, {
         description: `${erro.mensagem}`, position: "top-center", style: erro.status === 'erro' ? {
@@ -109,7 +115,9 @@ export default function Home() {
           '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
         } as React.CSSProperties
       })
-      // Salvar token, redirecionar, etc
+
+      router.replace("/codigos")
+
     } catch (erro: any) {
       toast.error(`Erro no login: ${erro.titulo}`, {
         description: `${erro.mensagem}`, position: "top-center", style: erro.status === 'erro' ? {

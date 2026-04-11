@@ -1,3 +1,5 @@
+import { redirect } from 'next/navigation'
+
 export async function login(email: string, senha: string) {
     try {
         const res = await fetch("http://localhost:8080/login", {

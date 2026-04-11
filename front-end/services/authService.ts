@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation'
 
 export async function verificarAutenticacao() {
     try {
@@ -10,9 +11,10 @@ export async function verificarAutenticacao() {
         });
 
         if (res.status === 401) {
-            return false; 
+            redirect('/')
         }
-
+        redirect('/codigos')
+        
         return res.ok; // autenticado
     } catch (erro) {
         console.error("Erro ao verificar autenticação:", erro);

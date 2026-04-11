@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 
+import { listarCodigos, criarCodigo, atualizarCodigo, deletarCodigo } from "@/services/codigosService"
+
 import { AppSidebar } from "@/components/app-sidebar";
 import { Tabela } from "@/components/Organisms/tabela";
 import { columns, TCodigos } from "@/components/Molecules/colunas";
@@ -23,28 +25,7 @@ export interface Tags {
 export default function Home() {
 
   const [codigos, setCodigos] = useState<TCodigos[]>([])
-
-  useEffect(() => {
-    async function fetchSnippets() {
-      try {
-        const res = await fetch("http://localhost:8080/codigos")
-
-        if (!res.ok) {
-          throw new Error("Erro na resposta da API")
-        }
-
-        const data: TCodigos[] = await res.json()
-        console.log(data)
-        setCodigos(data)
-
-      } catch (error) {
-        console.error("Erro detalhado:", error)
-      }
-
-    }
-    fetchSnippets()
-
-  }, [])
+  console.log(listarCodigos())
 
   const DeletarCodigo = async (id: string) => {
     const res = await fetch(`http://localhost:8080/codigos/${id}`, {
