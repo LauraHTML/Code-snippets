@@ -34,15 +34,15 @@ export async function listarTags() {
 }
 
 
-export async function criarTag(titulo: string) {
+export async function criarTag(titulo: string, cor: string) {
     try {
-        const res = await fetch("http://localhost:8080/codigos", {
+        const res = await fetch("http://localhost:8080/tags", {
             method: "POST",
             credentials: "include", 
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ titulo, linguagem, codigo })
+            body: JSON.stringify({ titulo, cor })
         });
 
         const dados = await res.json();
@@ -50,7 +50,7 @@ export async function criarTag(titulo: string) {
         if (dados.status === 'erro') {
             throw {
                 titulo: dados.titulo || 'Erro ao criar',
-                mensagem: dados.mensagem || 'Falha ao criar código',
+                mensagem: dados.mensagem || 'Falha ao criar tag',
                 status: dados.status
             };
         }
@@ -58,22 +58,22 @@ export async function criarTag(titulo: string) {
         return dados;
     } catch (erro: any) {
         throw {
-            titulo: erro.titulo || 'Erro ao criar código',
-            mensagem: erro.mensagem || erro.message || 'Falha ao criar código',
+            titulo: erro.titulo || 'Erro ao criar',
+            mensagem: erro.mensagem || erro.message || 'Falha ao criar tag',
             status: erro.status || 'erro'
         };
     }
 }
 
-export async function atualizarCodigo(id: string, titulo: string, descricao: string, linguagem: string, codigo: string) {
+export async function atualizarTag(id: string, titulo: string, cor: string) {
     try {
-        const res = await fetch(`http://localhost:8080/codigos/${id}`, {
+        const res = await fetch(`http://localhost:8080/tags/${id}`, {
             method: "PUT",
             credentials: "include",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ titulo, descricao, linguagem, codigo })
+            body: JSON.stringify({ titulo, cor })
         });
 
         const dados = await res.json();
@@ -89,16 +89,16 @@ export async function atualizarCodigo(id: string, titulo: string, descricao: str
         return dados;
     } catch (erro: any) {
         throw {
-            titulo: erro.titulo || 'Erro ao atualizar código',
-            mensagem: erro.mensagem || erro.message || 'Falha ao atualizar código',
+            titulo: erro.titulo || 'Erro ao atualizar',
+            mensagem: erro.mensagem || erro.message || 'Falha ao atualizar tag',
             status: erro.status || 'erro'
         };
     }
 }
 
-export async function deletarCodigo(id: string) {
+export async function deletarTag(id: string) {
     try {
-        const res = await fetch(`http://localhost:8080/codigos/${id}`, {
+        const res = await fetch(`http://localhost:8080/tags/${id}`, {
             method: "DELETE",
             credentials: "include",
             headers: {
@@ -111,7 +111,7 @@ export async function deletarCodigo(id: string) {
         if (dados.status === 'erro') {
             throw {
                 titulo: dados.titulo || 'Erro ao deletar',
-                mensagem: dados.mensagem || 'Falha ao deletar código',
+                mensagem: dados.mensagem || 'Falha ao deletar tag',
                 status: dados.status
             };
         }
@@ -119,8 +119,8 @@ export async function deletarCodigo(id: string) {
         return dados;
     } catch (erro: any) {
         throw {
-            titulo: erro.titulo || 'Erro ao deletar código',
-            mensagem: erro.mensagem || erro.message || 'Falha ao deletar código',
+            titulo: erro.titulo || 'Erro ao deletar',
+            mensagem: erro.mensagem || erro.message || 'Falha ao deletar tag',
             status: erro.status || 'erro'
         };
     }

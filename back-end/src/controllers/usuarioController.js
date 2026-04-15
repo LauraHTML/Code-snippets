@@ -127,16 +127,7 @@ class UsuarioController {
             res.status(200).json({
                 status: 'sucesso',
                 titulo: 'Login realizado com sucesso!',
-                mensagem: 'Login realizado com sucesso!',
-                dados: {
-                    token,
-                    usuario: {
-                        id: usuarioLogin._id,
-                        nome: usuarioLogin.nome,
-                        email: usuarioLogin.email,
-                        tipo: usuarioLogin.tipo
-                    }
-                }
+                mensagem: 'Login realizado com sucesso!'
             });
             console.log("usuario logado com sucesso")
         } catch (erro) {
@@ -150,10 +141,6 @@ class UsuarioController {
             return res.status(200).json({
                 status: 'sucesso',
                 autenticado: true,
-                usuario: {
-                    id: req.usuario.id,
-                    email: req.usuario.email,
-                }
             });
         } catch (erro) {
             res.status(500).json({ status: 'erro', mensagem: 'Erro ao verificar autenticação' });

@@ -5,6 +5,7 @@ import { AppSidebar } from "@/src/components/app-sidebar";
 import { Tags } from "@/src/types";
 
 import { criarCodigo } from "@/src/services/codigosService"
+import { criarTag } from "@/src/services/tagsServices";
 
 import { SiteHeader } from "@/src/components/site-header";
 import {
@@ -13,7 +14,6 @@ import {
 } from "@/src/components/ui/sidebar";
 
 //formulário
-import { useForm, Controller } from "react-hook-form";
 import { toast } from "sonner";
 import { Form } from "@/src/components/ui/form";
 import {
@@ -50,6 +50,8 @@ export default function NovoCodigo() {
         php: "<?php\n\n$name = 'Alex';\necho $name;\n",
     };
 
+    const [errors, setErrors] = useState<{ [key: string]: string }>({})
+    const [loading, setLoading] = useState(false)
 
     //codigos
     const [codigo, setCodigo] = useState<string>("");
@@ -61,6 +63,60 @@ export default function NovoCodigo() {
     const [novaTag, setNovaTag] = useState<string>("")
     const [listaTags, setListaTags] = useState([])
 
+    //cor
+    type Cor = "azul" | "amarelo" | "verde" | "roxo";
+    const [cor, setCor] = useState<Cor>('azul');
+
+    const coresTag = {
+        azul: "#2f81f7",
+        amarelo: "#d2991d",
+        verde: "#3fb950",
+        roxo: "#a371f7"
+    }
+
+    async function handleCriarTag(e) {
+        e.preventDefault()
+        setErrors({})
+    
+        // Validação local
+        const newErrors: any = {}
+        if (!tag.trim()) newErrors.nome = "Dê um nome para a nova tag"
+    
+        if (Object.keys(newErrors).length > 0) {
+          setErrors(newErrors)
+          return
+        }
+    
+        setLoading(true)
+        try {
+          const response = await criarTag(tag, cor)
+          toast.success(response.titulo, {
+            position: "top-center", style: {
+              '--normal-bg':
+                'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
+              '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
+              '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
+            } as React.CSSProperties
+          })
+          setTag("")
+    
+        } catch (erro: any) {
+          toast.error(`Erro no cadastro: ${erro.titulo}`, {
+            description: `${erro.mensagem}`, position: "top-center", style: erro.status === 'erro' ? {
+              '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+              '--normal-text': 'var(--destructive)',
+              '--normal-border': 'var(--destructive)'
+            } as React.CSSProperties : {
+              '--normal-bg':
+                'color-mix(in oklab, light-dark(var(--color-amber-600), var(--color-amber-400)) 10%, var(--background))',
+              '--normal-text': 'light-dark(var(--color-amber-600), var(--color-amber-400))',
+              '--normal-border': 'light-dark(var(--color-amber-600), var(--color-amber-400))'
+            } as React.CSSProperties
+          },)
+        } finally {
+          setLoading(false)
+        }
+      }
 
 
     return (<>
@@ -75,50 +131,64 @@ export default function NovoCodigo() {
 
                             <div className="px-4 lg:px-5">
 
-                                <FieldSet className="space-y-8 w-full py-10 bg-card p-4 rounded-md border">
-                                        <Field>
-                                            <FieldLabel htmlFor="titulo">Título para o trecho de código</FieldLabel>
-                                            <Input
-                                                id="titulo"
-                                                placeholder="Ex: Exercício de python"
-                                                onChange={(e) => setTitulo(e.target.value)}
-                                            />
-                                            <FieldDescription>Dê um nome para o trecho de código.</FieldDescription>
-                                            
-                                        </Field>
-                                        <Field>
-                                            <FieldLabel htmlFor="tags">Tags</FieldLabel>
-                                            <div className="flex flex-row gap-3">
-                                                <Input type="text" id="tags" value={novaTag} onChange={(e) => setNovaTag(e.target.value)} placeholder="Ex: MySql" />
-                                                <Button type="button">Criar tag</Button>
+                                <FieldSet >
+                                    <Field>
+                                        <FieldLabel htmlFor="titulo">Título para o trecho de código</FieldLabel>
+                                        <Input
+                                            id="titulo"
+                                            placeholder="Ex: Exercício de python"
+                                            onChange={(e) => setTitulo(e.target.value)}
+                                        />
+                                        <FieldDescription>Dê um nome para o trecho de código.</FieldDescription>
+
+                                    </Field>
+                                    <Field>
+                                        <FieldLabel htmlFor="tags">Tags</FieldLabel>
+                                        <Input className="w-1/2" type="text" id="tags" value={novaTag} onChange={(e) => setNovaTag(e.target.value)} placeholder="Ex: MySql" />
+                                            <FieldLabel htmlFor="tags">Cor da tag</FieldLabel>
+                                            <div className="grid grid-cols-4 grid-rows-flow w-1/2 bg-input border p-2 rounded-md ">                                               
+                                                {Object.keys(coresTag).map((cor,index) => (
+                                                    <button
+                                                        key={index}
+                                                        type="button"
+                                                        onClick={() => setCor(cor as Cor)}
+                                                        className="w-full h-8 rounded border-2"
+                                                        style={{
+                                                            backgroundColor: coresTag[cor as Cor],
+                                                            borderColor: cor === cor ? '#000' : '#ccc'
+                                                        }}
+                                                        title={cor}
+                                                    />
+                                                ))}
                                             </div>
+                                        <Button onClick={handleCriarTag} type="button">Criar tag</Button>
+                                    </Field>
+                                    <Field>
+                                        <Select onValueChange={(value) => setTag(value)}>
+                                            <SelectTrigger className="w-[180px]">
+                                                <SelectValue placeholder="Selecione uma tag" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectItem value={'titulo'}>ouaua</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
 
-                                           
-                                                    <Select onValueChange={(value) => setTag(value)}>
-                                                        <SelectTrigger className="w-[180px]">
-                                                            <SelectValue placeholder="Selecione uma tag" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            <SelectGroup>
-                                                                <SelectItem value={'titulo'}>ouaua</SelectItem>
-                                                            </SelectGroup>
-                                                        </SelectContent>
-                                                    </Select>
+                                        <FieldDescription>Use as tags para organizar seus códigos.</FieldDescription>
 
-                                            <FieldDescription>Use as tags para organizar seus códigos.</FieldDescription>
-                                            
-                                        </Field>
-                                        <Field>
-                                            <CodeEditor
-                                                codeSnippets={codeSnippets}
-                                                onChange={(novoCodigo: string, novaLinguagem: string) => {
-                                                    setCodigo(novoCodigo);
-                                                    setLinguagem(novaLinguagem);
-                                                }}
-                                            />
-                                            <FieldError></FieldError>
-                                        </Field>
-                                        <Button type="submit" >Enviar</Button>
+                                    </Field>
+                                    <Field>
+                                        <CodeEditor
+                                            codeSnippets={codeSnippets}
+                                            onChange={(novoCodigo: string, novaLinguagem: string) => {
+                                                setCodigo(novoCodigo);
+                                                setLinguagem(novaLinguagem);
+                                            }}
+                                        />
+                                        <FieldError></FieldError>
+                                    </Field>
+                                    <Button type="submit" >Enviar</Button>
                                 </FieldSet>
                             </div>
                         </div>
