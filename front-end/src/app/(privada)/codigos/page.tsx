@@ -108,7 +108,8 @@ export default function Home() {
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
 
               <div className="grid grid-cols-1 md:grid-cols-[50%_50%] gap-4">
-                <TagsSection />
+              {/* <TagsSection /> */}
+                
                 <div className="bg-card p-4 rounded-md border">
                   <h1 className="text-xl mb-3">Linguagens utilizadas</h1>
                   <div className="flex flex-row w-auto flex-wrap gap-3 rounded-xl">

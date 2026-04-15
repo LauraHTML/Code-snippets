@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 import { AppSidebar } from "@/src/components/app-sidebar";
-import { Tags } from "@/src/app/(privada)/page";
+import { Tags } from "@/src/types";
 
 import { criarCodigo } from "@/src/services/codigosService"
 
@@ -17,6 +17,7 @@ import { useForm, Controller } from "react-hook-form";
 import { toast } from "sonner";
 import { Form } from "@/src/components/ui/form";
 import {
+    FieldSet,
     Field,
     FieldLabel,
     FieldDescription,
@@ -37,13 +38,6 @@ import {
 import { CodeEditor } from "@/src/components/Organisms/codeEditor";
 
 export default function NovoCodigo() {
-    const { register, handleSubmit, control, formState: { errors } } = useForm({
-        defaultValues: {
-            titulo: "",
-            tag: "",
-            codigo: ""
-        }
-    });
 
     //linguagens
     const codeSnippets = {
@@ -67,77 +61,6 @@ export default function NovoCodigo() {
     const [novaTag, setNovaTag] = useState<string>("")
     const [listaTags, setListaTags] = useState([])
 
-    const CriarTags = async () => {
-        try {
-            const res = await fetch('http://localhost:8080/tags', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    titulo: novaTag,
-                    cor: "#f4d812"
-                })
-            });
-            if (res.ok) {
-                const tagCriada = await res.json()
-                toast.success("Tag criada com sucesso", {
-                    position: "top-center", style: {
-                        '--normal-bg':
-                            'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
-                        '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
-                        '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
-                    } as React.CSSProperties
-                })
-
-                const handleAdicionarTagLista = (novaTag: string) => {
-                    setListaTags((prevLista) => [...prevLista, tagCriada]);
-                }
-                handleAdicionarTagLista(novaTag)
-            } else {
-                console.error("Erro ao criar tag", res)
-            }
-        } catch (erro) {
-            toast.error("Erro ao criar tag", {
-                position: "top-center", style: {
-                    '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
-                    '--normal-text': 'var(--destructive)',
-                    '--normal-border': 'var(--destructive)'
-                } as React.CSSProperties
-            })
-        }
-
-    };
-
-    useEffect(() => {
-        async function fetchTags() {
-            try {
-                const res = await fetch("http://localhost:8080/tags")
-
-                if (!res.ok) {
-                    throw new Error("Erro na resposta da API")
-                }
-
-                const tags: Tags[] = await res.json()
-                setListaTags(tags)
-
-            } catch (error) {
-                console.error("Erro detalhado:", error)
-            }
-
-        }
-        fetchTags()
-    }, []);
-
-    async function handleCriaCodigo(e){
-        e.preventDefault()
-
-        try{
-            const res = await criarCodigo(codigo,linguagem,titulo, tag)
-        }
-        catch(erro){
-
-        }
-    },
-    
 
 
     return (<>
@@ -152,50 +75,38 @@ export default function NovoCodigo() {
 
                             <div className="px-4 lg:px-5">
 
-                                <Form>
-                                    <form className="space-y-8 w-full py-10 bg-card p-4 rounded-md border">
+                                <FieldSet className="space-y-8 w-full py-10 bg-card p-4 rounded-md border">
                                         <Field>
                                             <FieldLabel htmlFor="titulo">Título para o trecho de código</FieldLabel>
                                             <Input
                                                 id="titulo"
                                                 placeholder="Ex: Exercício de python"
-                                                {...register("titulo", { required: "Título é obrigatório" })}
+                                                onChange={(e) => setTitulo(e.target.value)}
                                             />
                                             <FieldDescription>Dê um nome para o trecho de código.</FieldDescription>
-                                            {errors.titulo && <FieldError>{errors.titulo.message}</FieldError>}
+                                            
                                         </Field>
                                         <Field>
                                             <FieldLabel htmlFor="tags">Tags</FieldLabel>
                                             <div className="flex flex-row gap-3">
                                                 <Input type="text" id="tags" value={novaTag} onChange={(e) => setNovaTag(e.target.value)} placeholder="Ex: MySql" />
-                                                <Button type="button" onClick={CriarTags}>Criar tag</Button>
+                                                <Button type="button">Criar tag</Button>
                                             </div>
 
-                                            <Controller
-                                                name="tag"
-                                                control={control}
-                                                rules={{ required: "Selecione uma tag" }}
-                                                render={({ field }) => (
-                                                    <Select onValueChange={field.onChange} value={field.value}>
+                                           
+                                                    <Select onValueChange={(value) => setTag(value)}>
                                                         <SelectTrigger className="w-[180px]">
                                                             <SelectValue placeholder="Selecione uma tag" />
                                                         </SelectTrigger>
                                                         <SelectContent>
                                                             <SelectGroup>
-                                                                {listaTags && listaTags.length > 0 ? (
-                                                                    listaTags.map((item, index) => (
-                                                                        <SelectItem key={index} value={item._id}>{item.titulo}</SelectItem>
-                                                                    ))) :
-                                                                    (<p>Crie uma tag</p>)}
-
+                                                                <SelectItem value={'titulo'}>ouaua</SelectItem>
                                                             </SelectGroup>
                                                         </SelectContent>
                                                     </Select>
-                                                )}
-                                            />
 
                                             <FieldDescription>Use as tags para organizar seus códigos.</FieldDescription>
-                                            {errors.tag && <FieldError>{errors.tag.message}</FieldError>}
+                                            
                                         </Field>
                                         <Field>
                                             <CodeEditor
@@ -207,9 +118,8 @@ export default function NovoCodigo() {
                                             />
                                             <FieldError></FieldError>
                                         </Field>
-                                        <Button type="submit">Enviar</Button>
-                                    </form>
-                                </Form>
+                                        <Button type="submit" >Enviar</Button>
+                                </FieldSet>
                             </div>
                         </div>
                     </div>
