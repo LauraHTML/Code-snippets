@@ -42,7 +42,7 @@ export async function criarCodigo(titulo: string, linguagem: string, codigo: str
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ titulo, linguagem, codigo })
+            body: JSON.stringify({ titulo, linguagem, codigo, tag })
         });
 
         const dados = await res.json();

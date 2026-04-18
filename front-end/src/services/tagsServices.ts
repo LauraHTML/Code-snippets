@@ -22,8 +22,9 @@ export async function listarTags() {
         if (!res.ok) {
             throw new Error(`Erro HTTP ${res.status}`);
         }
-
+console.log("tags:",tags)
         return tags;
+        
     } catch (erro: any) {
         throw {
             titulo: erro.titulo || 'Erro ao listar tags',
