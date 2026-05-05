@@ -7,7 +7,7 @@ class TagController {
       const listarTags = await tags.find({ idUsuario: req.usuario.id_usuario });
       res.status(200).json(listarTags);
     } catch (erro) {
-      res.status(500).json({ message: `${erro.message} - falha na requisição` });
+      res.status(500).json({ mensagem: `${erro.mensagem} - falha na requisição` });
     }
   };
 
@@ -17,7 +17,7 @@ class TagController {
       const tagEncontrada = await tags.findById(id,{ idUsuario: req.usuario.id_usuario });
       res.status(200).json(tagEncontrada);
     } catch (erro) {
-      res.status(500).json({ message: `${erro.message} - falha na requisição do tag` });
+      res.status(500).json({ mensagem: `${erro.mensagem} - falha na requisição do tag` });
     }
   };
 
@@ -25,9 +25,9 @@ class TagController {
     try {
       const id = req.params.id;
       await tags.findByIdAndUpdate(id, req.body,{ idUsuario: req.usuario.id_usuario});
-      res.status(200).json({message: "Tag atualizado com sucesso!"});
+      res.status(200).json({mensagem: "Tag atualizado com sucesso!"});
     } catch (erro) {
-      res.status(500).json({ message: `${erro.message} - falha ao atualizar tag` });
+      res.status(500).json({ mensagem: `${erro.mensagem} - falha ao atualizar tag` });
     }
   };
 
@@ -35,18 +35,18 @@ class TagController {
     try {
       const id = req.params.id;
       await tags.findByIdAndDelete(id,{idUsuario: req.usuario.id_usuario});
-      res.status(200).json({message: "Tag excluido com sucesso!"});
+      res.status(200).json({mensagem: "Tag excluido com sucesso!"});
     } catch (erro) {
-      res.status(500).json({ message: `${erro.message} - falha ao excluir tag` });
+      res.status(500).json({ mensagem: `${erro.mensagem} - falha ao excluir tag` });
     }
   };
 
     static async inserirTags (req, res) {
     try {
       const novaTag = await tags.create(req.body,{idUsuario: req.usuario.id_usuario});
-      res.status(201).json({ message: "criado com sucesso", tags: novaTag });
+      res.status(201).json({ mensagem: "criado com sucesso", tags: novaTag });
     } catch (erro) {
-      res.status(500).json({ message: `${erro.message} - falha ao inserir nova tag` });
+      res.status(500).json({ mensagem: `${erro.mensagem} - falha ao inserir nova tag` });
     }
   }
 
