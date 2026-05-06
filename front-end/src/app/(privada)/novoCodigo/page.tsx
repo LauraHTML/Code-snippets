@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { AppSidebar } from "@/src/components/app-sidebar";
 import { Tags } from "@/src/types";
@@ -60,7 +60,19 @@ export default function NovoCodigo() {
 
     //tags
     const [novaTag, setNovaTag] = useState<string>("")
-    // const [listaTags, setListaTags] = useState([listarTags()])
+    const [listaTags, setListaTags] = useState<Tags[]>([])
+
+    useEffect(() => {
+        const carregarTags = async () => {
+            try {
+                const tags = await listarTags();
+                setListaTags(tags);
+            } catch (erro) {
+                console.error("Erro ao carregar tags:", erro);
+            }
+        };
+        carregarTags();
+    }, []);
 
     //cor
     type Cor = "azul" | "amarelo" | "verde" | "roxo";
@@ -116,12 +128,6 @@ export default function NovoCodigo() {
         } finally {
             setLoading(false)
         }
-    }
-
-    async function listarTags() {
-        const listaTags: Tags = await listarTags();
-        const tags: Tags = listaTags.map(item => item.nome);
-        return tags;
     }
 
     async function handleCriarCodigo(e) {
@@ -220,8 +226,12 @@ export default function NovoCodigo() {
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
+                                                    {listaTags.length === 0 && <p>Crie uma tag</p>}
+
                                                     {listaTags.map((tag) => (
-                                                        <SelectItem value={tag.titulo}>ouaua</SelectItem>
+                                                        <SelectItem key={tag.id} value={tag.titulo}>
+                                                            {tag.titulo}
+                                                        </SelectItem>
                                                     ))}
                                                 </SelectGroup>
                                             </SelectContent>
@@ -240,7 +250,7 @@ export default function NovoCodigo() {
                                         />
                                         <FieldError></FieldError>
                                     </Field>
-                                    <Button type="submit" >Enviar</Button>
+                                    <Button onClick={handleCriarCodigo} >Enviar</Button>
                                 </FieldSet>
                             </div>
                         </div>
