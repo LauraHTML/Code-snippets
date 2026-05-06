@@ -7,5 +7,6 @@ const routes = express.Router();
 routes.post("/cadastro", UsuarioController.CadastrarUsuario);
 routes.post("/login", UsuarioController.Login);
 routes.get("/usuario", verificarToken, UsuarioController.verificarAutenticacao);
+routes.post("/logout", UsuarioController.Logout);
 
 export default routes;

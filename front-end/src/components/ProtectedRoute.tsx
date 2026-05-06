@@ -2,11 +2,15 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { verificarAutenticacao } from "@/src/services/authService";
+import { useAuthCheck } from "@/src/hooks/useAuthCheck";
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const [isAutenticado, setIsAutenticado] = useState(false);
     const [carregando, setCarregando] = useState(true);
+
+   
+    useAuthCheck();
 
     useEffect(() => {
         async function verificar() {

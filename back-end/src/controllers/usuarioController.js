@@ -146,6 +146,25 @@ class UsuarioController {
             res.status(500).json({ status: 'erro', mensagem: 'Erro ao verificar autenticação' });
         }
     }
+
+    static async Logout(req, res) {
+        try {
+            // Limpar o cookie do token
+            res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+
+            return res.status(200).json({
+                status: 'sucesso',
+                titulo: 'Logout realizado',
+                mensagem: 'Você foi desconectado com sucesso'
+            });
+        } catch (erro) {
+            res.status(500).json({
+                status: 'erro',
+                titulo: 'Erro ao fazer logout',
+                mensagem: 'Não foi possível fazer logout'
+            });
+        }
+    }
 }
 
 export default UsuarioController;
