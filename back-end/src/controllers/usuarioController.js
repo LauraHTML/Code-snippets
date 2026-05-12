@@ -123,7 +123,12 @@ class UsuarioController {
                 { expiresIn: JWT_CONFIG.expiresIn }
             );
 
-            res.cookie('token', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, secure: process.env.NODE_ENV === 'production' })
+            res.cookie('token', token, {
+                maxAge: 24 * 60 * 60 * 1000,
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'Lax'
+            })
             res.status(200).json({
                 status: 'sucesso',
                 titulo: 'Login realizado com sucesso!',
@@ -150,7 +155,11 @@ class UsuarioController {
     static async Logout(req, res) {
         try {
             // Limpar o cookie do token
-            res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+            res.clearCookie('token', {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'Lax'
+            });
 
             return res.status(200).json({
                 status: 'sucesso',

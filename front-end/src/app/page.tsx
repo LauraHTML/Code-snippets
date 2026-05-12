@@ -108,6 +108,7 @@ export default function Home() {
     try {
       const response = await login(email, senha)
       toast.success(response.titulo, {
+        description: `${response.mensagem}`,
         position: "top-center", style: {
           '--normal-bg':
             'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',

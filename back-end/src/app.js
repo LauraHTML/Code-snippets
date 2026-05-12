@@ -1,5 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import conectaDatabase from "./config/dbConnect.js";
 import routes from "./routes/index.js";
 const conexao = await conectaDatabase();
@@ -13,6 +14,14 @@ conexao.once("open", () => {
 });
 
 const app = express();
+
+// Middleware de CORS para permitir credenciais
+app.use(cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 // Middleware para parsear cookies
 app.use(cookieParser());

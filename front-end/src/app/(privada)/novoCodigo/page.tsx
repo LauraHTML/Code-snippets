@@ -40,13 +40,12 @@ export default function NovoCodigo() {
 
     //linguagens
     const codeSnippets = {
-        javascript: `\nfunction greet(name) {\n\tconsole.log("Hello, " + name + "!");\n}\n\ngreet("Alex");\n`,
-        typescript: `\ntype Params = {\n\tname: string;\n}\n\nfunction greet(data: Params) {\n\tconsole.log("Hello, " + data.name + "!");\n}\n\ngreet({ name: "Alex" });\n`,
-        python: `\ndef greet(name):\n\tprint("Hello, " + name + "!")\n\ngreet("Alex")\n`,
-        java: `\npublic class HelloWorld {\n\tpublic static void main(String[] args) {\n\t\tSystem.out.println("Hello World");\n\t}\n}\n`,
-        csharp:
-            'using System;\n\nnamespace HelloWorld\n{\n\tclass Hello { \n\t\tstatic void Main(string[] args) {\n\t\t\tConsole.WriteLine("Hello World in C#");\n\t\t}\n\t}\n}\n',
-        php: "<?php\n\n$name = 'Alex';\necho $name;\n",
+        javascript: ``,
+        typescript: ``,
+        python: ``,
+        java: ``,
+        csharp: '',
+        php: '',
     };
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({})
@@ -59,7 +58,7 @@ export default function NovoCodigo() {
     const [tag, setTag] = useState<string>("");
 
     //tags
-    const [novaTag, setNovaTag] = useState<string>("")
+    // const [novaTag, setNovaTag] = useState<string>("")
     const [listaTags, setListaTags] = useState<Tags[]>([])
 
     useEffect(() => {
@@ -77,7 +76,6 @@ export default function NovoCodigo() {
     //cor
     type Cor = "azul" | "amarelo" | "verde" | "roxo";
     const [cor, setCor] = useState<Cor>('azul');
-    console.log("cor escolhida: ", cor)
 
     const coresTag = {
         azul: "#2f81f7",
@@ -86,7 +84,12 @@ export default function NovoCodigo() {
         roxo: "#a371f7"
     }
 
-    async function handleCriarTag(e) {
+    async function listarTags(){
+        
+    }
+
+    async function handleCriarTag(e: React.MouseEvent<HTMLButtonElement>) {
+        console.log('Criar tag payload:', { tag, cor });
         e.preventDefault()
         setErrors({})
 
@@ -102,7 +105,9 @@ export default function NovoCodigo() {
         setLoading(true)
         try {
             const response = await criarTag(tag, cor)
-            toast.success(response.titulo, {
+            console.log('Criar tag response:', response)
+            toast.success(response.titulo || 'Tag criada', {
+                description: `${response.mensagem}`,
                 position: "top-center", style: {
                     '--normal-bg':
                         'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
@@ -130,7 +135,7 @@ export default function NovoCodigo() {
         }
     }
 
-    async function handleCriarCodigo(e) {
+    async function handleCriarCodigo(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault()
         setErrors({})
 
@@ -147,6 +152,7 @@ export default function NovoCodigo() {
         try {
             const response = await criarCodigo(titulo, tag, linguagem, codigo)
             toast.success(response.titulo, {
+                description: `${response.mensagem}`,
                 position: "top-center", style: {
                     '--normal-bg':
                         'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
@@ -157,7 +163,7 @@ export default function NovoCodigo() {
             setTag("")
 
         } catch (erro: any) {
-            toast.error(`Erro no cadastro: ${erro.titulo}`, {
+            toast.error(`Erro ao criar código: ${erro.titulo}`, {
                 description: `${erro.mensagem}`, position: "top-center", style: erro.status === 'erro' ? {
                     '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
                     '--normal-text': 'var(--destructive)',
@@ -199,28 +205,28 @@ export default function NovoCodigo() {
 
                                     </Field>
                                     <Field>
-                                        <FieldLabel htmlFor="tags">Tags</FieldLabel>
-                                        <Input className="w-1/2" type="text" id="tags" value={novaTag} onChange={(e) => setNovaTag(e.target.value)} placeholder="Ex: MySql" />
+                                        <FieldLabel htmlFor="tags">Título da tag</FieldLabel>
+                                        <Input className="w-1/2" type="text" id="tags" value={tag} onChange={(e) => setTag(e.target.value)} placeholder="Ex: MySql" />
                                         <FieldLabel htmlFor="tags">Cor da tag</FieldLabel>
                                         <div className="grid grid-cols-4 grid-rows-flow w-1/2 bg-input border p-2 rounded-md ">
-                                            {Object.keys(coresTag).map((cor, index) => (
-                                                <button
+                                            {Object.values(coresTag).map((corHex, index) => (
+                                                <Button
                                                     key={index}
                                                     type="button"
-                                                    onClick={() => setCor(cor as Cor)}
+                                                    onClick={() => setCor(corHex as Cor)}
                                                     className="w-full h-8 rounded border-2"
                                                     style={{
-                                                        backgroundColor: coresTag[cor as Cor],
-                                                        borderColor: cor === cor ? '#000' : '#ccc'
+                                                        backgroundColor: corHex as Cor,
+                                                        borderColor: corHex === coresTag[cor] ? '#FFFFFF' : '#21262d'
                                                     }}
-                                                    title={cor}
+                                                    title={corHex}
                                                 />
                                             ))}
                                         </div>
                                         <Button onClick={handleCriarTag} type="button">Criar tag</Button>
                                     </Field>
                                     <Field>
-                                        <Select onValueChange={(value) => setTag(value)}>
+                                        <Select onValueChange={(value: string) => setTag(value)}>
                                             <SelectTrigger className="w-[180px]">
                                                 <SelectValue placeholder="Selecione uma tag" />
                                             </SelectTrigger>
@@ -229,7 +235,7 @@ export default function NovoCodigo() {
                                                     {listaTags.length === 0 && <p>Crie uma tag</p>}
 
                                                     {listaTags.map((tag) => (
-                                                        <SelectItem key={tag.id} value={tag.titulo}>
+                                                        <SelectItem key={tag._id} value={tag.titulo}>
                                                             {tag.titulo}
                                                         </SelectItem>
                                                     ))}
@@ -241,6 +247,7 @@ export default function NovoCodigo() {
 
                                     </Field>
                                     <Field>
+                                        <FieldLabel htmlFor="titulo">Selecione uma linguagem</FieldLabel>
                                         <CodeEditor
                                             codeSnippets={codeSnippets}
                                             onChange={(novoCodigo: string, novaLinguagem: string) => {
@@ -250,7 +257,7 @@ export default function NovoCodigo() {
                                         />
                                         <FieldError></FieldError>
                                     </Field>
-                                    <Button onClick={handleCriarCodigo} >Enviar</Button>
+                                    <Button onClick={handleCriarCodigo} >Criar novo código</Button>
                                 </FieldSet>
                             </div>
                         </div>

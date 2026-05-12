@@ -31,7 +31,7 @@ class CodigoController {
     try {
       const id = req.params.id;
       const codigoAtualizado = await codigo.findByIdAndUpdate(
-        { _id: id, idUsuario: req.usuario.id_usuario },req.body,{ new: true });
+        { _id: id, idUsuario: req.usuario.id_usuario }, req.body, { new: true });
 
       if (!codigoAtualizado) {
         return res.status(403).json({
@@ -66,6 +66,11 @@ class CodigoController {
     const novoCodigo = req.body;
     try {
       const tagEncontrada = await tags.findById(novoCodigo.tags);
+
+      if (!tagEncontrada) {
+        return res.status(404).json({ status: 'erro', titulo: 'Tag não encontrada', mensagem: 'A tag informada não existe' });
+      }
+
       const codigoCompleto = { ...novoCodigo, tags: { ...tagEncontrada._doc }, idUsuario: req.usuario.id_usuario };
       const codigoCriado = await codigo.create(codigoCompleto);
       res.status(201).json({ status: 'sucesso', titulo: 'Código criado', mensagem: "Código criado com sucesso", codigo: codigoCriado });

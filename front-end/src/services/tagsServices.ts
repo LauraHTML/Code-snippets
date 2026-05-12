@@ -3,13 +3,14 @@ export async function listarTags() {
     try {
         const res = await fetch("http://localhost:8080/tags", {
             method: "GET",
-            credentials: "include", 
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json"
             }
         });
 
         const tags = await res.json();
+        console.log(`tags: ${tags}`)
 
         if (tags.status === 'erro') {
             throw {
@@ -22,9 +23,9 @@ export async function listarTags() {
         if (!res.ok) {
             throw new Error(`Erro HTTP ${res.status}`);
         }
-console.log("tags:",tags)
+        console.log("tags:", tags)
         return tags;
-        
+
     } catch (erro: any) {
         throw {
             titulo: erro.titulo || 'Erro ao listar tags',
@@ -39,20 +40,28 @@ export async function criarTag(titulo: string, cor: string) {
     try {
         const res = await fetch("http://localhost:8080/tags", {
             method: "POST",
-            credentials: "include", 
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({ titulo, cor })
         });
 
-        const dados = await res.json();
+        const dados = await res.json().catch(() => ({} as any));
 
-        if (dados.status === 'erro') {
+        if (!res.ok) {
             throw {
-                titulo: dados.titulo || 'Erro ao criar',
-                mensagem: dados.mensagem || 'Falha ao criar tag',
-                status: dados.status
+                titulo: dados?.titulo || 'Erro ao criar',
+                mensagem: dados?.mensagem || dados?.erro || `Falha ao criar tag (HTTP ${res.status})`,
+                status: dados?.status || res.status
+            };
+        }
+
+        if (dados?.status === 'erro') {
+            throw {
+                titulo: dados?.titulo || 'Erro ao criar',
+                mensagem: dados?.mensagem || 'Falha ao criar tag',
+                status: dados?.status
             };
         }
 

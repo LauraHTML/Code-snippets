@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const tagsSchema = new mongoose.Schema({
   id: { type: mongoose.Schema.Types.ObjectId },
+  idUsuario: { type: mongoose.Schema.Types.ObjectId, ref: "usuario", required: true },
   titulo: { type: String, required: true },
   cor: { type: String }
 }, { versionKey: false });

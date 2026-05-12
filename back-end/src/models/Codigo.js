@@ -3,7 +3,7 @@ import { tagsSchema } from "./Tags.js";
 
 const codigosSchema = new mongoose.Schema({
   id: { type: mongoose.Schema.Types.ObjectId },
-  idUsuario: { type: mongoose.Schema.Types.ObjectId, ref: "usuario",required: true},
+  idUsuario: { type: mongoose.Schema.Types.ObjectId, ref: "usuario", required: true },
   titulo: { type: String, required: true },
   codigo: { type: String },
   linguagem: { type: String },
@@ -12,8 +12,7 @@ const codigosSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
-}, { versionKey: false }
-, { collection: "codigos"});
+}, { versionKey: false, collection: "codigos" });
 
 const codigo = mongoose.model("codigos", codigosSchema, "codigos");
 
