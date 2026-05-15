@@ -120,7 +120,7 @@ export default function Home() {
       router.replace("/codigos")
 
     } catch (erro: any) {
-      toast.error(`Erro no login: ${erro.titulo}`, {
+      toast.error(`${erro.titulo}`, {
         description: `${erro.mensagem}`, position: "top-center", style: erro.status === 'erro' ? {
           '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
           '--normal-text': 'var(--destructive)',

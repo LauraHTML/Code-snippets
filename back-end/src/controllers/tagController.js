@@ -14,7 +14,7 @@ class TagController {
   static async listarTagsPorId(req, res) {
     try {
       const id = req.params.id;
-      const tagEncontrada = await tags.findById(id);
+      const tagEncontrada = await tags.findOne({_id: id, idUsuario: req.usuario.id});
       res.status(200).json(tagEncontrada, { status: 'sucesso', titulo: 'Tag encontrada', mensagem: "Tag encontrada com sucesso!" });
     } catch (erro) {
       res.status(500).json({ status: 'erro', titulo: 'Erro ao listar tags por id', mensagem: `${erro.message} - falha na requisição do tag` });

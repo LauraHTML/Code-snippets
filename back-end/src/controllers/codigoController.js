@@ -1,11 +1,13 @@
 import codigo from "../models/Codigo.js";
+import mongoose from "mongoose";
 import { tags } from "../models/Tags.js";
 
 class CodigoController {
 
   static async listarCodigos(req, res) {
     try {
-      const listarCodigos = await codigo.find({ idUsuario: req.usuario.id_usuario });
+      // id vem do token (JWT) via middleware
+      const listarCodigos = await codigo.find({ idUsuario: req.usuario.id_usuario }).sort({ dataCriacao: -1 });
       res.status(200).json(listarCodigos);
     } catch (erro) {
       res.status(500).json({ status: 'erro', titulo: 'Erro na listagem', mensagem: `${erro} - falha na requisição` });
@@ -65,7 +67,8 @@ class CodigoController {
   static async inserirCodigo(req, res) {
     const novoCodigo = req.body;
     try {
-      const tagEncontrada = await tags.findById(novoCodigo.tags);
+      const tagEncontrada = await tags.findById(novoCodigo.tag);
+      console.log(`tag encontrada: ${tagEncontrada}`)
 
       if (!tagEncontrada) {
         return res.status(404).json({ status: 'erro', titulo: 'Tag não encontrada', mensagem: 'A tag informada não existe' });

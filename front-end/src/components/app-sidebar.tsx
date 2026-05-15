@@ -31,11 +31,6 @@ const data = {
       icon: LayoutGrid,
     },
     {
-      title: "Códigos",
-      url: "#",
-      icon: Code,
-    },
-    {
       title: "Novo código",
       url: "/novoCodigo",
       icon: FilePlus,

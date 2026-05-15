@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { listarCodigos, criarCodigo, atualizarCodigo, deletarCodigo } from "@/src/services/codigosService"
 
@@ -24,7 +24,30 @@ export interface Tags {
 
 export default function Home() {
 
-  const [codigos, setCodigos] = useState<TCodigos[]>([])
+  const [codigos, setCodigos] = useState<TCodigos[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [erro, setErro] = useState("");
+  
+  useEffect(() => {
+  const Codigos = async () => {
+    try{
+      setLoading(true);
+      const res = await listarCodigos();
+      setCodigos(res);
+
+      if(!res.ok){
+        throw new Error("Erro ao listar códigos");
+      }
+    }
+    catch(erro: any){
+      setErro(`Erro ao listar códigos: ${erro.mensagem}`);
+    }
+    finally{
+      setLoading(false);
+    }
+  }
+  Codigos();
+  }, []);
 
   const DeletarCodigo = async (id: string) => {
     const res = await fetch(`http://localhost:8080/codigos/${id}`, {

@@ -55,23 +55,29 @@ export default function NovoCodigo() {
     const [codigo, setCodigo] = useState<string>("");
     const [linguagem, setLinguagem] = useState("javascript")
     const [titulo, setTitulo] = useState<string>("");
-    const [tag, setTag] = useState<string>("");
+
+    // novo campo: id da tag selecionada para o backend (novoCodigo.tags)
+    const [tagIdSelecionada, setTagIdSelecionada] = useState<string>("");
+    // campo digitar/usar para criar tag
+
 
     //tags
-    // const [novaTag, setNovaTag] = useState<string>("")
+    const [novaTag, setNovaTag] = useState<string>("")
     const [listaTags, setListaTags] = useState<Tags[]>([])
 
+    const fetchTags = async () => {
+        try {
+            const tags = await listarTags();
+            setListaTags(tags);
+        } catch (erro) {
+            console.error("Erro ao carregar tags:", erro);
+        }
+    };
+
     useEffect(() => {
-        const carregarTags = async () => {
-            try {
-                const tags = await listarTags();
-                setListaTags(tags);
-            } catch (erro) {
-                console.error("Erro ao carregar tags:", erro);
-            }
-        };
-        carregarTags();
+        fetchTags();
     }, []);
+
 
     //cor
     type Cor = "azul" | "amarelo" | "verde" | "roxo";
@@ -84,18 +90,12 @@ export default function NovoCodigo() {
         roxo: "#a371f7"
     }
 
-    async function listarTags(){
-        
-    }
-
     async function handleCriarTag(e: React.MouseEvent<HTMLButtonElement>) {
-        console.log('Criar tag payload:', { tag, cor });
         e.preventDefault()
         setErrors({})
 
-        // Validação local
         const newErrors: any = {}
-        if (!tag.trim()) newErrors.nome = "Dê um nome para a nova tag"
+        if (!novaTag.trim()) newErrors.nome = "Dê um nome para a nova tag"
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors)
@@ -104,7 +104,7 @@ export default function NovoCodigo() {
 
         setLoading(true)
         try {
-            const response = await criarTag(tag, cor)
+            const response = await criarTag(novaTag, cor)
             console.log('Criar tag response:', response)
             toast.success(response.titulo || 'Tag criada', {
                 description: `${response.mensagem}`,
@@ -115,9 +115,11 @@ export default function NovoCodigo() {
                     '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
                 } as React.CSSProperties
             })
-            setTag("")
+            setNovaTag("")
+            await fetchTags();
 
         } catch (erro: any) {
+
             toast.error(`Erro no cadastro: ${erro.titulo}`, {
                 description: `${erro.mensagem}`, position: "top-center", style: erro.status === 'erro' ? {
                     '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
@@ -141,7 +143,7 @@ export default function NovoCodigo() {
 
         // Validação local
         const newErrors: any = {}
-        if (!tag.trim()) newErrors.nome = "Dê um nome para a nova tag"
+        if (!tagIdSelecionada.trim()) newErrors.nome = "Dê um nome para a nova tag"
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors)
@@ -150,7 +152,8 @@ export default function NovoCodigo() {
 
         setLoading(true)
         try {
-            const response = await criarCodigo(titulo, tag, linguagem, codigo)
+            // seu backend espera: (titulo, linguagem, codigo, tag)
+            const response = await criarCodigo(titulo, linguagem, codigo, tagIdSelecionada)
             toast.success(response.titulo, {
                 description: `${response.mensagem}`,
                 position: "top-center", style: {
@@ -160,7 +163,8 @@ export default function NovoCodigo() {
                     '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
                 } as React.CSSProperties
             })
-            setTag("")
+            console.log(`tag selecionada: ${tagIdSelecionada}`)
+            // setTagIdSelecionada("")
 
         } catch (erro: any) {
             toast.error(`Erro ao criar código: ${erro.titulo}`, {
@@ -206,7 +210,7 @@ export default function NovoCodigo() {
                                     </Field>
                                     <Field>
                                         <FieldLabel htmlFor="tags">Título da tag</FieldLabel>
-                                        <Input className="w-1/2" type="text" id="tags" value={tag} onChange={(e) => setTag(e.target.value)} placeholder="Ex: MySql" />
+                                        <Input className="w-1/2" type="text" id="tags" value={novaTag} onChange={(e) => setNovaTag(e.target.value)} placeholder="Ex: MySql" />
                                         <FieldLabel htmlFor="tags">Cor da tag</FieldLabel>
                                         <div className="grid grid-cols-4 grid-rows-flow w-1/2 bg-input border p-2 rounded-md ">
                                             {Object.values(coresTag).map((corHex, index) => (
@@ -226,7 +230,7 @@ export default function NovoCodigo() {
                                         <Button onClick={handleCriarTag} type="button">Criar tag</Button>
                                     </Field>
                                     <Field>
-                                        <Select onValueChange={(value: string) => setTag(value)}>
+                                        <Select onValueChange={(value: string) => setTagIdSelecionada(value)}>
                                             <SelectTrigger className="w-[180px]">
                                                 <SelectValue placeholder="Selecione uma tag" />
                                             </SelectTrigger>
@@ -235,7 +239,7 @@ export default function NovoCodigo() {
                                                     {listaTags.length === 0 && <p>Crie uma tag</p>}
 
                                                     {listaTags.map((tag) => (
-                                                        <SelectItem key={tag._id} value={tag.titulo}>
+                                                        <SelectItem key={tag._id} value={tag._id}>
                                                             {tag.titulo}
                                                         </SelectItem>
                                                     ))}
