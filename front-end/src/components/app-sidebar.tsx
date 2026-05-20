@@ -27,7 +27,7 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/",
+      url: "/codigos",
       icon: LayoutGrid,
     },
     {

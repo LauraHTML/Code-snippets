@@ -10,7 +10,6 @@ export async function listarTags() {
         });
 
         const tags = await res.json();
-        console.log(`tags: ${tags}`)
 
         if (tags.status === 'erro') {
             throw {

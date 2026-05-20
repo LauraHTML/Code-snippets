@@ -4,26 +4,21 @@ export async function verificarAutenticacao() {
             method: "GET",
             credentials: "include",
             headers: {
-                "Content-Type": "application/json"
-            }
+                "Content-Type": "application/json",
+            },
         });
 
-        // Se receber 401, token expirou ou é inválido
-        if (res.status === 401) {
-            return false;
-        }
+        if (res.status === 401) return false;
+        if (!res.ok) return false;
 
-        if (res.ok) {
-            const data = await res.json();
-            return data.autenticado ?? true;
-        }
-
-        return false;
+        const data = await res.json();
+        return data?.autenticado === true;
     } catch (erro) {
         console.error("Erro ao verificar autenticação:", erro);
         return false;
     }
 }
+
 
 export async function logout() {
     try {

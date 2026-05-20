@@ -27,31 +27,32 @@ export default function Home() {
   const [codigos, setCodigos] = useState<TCodigos[]>([]);
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
-  
-  useEffect(() => {
-  const Codigos = async () => {
-    try{
-      setLoading(true);
-      const res = await listarCodigos();
-      setCodigos(res);
 
-      if(!res.ok){
-        throw new Error("Erro ao listar códigos");
+  useEffect(() => {
+    const Codigos = async () => {
+      try {
+        setLoading(true);
+        const res = await listarCodigos();
+        setCodigos(res);
+
+        if (!res.ok) {
+          throw new Error("Erro ao listar códigos");
+        }
+      }
+      catch (erro: any) {
+        setErro(`Erro ao listar códigos: ${erro.mensagem}`);
+      }
+      finally {
+        setLoading(false);
       }
     }
-    catch(erro: any){
-      setErro(`Erro ao listar códigos: ${erro.mensagem}`);
-    }
-    finally{
-      setLoading(false);
-    }
-  }
-  Codigos();
+    Codigos();
   }, []);
 
   const DeletarCodigo = async (id: string) => {
     const res = await fetch(`http://localhost:8080/codigos/${id}`, {
       method: 'DELETE',
+      credentials: "include",
     });
 
     if (res.ok) {
@@ -81,6 +82,7 @@ export default function Home() {
     const res = await fetch(`http://localhost:8080/codigos/${data._id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
+      credentials: "include",
       body: JSON.stringify({
         titulo: data.titulo,
         codigo: data.codigo,
@@ -131,8 +133,8 @@ export default function Home() {
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
 
               <div className="grid grid-cols-1 md:grid-cols-[50%_50%] gap-4">
-              {/* <TagsSection /> */}
-                
+                {/* <TagsSection /> */}
+
                 <div className="bg-card p-4 rounded-md border">
                   <h1 className="text-xl mb-3">Linguagens utilizadas</h1>
                   <div className="flex flex-row w-auto flex-wrap gap-3 rounded-xl">

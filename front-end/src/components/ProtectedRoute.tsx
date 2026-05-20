@@ -1,16 +1,13 @@
 "use client"
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { verificarAutenticacao } from "@/src/services/authService";
-import { useAuthCheck } from "@/src/hooks/useAuthCheck";
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     const router = useRouter();
+    const routerRef = useRef(router);
     const [isAutenticado, setIsAutenticado] = useState(false);
     const [carregando, setCarregando] = useState(true);
-
-   
-    useAuthCheck();
 
     useEffect(() => {
         async function verificar() {
@@ -21,8 +18,10 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
                     router.push("/");
                     return;
                 }
-
-                setIsAutenticado(true);
+                else{
+                  setIsAutenticado(true);  
+                }
+                
             } catch (erro) {
                 console.error("Erro ao verificar autenticação:", erro);
                 router.push("/");
@@ -32,7 +31,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
         }
 
         verificar();
-    }, [router]);
+    }, []);
 
     if (carregando) {
         return (
