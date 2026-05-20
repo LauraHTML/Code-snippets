@@ -115,25 +115,24 @@ class UsuarioController {
             // Gerar token JWT
             const token = jwt.sign(
                 {
+                    autenticado: true,
                     id: usuarioLogin._id,
-                    email: usuarioLogin.email,
-                    tipo: usuarioLogin.tipo
+                    email: usuarioLogin.email
                 },
                 JWT_CONFIG.secret,
                 { expiresIn: JWT_CONFIG.expiresIn }
             );
 
-            // garante que o cookie anterior seja removido antes de sobrescrever
             res.clearCookie('token', {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
+                secure: false,
                 sameSite: 'Lax'
             });
 
             res.cookie('token', token, {
                 maxAge: 24 * 60 * 60 * 1000,
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
+                secure: false,
                 sameSite: 'Lax'
             })
             res.status(200).json({
@@ -150,14 +149,27 @@ class UsuarioController {
 
     static async verificarAutenticacao(req, res) {
         try {
+            if (!req.usuario || !req.usuario.id) {
+                return res.status(401).json({
+                    status: 'erro',
+                    autenticado: false,
+                    titulo: 'Não autorizado',
+                    mensagem: 'Token inválido ou ausente'
+                });
+            }
             return res.status(200).json({
-                status: 'sucesso',
                 autenticado: true,
+                status: 'sucesso',
+                usuario: {
+                    id: req.usuario.id,
+                    email: req.usuario.email
+                }
             });
         } catch (erro) {
-            res.status(500).json({ status: 'erro', mensagem: 'Erro ao verificar autenticação' });
+            return res.status(500).json({ status: 'erro', mensagem: 'Erro ao verificar autenticação' });
         }
     }
+
 
     static async Logout(req, res) {
         try {
