@@ -41,8 +41,8 @@ const data = {
       icon: Bookmark,
     },
     {
-      title: "ReadMe (em breve)",
-      url: "#",
+      title: "ReadMe",
+      url: "/readme",
       icon: BookOpen,
     },
   ],

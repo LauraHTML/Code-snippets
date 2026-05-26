@@ -235,14 +235,14 @@ export default function Home() {
                 {errors.senha && <FieldError>{errors.senha}</FieldError>}
               </Field>
               <FieldSeparator />
-              <FieldGroup className="items-center py-4">
+              {/* <FieldGroup className="items-center py-4">
                 <FieldLabel>Ou se cadastre com</FieldLabel>
                 <Field orientation={"horizontal"} className="w-full items-center">
                   <Button className="w-1/2" variant={"secondary"}><IconBrandGithub />Github</Button>
                   <Button className="w-1/2" variant={"secondary"}><IconBrandGoogle />Google</Button>
 
                 </Field>
-              </FieldGroup>
+              </FieldGroup> */}
             </FieldGroup>
           </FieldSet>
           <Button className="w-full" onClick={handleLogin} disabled={loading}>
