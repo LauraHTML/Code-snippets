@@ -15,7 +15,6 @@ conexao.once("open", () => {
 
 const app = express();
 
-// Middleware de CORS para permitir credenciais
 app.use(cors({
     origin: process.env.FRONTEND_URL || "http://localhost:3000",
     credentials: true,
@@ -23,7 +22,6 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-// Middleware para parsear cookies
 app.use(cookieParser());
 
 routes(app);

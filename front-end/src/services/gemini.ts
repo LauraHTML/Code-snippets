@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { marked } from "marked";
 
-const ai = new GoogleGenAI({ apiKey: `AIzaSyD6EYBLgwvAPN-l-rg4TebM32I4cn4e9Nc` });
+const ai = new GoogleGenAI({ apiKey: process.env.API_GEMINI_KEY! });
 
 export async function gemini(conteudo: string){
     const response = await ai.models.generateContent({
