@@ -18,25 +18,25 @@ import { Skeleton } from "@/src/components/ui/skeleton"
 export default function Readme() {
     const [prompt, setPrompt] = useState("");
     const [resposta, setResposta] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-    const respostaGemini = async () => {
+    const respostaGemini = async (conteudo: string) => {
+        setLoading(true);
         try {
-            const resposta = await gemini(prompt);
+            const resposta = await gemini(conteudo);
             if (resposta) {
                 setResposta(resposta);
                 console.log(resposta);
             }
-        }
-        finally {
+        } catch (erro) {
+            console.error("Erro:", erro);
+        } finally {
             setLoading(false);
         }
     };
 
-    function gerarReadme() {
-        gemini(prompt)
-        respostaGemini();
-        
+    function gerarReadme(conteudo: string) {
+        respostaGemini(conteudo);
     }
 
 
@@ -51,13 +51,18 @@ export default function Readme() {
                         (<div>
                             <Resposta resposta={resposta} />
                         </div>) : loading ?
-                            (<p><div className="flex w-full max-w-xs flex-col gap-2">
-                                <Skeleton className="h-4 w-full" />
-                                <Skeleton className="h-4 w-full" />
-                                <Skeleton className="h-4 w-3/4" />
-                            </div></p>) :
+                            (<div className="flex flex-col gap-2">
+                                <Resposta children={
+                                    <div className="flex flex-col gap-4 py-2">
+                                        <Skeleton className="h-4 w-full" />
+                                        <Skeleton className="h-4 w-full" />
+                                        <Skeleton className="h-4 w-3/4" />
+                                    </div>
+                                } />
+                            </div>) :
                             (<p>Descreva o seu projeto para gerar o readme</p>)}
-                    <PromptForm conteudo={prompt} enviar={gerarReadme} />
+                    <PromptForm enviar={gerarReadme} />
+
                 </div>
             </SidebarInset>
         </SidebarProvider>

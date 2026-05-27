@@ -25,13 +25,11 @@ import {
 } from "@tabler/icons-react";
 
 type Input = {
-    // modelo: string,
-    conteudo?: string,
-    enviar: () => void,
+    enviar: (conteudo: string) => void,
 }
 
-export default function PromptForm({ conteudo: conteudoInicial = "", enviar}: Input) {
-    const [conteudo, setConteudo] = useState(conteudoInicial);
+export default function PromptForm({ enviar }: Input) {
+    const [conteudo, setConteudo] = useState("");
     const [selectedModel, setSelectedModel] = useState("Modelo");
     const [autoMode, setAutoMode] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -39,8 +37,10 @@ export default function PromptForm({ conteudo: conteudoInicial = "", enviar}: In
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (conteudo.trim()) {
+            console.log("conteudo enviado", conteudo)
+            enviar(conteudo);
+            setConteudo("");
         }
-        setConteudo("");
     };
 
     return (
@@ -48,7 +48,7 @@ export default function PromptForm({ conteudo: conteudoInicial = "", enviar}: In
             <div className="bg-background border border-border rounded-2xl overflow-hidden">
 
                 <div className="px-3 pt-3 pb-2 grow">
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} className="flex flex-col justify-between gap-4">
                         <Textarea
                             value={conteudo}
                             onChange={(e) => setConteudo(e.target.value)}
@@ -61,72 +61,18 @@ export default function PromptForm({ conteudo: conteudoInicial = "", enviar}: In
                                 target.style.height = target.scrollHeight + "px";
                             }}
                         />
-                    </form>
-                </div>
-
-                <div className="mb-2 px-2 flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-7 w-7 p-0 rounded-full border border-border hover:bg-accent"
-                                >
-                                    <IconPlus className="size-3" />
-                                </Button>
-                            </DropdownMenuTrigger>
-
-                            <DropdownMenuContent
-                                align="start"
-                                className="max-w-xs rounded-2xl p-1.5"
-                            >
-                                <DropdownMenuGroup className="space-y-1">
-                                    <DropdownMenuItem
-                                        className="rounded-[calc(1rem-6px)]"
-                                        onClick={() => fileInputRef.current?.click()}
-                                    >
-                                        <IconPaperclip size={16} className="opacity-60" />
-                                        Attach Files
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        className="rounded-[calc(1rem-6px)]"
-                                        onClick={() => { }}
-                                    >
-                                        <IconCode size={16} className="opacity-60" />
-                                        Code Interpreter
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        className="rounded-[calc(1rem-6px)]"
-                                        onClick={() => { }}
-                                    >
-                                        <IconWorld size={16} className="opacity-60" />
-                                        Web Search
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        className="rounded-[calc(1rem-6px)]"
-                                        onClick={() => { }}
-                                    >
-                                        <IconHistory size={16} className="opacity-60" />
-                                        Chat History
-                                    </DropdownMenuItem>
-                                </DropdownMenuGroup>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-
-                    </div>
-
-                    <div>
                         <Button
                             type="submit"
                             disabled={!conteudo.trim()}
-                            className="size-7 p-0 rounded-full bg-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                            onClick={enviar}
+                            className=" p-0 rounded-full bg-primary disabled:opacity-50 disabled:cursor-not-allowed"
                         >
+                            <p>Enviar</p>
                             <IconSend className="size-3 fill-primary" />
                         </Button>
-                    </div>
+                    </form>
                 </div>
+
+                
             </div>
 
             <div className="flex items-center gap-0 pt-2">
