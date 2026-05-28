@@ -32,8 +32,11 @@ class CodigoController {
   static async atualizarCodigo(req, res) {
     try {
       const id = req.params.id;
+      const { titulo, codigo, linguagem, tags } = req.body;
       const codigoAtualizado = await codigo.findByIdAndUpdate(
-        { _id: id, idUsuario: req.usuario.id_usuario }, req.body, { new: true });
+        { _id: id, idUsuario: req.usuario.id_usuario },
+        { titulo, codigo, linguagem, tags },
+        { new: true });
 
       if (!codigoAtualizado) {
         return res.status(403).json({
@@ -64,11 +67,11 @@ class CodigoController {
     }
   };
 
+  //revisar
   static async inserirCodigo(req, res) {
     const novoCodigo = req.body;
     try {
-      const tagEncontrada = await tags.findById(novoCodigo.tag);
-      console.log(`tag encontrada: ${tagEncontrada}`)
+      const tagEncontrada = await tags.findByOne({ idUsuario: req.usuario.id_usuario },novoCodigo.tag);
 
       if (!tagEncontrada) {
         return res.status(404).json({ status: 'erro', titulo: 'Tag não encontrada', mensagem: 'A tag informada não existe' });
@@ -91,7 +94,9 @@ class CodigoController {
       }
 
       titulo = titulo.trim().toLowerCase();
-      titulo = titulo.replace(/[$<>'"\\]/g, '');
+      if (!/^[a-zA-Z0-9\s\-_áéíóúàâãõç]+$/i.test(titulo)) {
+        return res.status(400).json({ erro: 'Título contém caracteres inválidos' });
+      }
 
       if (titulo.length === 0 || titulo.length > 100) {
         return res.status(400).json({ erro: 'Título inválido' });

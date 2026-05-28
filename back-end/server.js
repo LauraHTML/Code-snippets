@@ -10,10 +10,10 @@ app.post("/", async (req, res) => {
 
   } catch (erro) {
     console.error("ERRO:", erro)
-    res.status(500).json({ erro: erro.message })
+    res.status(500).json({ erro: erro.mensagem || "Erro interno do servidor" })
   }
 })
 
 app.listen(porta, () => {
-  console.log("servidor rodando!", porta);
+  // console.log("servidor rodando!", porta);
 });

@@ -43,7 +43,6 @@ class UsuarioController {
             const buscaEmail = await usuario.findOne({ email: email.trim().toLowerCase() });
 
             if (buscaEmail) {
-                console.log('Usuário já existe no banco de dados');
                 return res.status(409).json({ status: 'aviso', titulo: 'Email inválido', mensagem: 'Email já cadastrado' });
             }
 
@@ -89,6 +88,7 @@ class UsuarioController {
         }
     }
 
+    //cors
     static async Login(req, res) {
         try {
             const { email, senha } = req.body;
@@ -125,14 +125,14 @@ class UsuarioController {
 
             res.clearCookie('token', {
                 httpOnly: true,
-                secure: false,
+                secure: true,
                 sameSite: 'Lax'
             });
 
             res.cookie('token', token, {
                 maxAge: 24 * 60 * 60 * 1000,
                 httpOnly: true,
-                secure: false,
+                secure: true,
                 sameSite: 'Lax'
             })
             res.status(200).json({
@@ -140,7 +140,7 @@ class UsuarioController {
                 titulo: 'Login realizado com sucesso!',
                 mensagem: 'Login realizado com sucesso!'
             });
-            console.log("usuario logado com sucesso")
+          
         } catch (erro) {
             console.error('Erro ao fazer login:', erro);
             res.status(500).json({ status: 'erro', titulo: 'Erro no login', mensagem: `${erro.mensagem} - não foi possível processar o login` });
@@ -149,7 +149,7 @@ class UsuarioController {
 
     static async verificarAutenticacao(req, res) {
         try {
-            if (!req.usuario || !req.usuario.id) {
+            if (!req.usuario || !req.usuario.id_usuario) {
                 return res.status(401).json({
                     status: 'erro',
                     autenticado: false,
@@ -161,7 +161,7 @@ class UsuarioController {
                 autenticado: true,
                 status: 'sucesso',
                 usuario: {
-                    id: req.usuario.id,
+                    id: req.usuario.usuario.id_usuario,
                     email: req.usuario.email
                 }
             });

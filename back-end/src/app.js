@@ -10,18 +10,19 @@ conexao.on("error", (erro) => {
 });
 
 conexao.once("open", () => {
-    console.log("Conexão com o banco feita com sucesso")
+    // console.log("Conexão com o banco feita com sucesso")
 });
 
 const app = express();
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: process.env.CLIENT_URL || "http://localhost:3000",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
+app.use(express.json());
 app.use(cookieParser());
 
 routes(app);
