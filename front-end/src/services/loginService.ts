@@ -30,7 +30,7 @@ export async function login(email: string, senha: string) {
     catch (erro: any) {
         throw {
             titulo: erro.titulo || 'Erro ao fazer login',
-            mensagem: erro.message || 'Falha ao fazer login',
+            mensagem: erro.mensagem || 'Falha ao fazer login',
             status: erro.status || 'erro'
         };
     }

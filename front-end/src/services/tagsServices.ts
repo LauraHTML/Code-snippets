@@ -22,13 +22,13 @@ export async function listarTags() {
         if (!res.ok) {
             throw new Error(`Erro HTTP ${res.status}`);
         }
-        console.log("tags:", tags)
+       
         return tags;
 
     } catch (erro: any) {
         throw {
             titulo: erro.titulo || 'Erro ao listar tags',
-            mensagem: erro.mensagem || erro.message || 'Falha ao buscar tags',
+            mensagem: erro.mensagem || 'Falha ao buscar tags',
             status: erro.status || 'erro'
         };
     }
@@ -68,7 +68,7 @@ export async function criarTag(titulo: string, cor: string) {
     } catch (erro: any) {
         throw {
             titulo: erro.titulo || 'Erro ao criar',
-            mensagem: erro.mensagem || erro.message || 'Falha ao criar tag',
+            mensagem: erro.mensagem || 'Falha ao criar tag',
             status: erro.status || 'erro'
         };
     }
@@ -99,7 +99,7 @@ export async function atualizarTag(id: string, titulo: string, cor: string) {
     } catch (erro: any) {
         throw {
             titulo: erro.titulo || 'Erro ao atualizar',
-            mensagem: erro.mensagem || erro.message || 'Falha ao atualizar tag',
+            mensagem: erro.mensagem || 'Falha ao atualizar tag',
             status: erro.status || 'erro'
         };
     }
@@ -129,7 +129,7 @@ export async function deletarTag(id: string) {
     } catch (erro: any) {
         throw {
             titulo: erro.titulo || 'Erro ao deletar',
-            mensagem: erro.mensagem || erro.message || 'Falha ao deletar tag',
+            mensagem: erro.mensagem || 'Falha ao deletar tag',
             status: erro.status || 'erro'
         };
     }

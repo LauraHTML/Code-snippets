@@ -18,7 +18,7 @@ import { Skeleton } from "@/src/components/ui/skeleton"
 export default function Readme() {
     const [prompt, setPrompt] = useState("");
     const [resposta, setResposta] = useState("");
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const respostaGemini = async (conteudo: string) => {
         setLoading(true);
@@ -26,7 +26,7 @@ export default function Readme() {
             const resposta = await gemini(conteudo);
             if (resposta) {
                 setResposta(resposta);
-                console.log(resposta);
+                
             }
         } catch (erro) {
             console.error("Erro:", erro);

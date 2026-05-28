@@ -18,12 +18,12 @@ export async function POST(req: Request): Promise<Response> {
         });
 
         const text = result.text;
-        console.log("resposta do gemini: ", text);
+        // console.log("resposta do gemini: ", text);
         return NextResponse.json({ readme: text });
     } catch (error: any) {
         console.error("Erro ao gerar README:", error);
         return NextResponse.json(
-            { error: error.message || "Erro ao gerar README" },
+            { error: error.mensagem || "Erro ao gerar README" },
             { status: 500 }
         );
     }

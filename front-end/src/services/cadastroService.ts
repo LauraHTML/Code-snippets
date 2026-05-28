@@ -27,7 +27,7 @@ export async function cadastro(email: string, senha: string, nome: string) {
     catch (erro: any) {
         throw {
             titulo: erro.titulo || 'Erro ao cadastrar',
-            mensagem: erro.message || 'Falha ao criar novo usuário',
+            mensagem: erro.mensagem || 'Falha ao criar novo usuário',
             status: erro.status || 'erro'
         };
     }

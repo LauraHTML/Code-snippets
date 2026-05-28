@@ -37,7 +37,7 @@ export default function PromptForm({ enviar }: Input) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (conteudo.trim()) {
-            console.log("conteudo enviado", conteudo)
+            
             enviar(conteudo);
             setConteudo("");
         }
@@ -76,40 +76,7 @@ export default function PromptForm({ enviar }: Input) {
             </div>
 
             <div className="flex items-center gap-0 pt-2">
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 px-2 rounded-full border border-transparent hover:bg-accent text-muted-foreground"
-                        >
-                            <IconSparkles2 className="size-5" />
-                            <span>{selectedModel}</span>
-                            <IconChevronDown className="size-3" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                        align="start"
-                        className="max-w-xs rounded-2xl p-1.5 bg-popover border-border"
-                    >
-                        <DropdownMenuGroup className="space-y-1">
-                            <DropdownMenuItem
-                                className="rounded-[calc(1rem-6px)]"
-                                onClick={() => setSelectedModel("gemini-3-flash-preview")}
-                            >
-                                <IconSparkles2 size={20} className="opacity-60" />
-                                Gemini 3 Flash
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                                className="rounded-[calc(1rem-6px)]"
-                                onClick={() => setSelectedModel("gemini-3.5-flash-preview")}
-                            >
-                                <IconSparkles2 size={20} className="opacity-60" />
-                                Gemini 3.5 Flash
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                
 
                 <div className="flex-1" />
             </div>

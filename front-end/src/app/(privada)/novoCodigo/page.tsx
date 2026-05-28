@@ -105,7 +105,7 @@ export default function NovoCodigo() {
         setLoading(true)
         try {
             const response = await criarTag(novaTag, cor)
-            console.log('Criar tag response:', response)
+            
             toast.success(response.titulo || 'Tag criada', {
                 description: `${response.mensagem}`,
                 position: "top-center", style: {
@@ -163,7 +163,7 @@ export default function NovoCodigo() {
                     '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
                 } as React.CSSProperties
             })
-            console.log(`tag selecionada: ${tagIdSelecionada}`)
+            
             // setTagIdSelecionada("")
 
         } catch (erro: any) {

@@ -32,7 +32,7 @@ export function TagsSection() {
                 }
 
                 const data: Tags[] = await res.json()
-                console.log(data)
+              
                 setTags(data)
 
             } catch (error) {

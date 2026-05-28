@@ -27,7 +27,7 @@ export async function listarCodigos() {
     } catch (erro: any) {
         throw {
             titulo: erro.titulo || 'Erro ao listar códigos',
-            mensagem: erro.mensagem || erro.message || 'Falha ao buscar códigos',
+            mensagem: erro.mensagem || 'Falha ao buscar códigos',
             status: erro.status || 'erro'
         };
     }
@@ -59,7 +59,7 @@ export async function criarCodigo(titulo: string, linguagem: string, codigo: str
     } catch (erro: any) {
         throw {
             titulo: erro.titulo || 'Erro ao criar código',
-            mensagem: erro.mensagem || erro.message || 'Falha ao criar código',
+            mensagem: erro.mensagem || 'Falha ao criar código',
             status: erro.status || 'erro'
         };
     }
@@ -90,7 +90,7 @@ export async function atualizarCodigo(id: string, titulo: string, descricao: str
     } catch (erro: any) {
         throw {
             titulo: erro.titulo || 'Erro ao atualizar código',
-            mensagem: erro.mensagem || erro.message || 'Falha ao atualizar código',
+            mensagem: erro.mensagem || 'Falha ao atualizar código',
             status: erro.status || 'erro'
         };
     }
@@ -120,7 +120,7 @@ export async function deletarCodigo(id: string) {
     } catch (erro: any) {
         throw {
             titulo: erro.titulo || 'Erro ao deletar código',
-            mensagem: erro.mensagem || erro.message || 'Falha ao deletar código',
+            mensagem: erro.mensagem || 'Falha ao deletar código',
             status: erro.status || 'erro'
         };
     }

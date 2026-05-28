@@ -189,7 +189,7 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
                                             {...register("titulo", { required: "Título é obrigatório" })}
                                         />
                                         <FieldDescription>Dê um nome para o trecho de código.</FieldDescription>
-                                        {errors.titulo && <FieldError>{errors.titulo.message}</FieldError>}
+                                        {errors.titulo && <FieldError>{errors.titulo.mensagem}</FieldError>}
                                     </Field>
                                     <Field className="py-2">
                                         <FieldLabel htmlFor="tags">Tags</FieldLabel>
@@ -220,7 +220,7 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
                                                 </Select>
                                             )} />
                                         <FieldDescription>Use as tags para organizar seus códigos.</FieldDescription>
-                                        {errors.tag && <FieldError>{errors.tag.message}</FieldError>}
+                                        {errors.tag && <FieldError>{errors.tag.mensagem}</FieldError>}
                                     </Field>
                                 </form>
                             </Form>

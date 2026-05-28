@@ -6,9 +6,8 @@ import { listarCodigos, criarCodigo, atualizarCodigo, deletarCodigo } from "@/sr
 import { AppSidebar } from "@/src/components/app-sidebar";
 import { Tabela } from "@/src/components/Organisms/tabela";
 import { columns, TCodigos } from "@/src/components/Molecules/colunas";
-import { toast } from "sonner"
+import { toast } from "sonner";
 
-import { TagsSection } from "@/src/components/Organisms/tagsSection";
 import { SiteHeader } from "@/src/components/site-header";
 import {
   SidebarInset,

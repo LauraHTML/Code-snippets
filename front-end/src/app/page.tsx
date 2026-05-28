@@ -188,7 +188,7 @@ export default function Home() {
                 />
                 {errors.senha && <FieldError>{errors.senha}</FieldError>}
               </Field>
-              <FieldSeparator />
+              {/* <FieldSeparator />
               <FieldGroup className="items-center py-4">
                 <FieldLabel>Ou se cadastre com</FieldLabel>
                 <Field orientation={"horizontal"} className="w-full items-center">
@@ -196,10 +196,10 @@ export default function Home() {
                   <Button className="w-1/2" variant={"secondary"}><IconBrandGoogle />Google</Button>
 
                 </Field>
-              </FieldGroup>
+              </FieldGroup> */}
             </FieldGroup>
           </FieldSet>
-          <Button className="w-full" onClick={handleCadastro} disabled={loading}>
+          <Button className="w-full my-2" onClick={handleCadastro} disabled={loading}>
             {loading ? "Cadastrando..." : "Cadastrar"}
           </Button>
         </TabsContent>
