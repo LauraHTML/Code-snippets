@@ -88,7 +88,6 @@ class UsuarioController {
         }
     }
 
-    //cors
     static async Login(req, res) {
         try {
             const { email, senha } = req.body;
@@ -125,14 +124,14 @@ class UsuarioController {
 
             res.clearCookie('token', {
                 httpOnly: true,
-                secure: true,
+                secure: process.env.NODE_ENV === 'production',
                 sameSite: 'Lax'
             });
 
             res.cookie('token', token, {
                 maxAge: 24 * 60 * 60 * 1000,
                 httpOnly: true,
-                secure: true,
+                secure: process.env.NODE_ENV === 'production',
                 sameSite: 'Lax'
             })
             res.status(200).json({
@@ -149,7 +148,7 @@ class UsuarioController {
 
     static async verificarAutenticacao(req, res) {
         try {
-            if (!req.usuario || !req.usuario.id_usuario) {
+            if ( !req.usuario.id_usuario) {
                 return res.status(401).json({
                     status: 'erro',
                     autenticado: false,
@@ -160,13 +159,15 @@ class UsuarioController {
             return res.status(200).json({
                 autenticado: true,
                 status: 'sucesso',
+                mensagem: 'Autenticado com sucesso',
                 usuario: {
-                    id: req.usuario.usuario.id_usuario,
+                    id: req.usuario.id_usuario,
                     email: req.usuario.email
                 }
             });
         } catch (erro) {
-            return res.status(500).json({ status: 'erro', mensagem: 'Erro ao verificar autenticação' });
+            throw erro;
+            return res.status(500).json({ status: 'erro', mensagem: 'Erro ao verificar autenticação:'});
         }
     }
 

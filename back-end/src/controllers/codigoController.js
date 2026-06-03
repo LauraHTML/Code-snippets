@@ -67,11 +67,11 @@ class CodigoController {
     }
   };
 
-  //revisar
   static async inserirCodigo(req, res) {
     const novoCodigo = req.body;
     try {
-      const tagEncontrada = await tags.findByOne({ idUsuario: req.usuario.id_usuario },novoCodigo.tag);
+
+      const tagEncontrada = await tags.findOne({ idUsuario: req.usuario.id_usuario });
 
       if (!tagEncontrada) {
         return res.status(404).json({ status: 'erro', titulo: 'Tag não encontrada', mensagem: 'A tag informada não existe' });
