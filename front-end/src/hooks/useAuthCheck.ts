@@ -12,7 +12,7 @@ export function useAuthCheck() {
                 router.push("/");
             }
         } catch (erro) {
-            console.error("Erro ao verificar autenticação:", erro);
+            console.error("auth Erro ao verificar autenticação:", erro);
             router.push("/");
         }
     }, [router]);

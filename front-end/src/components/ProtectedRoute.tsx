@@ -12,18 +12,29 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         async function verificar() {
             try {
-                const autenticado = await verificarAutenticacao();
+                const res = await fetch("http://localhost:8080/usuario", {
+                    method: "GET",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
 
-                if (!autenticado) {
+                if (res.status === 401) return false;
+                if (!res.ok) return false;
+
+                const data = await res.json();
+
+                if (!data?.autenticado === true) {
                     router.push("/");
                     return;
                 }
-                else{
-                  setIsAutenticado(true);  
+                else {
+                   setIsAutenticado(true); 
                 }
-                
+
             } catch (erro) {
-                console.error("Erro ao verificar autenticação:", erro);
+                console.error("route: Erro ao verificar autenticação:", erro);
                 router.push("/");
             } finally {
                 setCarregando(false);

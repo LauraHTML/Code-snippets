@@ -14,7 +14,7 @@ export async function verificarAutenticacao() {
         const data = await res.json();
         return data?.autenticado === true;
     } catch (erro) {
-        console.error("Erro ao verificar autenticação:", erro);
+        console.error("service auth Erro ao verificar autenticação:", erro);
         return false;
     }
 }
