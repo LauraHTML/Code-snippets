@@ -2,12 +2,11 @@
 
 import * as React from "react"
 
-import { Tag, BookOpen,Keyboard, Bookmark, FilePlus, LayoutGrid, Code  } from "lucide-react";
+import { BookOpen,Keyboard, Bookmark, FilePlus, LayoutGrid  } from "lucide-react";
 
-import { NavDocuments } from "@/src/components/nav-documents"
-import { NavMain } from "@/src/components/nav-main"
-import { NavSecondary } from "@/src/components/nav-secondary"
-import { NavUser } from "@/src/components/nav-user"
+import { NavMain } from "@/src/components/navMain";
+import { NavLogout } from "./navLogout";
+import { NavUser } from "@/src/components/navUser";
 import {
   Sidebar,
   SidebarContent,
@@ -48,6 +47,7 @@ const data = {
   ],
 }
 
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -71,7 +71,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
        
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
+        <NavLogout />
       </SidebarFooter>
     </Sidebar>
   )

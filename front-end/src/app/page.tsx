@@ -41,7 +41,6 @@ export default function Home() {
     e.preventDefault()
     setErrors({})
 
-    // Validação local
     const newErrors: any = {}
     if (!nome.trim()) newErrors.nome = "Nome é obrigatório"
     if (!email.trim()) newErrors.email = "Email é obrigatório"

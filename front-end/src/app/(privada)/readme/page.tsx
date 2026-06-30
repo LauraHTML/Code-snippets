@@ -6,7 +6,7 @@ import {
     SidebarInset,
     SidebarProvider,
 } from "@/src/components/ui/sidebar";
-import { AppSidebar } from "@/src/components/app-sidebar";
+import { AppSidebar } from "@/src/components/appSidebar";
 
 import PromptForm from "@/src/components/Organisms/promptForm";
 import Resposta from "@/src/components/Organisms/resposta";
@@ -26,7 +26,7 @@ export default function Readme() {
             const resposta = await gemini(conteudo);
             if (resposta) {
                 setResposta(resposta);
-                
+
             }
         } catch (erro) {
             console.error("Erro:", erro);

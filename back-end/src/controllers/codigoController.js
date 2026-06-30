@@ -6,8 +6,8 @@ class CodigoController {
 
   static async listarCodigos(req, res) {
     try {
-      // id vem do token (JWT) via middleware
-      const listarCodigos = await codigo.find({ idUsuario: req.usuario.id_usuario }).sort({ dataCriacao: -1 });
+      const usuario = req.usuario.id_usuario;
+      const listarCodigos = await codigo.find({ idUsuario: usuario }).populate('tags');
       res.status(200).json(listarCodigos);
     } catch (erro) {
       res.status(500).json({ status: 'erro', titulo: 'Erro na listagem', mensagem: `${erro} - falha na requisição` });
@@ -68,18 +68,27 @@ class CodigoController {
   };
 
   static async inserirCodigo(req, res) {
-    const novoCodigo = req.body;
     try {
+      const usuario = req.usuario.id_usuario;
+      const { titulo, linguagem, codigo: conteudo, tag } = req.body;
 
-      const tagEncontrada = await tags.findOne({ idUsuario: req.usuario.id_usuario });
+      const tagEncontrada = await tags.findOne({ _id: tag, idUsuario: usuario });
 
       if (!tagEncontrada) {
-        return res.status(404).json({ status: 'erro', titulo: 'Tag não encontrada', mensagem: 'A tag informada não existe' });
+        return res.status(404).json({ status: 'erro', titulo: 'Tag não encontrada', mensagem: 'Tag selecionada não existe para este usuário' });
       }
 
-      const codigoCompleto = { ...novoCodigo, tags: { ...tagEncontrada._doc }, idUsuario: req.usuario.id_usuario };
+      const codigoCompleto = {
+        titulo,
+        codigo: conteudo,
+        linguagem,
+        tags: tagEncontrada,
+        idUsuario: usuario
+      };
+
       const codigoCriado = await codigo.create(codigoCompleto);
-      res.status(201).json({ status: 'sucesso', titulo: 'Código criado', mensagem: "Código criado com sucesso", codigo: codigoCriado });
+
+      return res.status(201).json({ status: 'sucesso', titulo: 'Código criado', mensagem: "Código criado com sucesso", codigo: codigoCriado });
     } catch (erro) {
       res.status(500).json({ status: 'erro', titulo: 'Erro na criação', mensagem: `${erro} - falha ao inserir novo código` });
     }

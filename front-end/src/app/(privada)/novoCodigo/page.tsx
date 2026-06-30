@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 
-import { AppSidebar } from "@/src/components/app-sidebar";
+import { AppSidebar } from "@/src/components/appSidebar";
 import { Tags } from "@/src/types";
 
 import { criarCodigo } from "@/src/services/codigosService"
@@ -66,6 +66,7 @@ export default function NovoCodigo() {
         try {
             const tags = await listarTags();
             setListaTags(tags);
+            console.log(tags)
         } catch (erro) {
             console.error("Erro ao carregar tags:", erro);
         }
@@ -91,17 +92,17 @@ export default function NovoCodigo() {
         e.preventDefault()
 
         if (!novaTag.trim()) toast.error(`Dê um título a nova tag`, {
-                description: `Campo para nome da tag está vazio`, position: "top-center", style:{
-                    '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
-                    '--normal-text': 'var(--destructive)',
-                    '--normal-border': 'var(--destructive)'
-                } as React.CSSProperties
-            })
+            description: `Campo para nome da tag está vazio`, position: "top-center", style: {
+                '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                '--normal-text': 'var(--destructive)',
+                '--normal-border': 'var(--destructive)'
+            } as React.CSSProperties
+        })
 
         setLoading(true)
         try {
             const response = await criarTag(novaTag, cor)
-            
+
             toast.success(response.titulo || 'Tag criada', {
                 description: `${response.mensagem}`,
                 position: "top-center", style: {
@@ -137,20 +138,20 @@ export default function NovoCodigo() {
         e.preventDefault()
 
         if (!tagIdSelecionada.trim()) toast.error(`Selecione uma tag`, {
-                description: `Selecione uma tag para vincular ao seu código atual`, position: "top-center", style:{
-                    '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
-                    '--normal-text': 'var(--destructive)',
-                    '--normal-border': 'var(--destructive)'
-                } as React.CSSProperties
-            })
-        
-        if(!linguagem) toast.error(`Selecione uma linguagem`, {
-                description: `Selecione uma linguagem para vincular ao seu código atual`, position: "top-center", style:{
-                    '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
-                    '--normal-text': 'var(--destructive)',
-                    '--normal-border': 'var(--destructive)'
-                } as React.CSSProperties
-            })
+            description: `Selecione uma tag para vincular ao seu código atual`, position: "top-center", style: {
+                '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                '--normal-text': 'var(--destructive)',
+                '--normal-border': 'var(--destructive)'
+            } as React.CSSProperties
+        })
+
+        if (!linguagem) toast.error(`Selecione uma linguagem`, {
+            description: `Selecione uma linguagem para vincular ao seu código atual`, position: "top-center", style: {
+                '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                '--normal-text': 'var(--destructive)',
+                '--normal-border': 'var(--destructive)'
+            } as React.CSSProperties
+        })
 
         setLoading(true)
         try {
@@ -165,7 +166,7 @@ export default function NovoCodigo() {
                     '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
                 } as React.CSSProperties
             })
-            
+
 
         } catch (erro: any) {
             toast.error(`Erro ao criar código: ${erro.titulo}`, {
@@ -252,7 +253,7 @@ export default function NovoCodigo() {
                                         </div>
                                         <Button onClick={handleCriarTag} type="button">Criar tag</Button>
                                     </Field>
-                                    
+
                                     <Field>
                                         <FieldLabel htmlFor="titulo">Selecione uma linguagem</FieldLabel>
                                         <CodeEditor
@@ -262,9 +263,9 @@ export default function NovoCodigo() {
                                                 setLinguagem(novaLinguagem);
                                             }}
                                         />
-                                        
+
                                     </Field>
-                                    
+
                                     <Button onClick={handleCriarCodigo} >Criar novo código</Button>
                                 </FieldSet>
                             </div>

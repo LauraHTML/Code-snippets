@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 
 import { listarCodigos, criarCodigo, atualizarCodigo, deletarCodigo } from "@/src/services/codigosService"
 
-import { AppSidebar } from "@/src/components/app-sidebar";
+import { AppSidebar } from "@/src/components/appSidebar";
 import { Tabela } from "@/src/components/Organisms/tabela";
 import { columns, TCodigos } from "@/src/components/Molecules/colunas";
 import { toast } from "sonner";
@@ -33,6 +33,7 @@ export default function Home() {
         setLoading(true);
         const res = await listarCodigos();
         setCodigos(res);
+        console.log(codigos)
 
         if (!res.ok) {
           throw new Error("Erro ao listar códigos");

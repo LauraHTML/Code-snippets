@@ -22,7 +22,7 @@ export async function listarTags() {
         if (!res.ok) {
             throw new Error(`Erro HTTP ${res.status}`);
         }
-       
+       console.log(tags)
         return tags;
 
     } catch (erro: any) {

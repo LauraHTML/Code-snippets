@@ -1,18 +1,17 @@
 
-export async function login(email: string, senha: string) {
+export async function logout() {
     try {
-        const res = await fetch("http://localhost:8080/login", {
+        const res = await fetch("http://localhost:8080/logout", {
             headers: {
                 "Content-Type": "application/json"
             },
             credentials: "include",
             method: "POST",
-            body: JSON.stringify({ email, senha }),
+            
         })
 
         const dados = await res.json();
 
-        // Verificar se há erro na resposta
         if (dados.status === 'erro' || dados.status === 'aviso') {
             const erro = new Error(dados.mensagem);
             (erro as any).titulo = dados.titulo;
@@ -28,8 +27,8 @@ export async function login(email: string, senha: string) {
     }
     catch (erro: any) {
         throw {
-            titulo: erro.titulo || 'Erro ao fazer login',
-            mensagem: erro.mensagem || 'Falha ao fazer login',
+            titulo: erro.titulo || 'Erro ao fazer logout',
+            mensagem: erro.mensagem || 'Falha ao fazer logout',
             status: erro.status || 'erro'
         };
     }
