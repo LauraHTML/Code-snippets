@@ -6,6 +6,7 @@ import { BookOpen,Keyboard, Bookmark, FilePlus, LayoutGrid  } from "lucide-react
 
 import { NavMain } from "@/src/components/navMain";
 import { NavLogout } from "./navLogout";
+import { NavAction } from "@/src/components/navAction";
 import { NavUser } from "@/src/components/navUser";
 import {
   Sidebar,
@@ -47,11 +48,17 @@ const data = {
   ],
 }
 
+const user = {
+  name: "shadcn",
+  email: "m@example.com",
+  avatar: "/img/icone.jpg",
+}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
+      <NavUser user={user} />
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
@@ -71,7 +78,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
        
       </SidebarContent>
       <SidebarFooter>
-        <NavUser />
+        <NavAction />
         <NavLogout />
       </SidebarFooter>
     </Sidebar>

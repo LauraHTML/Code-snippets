@@ -1,36 +1,60 @@
 "use client"
-import Link from "next/link"
-import { Button } from "./ui/button"
+
+import {
+  IconCreditCard,
+  IconDotsVertical,
+  IconLogout,
+  IconNotification,
+  IconUserCircle,
+} from "@tabler/icons-react"
+
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/src/components/ui/dropdown-menu"
 import {
   SidebarMenu,
+  SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@/src/components/ui/sidebar"
 
-import { CircleQuestionMark } from "lucide-react";
-import { toast } from "sonner"
-
-export function NavUser() {
+export function NavUser({
+  user,
+}: {
+  user: {
+    name: string
+    email: string
+    avatar: string
+  }
+}) {
   const { isMobile } = useSidebar()
 
   return (
-    <SidebarMenu className="border rounded-xl">
-      <SidebarMenuItem>
-          <div className="grid flex-1 text-left text-sm leading-tight p-4 gap-2">
-            <div className="flex flex-row justify-between items-center">
-              <span className="truncate font-medium">Seção de foco</span>
-              <Button
-                variant="ghost"
-                onClick={() =>
-                  toast.info("Organize seu fluxo de trabalho com a Deadline, da mesma desenvolvedora", { position: "top-center" })
-                }
-              >
-                <CircleQuestionMark />
-              </Button>
-            </div>
-            <Button size={"lg"}><Link href={"https://dashboard-estudo.vercel.app"}>Iniciar seção de foco</Link></Button>
-          </div>
+    <SidebarMenu className="flex border rounded-xl data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground p-2">
+      <SidebarMenuItem className="flex gap-4">
+              <Avatar className="h-8 w-8 rounded-lg grayscale">
+                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-medium">{user.name}</span>
+                <span className="truncate text-xs text-muted-foreground">
+                  {user.email}
+                </span>
+              </div>
+              
       </SidebarMenuItem>
-    </SidebarMenu>
+      </SidebarMenu>
   )
 }
