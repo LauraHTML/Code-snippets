@@ -1,4 +1,4 @@
-import { Button } from "@/src/components/ui/button"
+import { DiBreadcrumb } from "@/src/components/Molecules/breadcrumbDinamico"
 import { Separator } from "@/src/components/ui/separator"
 import { SidebarTrigger } from "@/src/components/ui/sidebar"
 
@@ -11,7 +11,7 @@ export function SiteHeader() {
           orientation="vertical"
           className="mx-2 data-[orientation=vertical]:h-4"
         />
-        <h1 className="text-base font-medium">Documents</h1>
+        <DiBreadcrumb />
         <div className="ml-auto flex items-center gap-2">
           
         </div>

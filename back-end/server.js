@@ -1,9 +1,11 @@
 import "dotenv/config";
+import { validateEnv } from "./src/config/validateEnv.js";  
 import app from "./src/app.js";
 import mongoose from "mongoose";
 import conectaDatabase from "./src/config/dbConnect.js";
 
-const porta = 8080;
+validateEnv(); 
+const porta = process.env.PORT || 8080;;
 
 app.post("/", async (req, res) => {
   try {
