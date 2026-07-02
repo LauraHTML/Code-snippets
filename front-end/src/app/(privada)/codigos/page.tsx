@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 
-import { listarCodigos, criarCodigo, atualizarCodigo, deletarCodigo } from "@/src/services/codigosService"
+import { listarCodigos } from "@/src/services/codigosService";
 
 import { AppSidebar } from "@/src/components/appSidebar";
 import { Tabela } from "@/src/components/Organisms/tabela";

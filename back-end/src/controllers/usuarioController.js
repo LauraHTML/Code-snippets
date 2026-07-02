@@ -162,7 +162,8 @@ class UsuarioController {
                 mensagem: 'Autenticado com sucesso',
                 usuario: {
                     id: req.usuario.id_usuario,
-                    email: req.usuario.email
+                    email: req.usuario.email,
+                    nome: req.usuario.nome
                 }
             });
         } catch (erro) {
@@ -183,7 +184,7 @@ class UsuarioController {
 
             return res.status(200).json({
                 status: 'sucesso',
-                titulo: 'Logout realizado',
+                titulo: 'Logout realizado com sucesso',
                 mensagem: 'Você foi desconectado com sucesso'
             });
         } catch (erro) {
