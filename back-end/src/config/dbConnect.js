@@ -5,7 +5,7 @@ dotenv.config();
 
 async function conectaDatabase() {
     try {
-        // Fail-fast: configurações de timeout agressivas
+        // Fail-fast
         const opcoes = {
             connectTimeoutMS: 5000,      // Falha rápido se não conectar em 5s
             socketTimeoutMS: 45000,      // Timeout para operações
@@ -21,10 +21,10 @@ async function conectaDatabase() {
 
         await mongoose.connect(process.env.DB_CONNECTION_STRING, opcoes);
 
-        console.log("✓ Conectado ao MongoDB com sucesso");
+        console.log("Conectado ao MongoDB com sucesso");
         return mongoose.connection;
     } catch (erro) {
-        console.error("✗ ERRO CRÍTICO de conexão com banco de dados:", erro.message);
+        console.error("Erro de conexão com banco de dados:", erro.message);
         // Re-lançar o erro para que a aplicação falhe na inicialização
         throw erro;
     }
