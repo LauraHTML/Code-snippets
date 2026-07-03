@@ -1,4 +1,5 @@
 import express from "express";
+import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import conectaDatabase from "./config/dbConnect.js";
@@ -14,8 +15,10 @@ conexao.once("open", () => {
 });
 
 const app = express();
+
 app.use(express.json());
 app.use(cookieParser());
+app.use(helmet());
 
 routes(app);
 
