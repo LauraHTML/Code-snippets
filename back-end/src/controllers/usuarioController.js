@@ -108,7 +108,10 @@ class UsuarioController {
             const usuarioLogin = await UsuarioController.verificarCredenciais(email.trim(), senha);
 
             if (!usuarioLogin) {
-                return res.status(401).json({ status: 'erro', titulo: 'Erro no email ou senha', mensagem: 'Email ou senha incorretos' });
+                return res.status(401).json({ status: 'erro', titulo: 'Erro no login', mensagem: 'Email ou senha incorretos' });
+            }
+            else{
+                return res.status(200).json({ status: 'sucesso', titulo: 'Sucesso no login', mensagem: 'Login realizado com sucesso' });
             }
 
             // Gerar token JWT
