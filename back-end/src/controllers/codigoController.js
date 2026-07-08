@@ -1,6 +1,6 @@
 import codigo from "../models/Codigo.js";
 import mongoose from "mongoose";
-import { tags } from "../models/Tags.js";
+import { tags as TagsModel } from "../models/Tags.js";
 
 class CodigoController {
 
@@ -32,10 +32,31 @@ class CodigoController {
   static async atualizarCodigo(req, res) {
     try {
       const id = req.params.id;
-      const { titulo, codigo, linguagem, tags } = req.body;
-      const codigoAtualizado = await codigo.findByIdAndUpdate(
+      const { titulo, codigo: conteudo, linguagem, tag, tags: tagsBody } = req.body;
+      const updatePayload = {};
+
+      if (titulo !== undefined) updatePayload.titulo = titulo;
+      if (conteudo !== undefined) updatePayload.codigo = conteudo;
+      if (linguagem !== undefined) updatePayload.linguagem = linguagem;
+
+      const tagId = tag ?? tagsBody;
+      if (tagId !== undefined) {
+        const tagEncontrada = await TagsModel.findOne({ _id: tagId, idUsuario: req.usuario.id_usuario });
+
+        if (!tagEncontrada) {
+          return res.status(404).json({
+            status: 'erro',
+            titulo: 'Tag não encontrada',
+            mensagem: 'Tag selecionada não existe para este usuário'
+          });
+        }
+
+        updatePayload.tags = tagEncontrada;
+      }
+
+      const codigoAtualizado = await codigo.findOneAndUpdate(
         { _id: id, idUsuario: req.usuario.id_usuario },
-        { titulo, codigo, linguagem, tags },
+        updatePayload,
         { new: true });
 
       if (!codigoAtualizado) {
@@ -45,7 +66,7 @@ class CodigoController {
         });
       }
 
-      res.status(200).json({ status: 'sucesso', titulo: 'Código atualizado', mensagem: "Código atualizado com sucesso!" });
+      return res.status(200).json({ status: 'sucesso', titulo: 'Código atualizado', mensagem: "Código atualizado com sucesso!" });
     } catch (erro) {
       res.status(500).json({ status: 'erro', titulo: 'Erro na atualização', mensagem: `${erro} - falha ao atualizar código` });
     }
@@ -72,7 +93,7 @@ class CodigoController {
       const usuario = req.usuario.id_usuario;
       const { titulo, linguagem, codigo: conteudo, tag } = req.body;
 
-      const tagEncontrada = await tags.findOne({ _id: tag, idUsuario: usuario });
+      const tagEncontrada = await TagsModel.findOne({ _id: tag, idUsuario: usuario });
 
       if (!tagEncontrada) {
         return res.status(404).json({ status: 'erro', titulo: 'Tag não encontrada', mensagem: 'Tag selecionada não existe para este usuário' });
