@@ -5,15 +5,11 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { MongoMemoryServer } from "mongodb-memory-server";
 
-import Codigo from "../src/models/Codigo.js";
-import { tags as TagsModel } from "../src/models/Tags.js";
 import Usuario from "../src/models/Usuario.js";
 
 let app;
 let mongoServer;
 let usuarioCriado;
-let tagCriada;
-let codigoCriado;
 
 describe("POST /cadastro", () => {
     beforeAll(async () => {
@@ -84,7 +80,18 @@ describe("POST /login", () => {
 
         expect(response.status).toBe(200);
         expect(response.body.status).toBe("sucesso");
-        expect(response.body.titulo).toBe("Sucesso no login");
+        expect(response.body.titulo).toBe("Login realizado com sucesso!");
+
+        //POST /login e verifiquem se o cookie token é enviado
+        const setCookieHeader = response.headers["set-cookie"];
+        expect(setCookieHeader).toBeDefined();
+
+        const tokenCookie = setCookieHeader.find((cookie) => cookie.startsWith("token=") && cookie.split("=")[1]?.trim() !== "");
+        expect(tokenCookie).toBeDefined();
+
+        const token = tokenCookie.split(";")[0].split("=")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        expect(decoded.id).toBeDefined();
     });
 });
 

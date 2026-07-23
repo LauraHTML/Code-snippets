@@ -54,10 +54,7 @@ class CodigoController {
         updatePayload.tags = tagEncontrada;
       }
 
-      const codigoAtualizado = await codigo.findOneAndUpdate(
-        { _id: id, idUsuario: req.usuario.id_usuario },
-        updatePayload,
-        { new: true });
+      const codigoAtualizado = await codigo.findOneAndUpdate({ _id: id, idUsuario: req.usuario.id_usuario },updatePayload, { new: true }, {returnDocument: 'after'});
 
       if (!codigoAtualizado) {
         return res.status(403).json({

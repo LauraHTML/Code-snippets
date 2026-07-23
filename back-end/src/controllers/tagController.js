@@ -18,10 +18,11 @@ class TagController {
       const tagEncontrada = await tags.findOne({ _id: id, idUsuario: req.usuario.id_usuario });
 
       if (!tagEncontrada) {
-        return res.status(404).json({  status: 'erro',  titulo: 'Não encontrado',  mensagem: 'Tag não encontrada'});
+        return res.status(404).json({ status: 'erro', titulo: 'Não encontrado', mensagem: 'Tag não encontrada' });
       }
 
-      return res.status(200).json({ status: 'sucesso', titulo: 'Tag encontrada', mensagem: 'Tag encontrada com sucesso!', tag: tagEncontrada
+      return res.status(200).json({
+        status: 'sucesso', titulo: 'Tag encontrada', mensagem: 'Tag encontrada com sucesso!', tag: tagEncontrada
       });
     } catch (erro) {
       return res.status(500).json({ status: 'erro', titulo: 'Erro ao listar tags por id', mensagem: `${erro.mensagem} - falha na requisição do tag` });
@@ -50,11 +51,22 @@ class TagController {
 
   static async inserirTags(req, res) {
     try {
-      const novaTag = await tags.create({ ...req.body, idUsuario: req.usuario.id_usuario });
-      res.status(201).json({ status: 'sucesso', titulo: 'Tag criada', mensagem: "Tag criada com sucesso", tags: novaTag });
+      const idUsuario = req.usuario?.id_usuario ?? req.usuario?.id;
+      const novaTag = await tags.create({ ...req.body, idUsuario });
+      //verifica se tem metodo toobject do mongoose
+      const tag = novaTag.toObject ? novaTag.toObject() : novaTag;
+
+      res.status(201).json({
+        status: 'sucesso',
+        titulo: 'Tag criada',
+        mensagem: 'Tag criada com sucesso',
+        tag: tag,
+        tags: tag
+      });
     } catch (erro) {
       console.error('Erro ao criar tag:', erro);
-      res.status(500).json({ status: 'erro', titulo: 'Erro ao criar tag', mensagem: `${erro.mensagem} - falha ao inserir nova tag` });
+      const mensagemErro = erro?.mensagem || erro?.message || 'falha ao inserir nova tag';
+      res.status(500).json({ status: 'erro', titulo: 'Erro ao criar tag', mensagem: `${mensagemErro} - falha ao inserir nova tag` });
     }
   }
 

@@ -63,8 +63,10 @@ export async function criarTag(titulo: string, cor: string) {
                 status: dados?.status
             };
         }
-
-        return dados;
+        // normalizar resposta da tag
+        // ?? escolhe o primeiro valor que não for null ou undefined
+        const tagCriada = dados?.tag ?? dados?.tags ?? dados;
+        return { ...dados, tag: tagCriada, tags: tagCriada };
     } catch (erro: any) {
         throw {
             titulo: erro.titulo || 'Erro ao criar',

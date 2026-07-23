@@ -10,32 +10,40 @@ const JWT_CONFIG = {
 class UsuarioController {
     static async CadastrarUsuario(req, res) {
         try {
-
             const { nome, email, senha } = req.body;
+
+            const nomeSanitizado = typeof req.body.nome === "string" ? req.body.nome.trim() : "";
+            const emailSanitizado = typeof req.body.email === "string" ? req.body.email.trim().toLowerCase() : "";
+            const senhaSanitizado = typeof req.body.senha === "string" ? req.body.senha.trim() : "";
 
             if (!req.body) {
                 return res.status(400).json({ mensagem: "Body não recebido" })
             }
 
-            if (!nome || nome.trim() === '') {
+            if (!nomeSanitizado || nomeSanitizado.trim() === '') {
                 return res.status(400).json({ status: 'erro', titulo: 'O campo nome está vazio', mensagem: 'O nome é obrigatório' });
             }
-            if (!email || email.trim() === '') {
+            if (!emailSanitizado || emailSanitizado.trim() === '') {
                 return res.status(400).json({ status: 'erro', titulo: 'O campo email está vazio', mensagem: 'O email é obrigatório' });
             }
-            if (!senha || senha.trim() === '') {
+            if (!senhaSanitizado || senhaSanitizado.trim() === '') {
                 return res.status(400).json({ status: 'erro', titulo: 'O campo senha está vazio', mensagem: 'A senha é obrigatória' });
             }
 
+            const emailCadastrado = await usuario.find({ email: emailSanitizado })
+            if(emailCadastrado === email){
+                return res.status(400).json({ status: 'erro', titulo: 'Email já cadastrado', mensagem: 'O email informado já está sendo usado' });
+            }
+
             //validar formato
-            if (nome.length < 2) {
+            if (nomeSanitizado.length < 2) {
                 return res.status(400).json({ status: 'erro', titulo: 'Nome curto', mensagem: 'O nome deve ter pelo menos 2 caracteres' })
             }
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
+            if (!emailRegex.test(emailSanitizado)) {
                 return res.status(400).json({ status: 'erro', titulo: 'Email inválido', mensagem: 'Formato de email inválido' });
             }
-            if (senha.length < 6) {
+            if (senhaSanitizado.length < 6) {
                 return res.status(400).json({ status: 'aviso', titulo: 'Senha curta', mensagem: 'A senha deve ter pelo menos 6 caracteres' });
             }
 
@@ -95,7 +103,6 @@ class UsuarioController {
             if (!email || email.trim() === '') {
                 return res.status(400).json({ status: 'aviso', titulo: 'Insira o seu email', mensagem: 'O email é obrigatório' });
             }
-
             if (!senha || senha.trim() === '') {
                 return res.status(400).json({ status: 'aviso', titulo: 'Insira a sua senha', mensagem: 'A senha é obrigatória' });
             }
@@ -110,15 +117,12 @@ class UsuarioController {
             if (!usuarioLogin) {
                 return res.status(401).json({ status: 'erro', titulo: 'Erro no login', mensagem: 'Email ou senha incorretos' });
             }
-            else{
-                return res.status(200).json({ status: 'sucesso', titulo: 'Sucesso no login', mensagem: 'Login realizado com sucesso' });
-            }
 
-            // Gerar token JWT
             const token = jwt.sign(
                 {
                     autenticado: true,
                     id: usuarioLogin._id,
+                    nome: usuarioLogin.nome,
                     email: usuarioLogin.email
                 },
                 JWT_CONFIG.secret,
@@ -127,17 +131,18 @@ class UsuarioController {
 
             res.clearCookie('token', {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
+                secure: true,
                 sameSite: 'Lax'
             });
 
             res.cookie('token', token, {
                 maxAge: 24 * 60 * 60 * 1000,
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
+                secure: true,
                 sameSite: 'Lax'
-            })
-            res.status(200).json({
+            });
+
+            return res.status(200).json({
                 status: 'sucesso',
                 titulo: 'Login realizado com sucesso!',
                 mensagem: 'Login realizado com sucesso!'
@@ -181,7 +186,7 @@ class UsuarioController {
             // Limpar o cookie do token
             res.clearCookie('token', {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
+                secure: true,
                 sameSite: 'Lax'
             });
 

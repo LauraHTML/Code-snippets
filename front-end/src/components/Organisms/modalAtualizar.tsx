@@ -38,6 +38,7 @@ import {
 } from "@/src/components/ui/select";
 import { Pencil, Trash } from "lucide-react"
 import { CodeEditor } from "@/src/components/Organisms/codeEditor";
+import { criarTag } from "@/src/services/tagsServices";
 
 interface ModalAtualizar {
     codigoSelecionado: TCodigos
@@ -51,7 +52,7 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
 
     //tags
     const [novaTag, setNovaTag] = useState<string>("")
-    const [listaTags, setListaTags] = useState<Tags>([])
+    const [listaTags, setListaTags] = useState<Tags[]>([])
     const [dadosFormulario, setDadosFormulario] = useState<Partial<TCodigos>>({});
 
     useEffect(() => {
@@ -93,42 +94,48 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
 
 
     const CriarTags = async () => {
-        try {
-            const res = await fetch('http://localhost:8080/tags', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    titulo: novaTag,
-                    cor: "#f4d812"
-                })
-            });
-            if (res.ok) {
-                toast.success("Tag criada com sucesso", {
-                    position: "top-center", style: {
-                        '--normal-bg':
-                            'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
-                        '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
-                        '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
-                    } as React.CSSProperties
-                })
-
-                const handleAdicionarTagLista = (novaTag: string) => {
-                    setListaTags((prevLista) => [...prevLista, novaTag]);
-                }
-                handleAdicionarTagLista(res)
-            } else {
-                console.error("Erro ao criar tag", res)
-            }
-        } catch (erro) {
-            toast.error("Erro ao criar tag", {
+        if (!novaTag.trim()) {
+            toast.error("Dê um título para a tag", {
                 position: "top-center", style: {
                     '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
                     '--normal-text': 'var(--destructive)',
                     '--normal-border': 'var(--destructive)'
                 } as React.CSSProperties
-            })
+            });
+            return;
         }
 
+        try {
+            const response = await criarTag(novaTag, "#f4d812");
+            const tagCriada = response.tag ?? response.tags ?? response;
+
+            setListaTags((prevLista) => {
+                if (prevLista.some((item) => item._id === tagCriada._id)) {
+                    return prevLista;
+                }
+                return [...prevLista, tagCriada];
+            });
+            setNovaTag("");
+
+            toast.success(response.titulo || "Tag criada com sucesso", {
+                description: response.mensagem || "Tag criada com sucesso",
+                position: "top-center", style: {
+                    '--normal-bg':
+                        'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
+                    '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
+                    '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
+                } as React.CSSProperties
+            });
+        } catch (erro: any) {
+            toast.error(`Erro ao criar tag: ${erro.titulo || "Erro"}`, {
+                description: erro.mensagem || "Não foi possível criar a tag",
+                position: "top-center", style: {
+                    '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                    '--normal-text': 'var(--destructive)',
+                    '--normal-border': 'var(--destructive)'
+                } as React.CSSProperties
+            });
+        }
     };
 
     useEffect(() => {

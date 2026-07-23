@@ -1,25 +1,25 @@
-import express from 'express';
-import codigo from '../models/Codigo.js';
 import jwt from 'jsonwebtoken';
 
-const routes = express.Router();
-
 export const verificarToken = (req, res, next) => {
+    const token = req.cookies?.token;
+
+    if (!token) {
+        return res.status(401).json({
+            status: 'erro',
+            titulo: 'Não autorizado',
+            mensagem: 'Token não fornecido'
+        });
+    }
+
     try {
-        const token = req.cookies.token;
-        if (!token) {
-            return res.status(401).json({
-                status: 'erro',
-                titulo: 'Não autorizado',
-                mensagem: 'Token não fornecido'
-            });
-        }
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        req.usuario = decoded;
-        req.usuario.id_usuario = decoded.id;
-        
-        next();
+        req.usuario = {
+            ...decoded,
+            id_usuario: decoded.id ?? decoded._id
+        };
+
+        return next();
     } catch (erro) {
         if (erro.name === 'TokenExpiredError') {
             return res.status(401).json({
