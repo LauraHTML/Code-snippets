@@ -1,26 +1,24 @@
 import { beforeAll, afterAll, beforeEach, describe, expect, it } from "vitest";
 import request from "supertest";
-import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { MongoMemoryServer } from "mongodb-memory-server";
 
 import Usuario from "../src/models/Usuario.js";
+import { bancoMongoDb, finalizarBancoMongoDb } from "./testSetup.js";
 
 let app;
-let mongoServer;
 let usuarioCriado;
 
 describe("POST /cadastro", () => {
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
+        await bancoMongoDb();
 
         const { default: appModule } = await import("../src/app.js");
         app = appModule;
+    });
+
+    afterAll(async () => {
+        await finalizarBancoMongoDb();
     });
 
     beforeEach(async () => {
@@ -46,14 +44,14 @@ describe("POST /cadastro", () => {
 
 describe("POST /login", () => {
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
+        await bancoMongoDb();
 
         const { default: appModule } = await import("../src/app.js");
         app = appModule;
+    });
+
+    afterAll(async () => {
+        await finalizarBancoMongoDb();
     });
 
     beforeEach(async () => {
@@ -82,14 +80,15 @@ describe("POST /login", () => {
         expect(response.body.status).toBe("sucesso");
         expect(response.body.titulo).toBe("Login realizado com sucesso!");
 
-        //POST /login e verifiquem se o cookie token é enviado
         const setCookieHeader = response.headers["set-cookie"];
         expect(setCookieHeader).toBeDefined();
 
-        const tokenCookie = setCookieHeader.find((cookie) => cookie.startsWith("token=") && cookie.split("=")[1]?.trim() !== "");
+        const tokenCookie = setCookieHeader.find((cookie) => cookie.startsWith("token=") && cookie.includes("eyJ"));
         expect(tokenCookie).toBeDefined();
 
         const token = tokenCookie.split(";")[0].split("=")[1];
+        expect(token).toBeDefined();
+
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         expect(decoded.id).toBeDefined();
     });
@@ -97,14 +96,14 @@ describe("POST /login", () => {
 
 describe("GET /usuario", () => {
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
+        await bancoMongoDb();
 
         const { default: appModule } = await import("../src/app.js");
         app = appModule;
+    });
+
+    afterAll(async () => {
+        await finalizarBancoMongoDb();
     });
 
     beforeEach(async () => {

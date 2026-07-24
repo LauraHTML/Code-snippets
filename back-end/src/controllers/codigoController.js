@@ -4,6 +4,20 @@ import { tags as TagsModel } from "../models/Tags.js";
 
 class CodigoController {
 
+  static stringCerta(value) {
+    //verifica se é valida e não esta vazia
+    return typeof value === 'string' && value.trim() !== '';
+  }
+
+  static async encontrarTag(tagId, userId) {
+    //retorna verdadeiro se tiver um id e se tem o formato certo do mongoose
+    if (!this.stringCerta(tagId) || !mongoose.isValidObjectId(tagId)) {
+      return null;
+    }
+
+    return TagsModel.findOne({ _id: tagId, idUsuario: userId });
+  }
+
   static async listarCodigos(req, res) {
     try {
       const usuario = req.usuario.id_usuario;
@@ -16,7 +30,12 @@ class CodigoController {
 
   static async listarCodigoPorId(req, res) {
     try {
-      const id = req.params.id;
+      const { id } = req.params;
+
+      if (!mongoose.isValidObjectId(id)) {
+        return res.status(400).json({ status: 'erro', titulo: 'ID inválido', mensagem: 'O ID do código é inválido' });
+      }
+
       const codigoEncontrado = await codigo.findOne({ _id: id, idUsuario: req.usuario.id_usuario });
 
       if (!codigoEncontrado) {
@@ -31,39 +50,69 @@ class CodigoController {
 
   static async atualizarCodigo(req, res) {
     try {
-      const id = req.params.id;
+      const { id } = req.params;
       const { titulo, codigo: conteudo, linguagem, tag, tags: tagsBody } = req.body;
+
+      if (!mongoose.isValidObjectId(id)) {
+        return res.status(400).json({ status: 'erro', titulo: 'ID inválido', mensagem: 'O ID do código é inválido' });
+      }
+
+      if (!req.body || Object.keys(req.body).length === 0) {
+        return res.status(400).json({ status: 'erro', titulo: 'Dados ausentes', mensagem: 'Forneça pelo menos um campo para atualização' });
+      }
+
       const updatePayload = {};
 
-      if (titulo !== undefined) updatePayload.titulo = titulo;
-      if (conteudo !== undefined) updatePayload.codigo = conteudo;
-      if (linguagem !== undefined) updatePayload.linguagem = linguagem;
+      if (titulo !== undefined) {
+        if (!this.stringCerta(titulo)) {
+          return res.status(400).json({ status: 'erro', titulo: 'Título inválido', mensagem: 'O título deve ser uma string não vazia' });
+        }
+        updatePayload.titulo = titulo.trim();
+      }
+
+      if (conteudo !== undefined) {
+        if (!this.stringCerta(conteudo)) {
+          return res.status(400).json({ status: 'erro', titulo: 'Código inválido', mensagem: 'O código deve ser uma string não vazia' });
+        }
+        updatePayload.codigo = conteudo.trim();
+      }
+
+      if (linguagem !== undefined) {
+        if (!this.stringCerta(linguagem)) {
+          return res.status(400).json({ status: 'erro', titulo: 'Linguagem inválida', mensagem: 'A linguagem deve ser uma string não vazia' });
+        }
+        updatePayload.linguagem = linguagem.trim();
+      }
 
       const tagId = tag ?? tagsBody;
       if (tagId !== undefined) {
-        const tagEncontrada = await TagsModel.findOne({ _id: tagId, idUsuario: req.usuario.id_usuario });
+        if (!this.stringCerta(tagId) || !mongoose.isValidObjectId(tagId)) {
+          return res.status(400).json({ status: 'erro', titulo: 'Tag inválida', mensagem: 'O ID da tag deve ser válido' });
+        }
 
+        const tagEncontrada = await this.encontrarTag(tagId, req.usuario.id_usuario);
         if (!tagEncontrada) {
-          return res.status(404).json({
-            status: 'erro',
-            titulo: 'Tag não encontrada',
-            mensagem: 'Tag selecionada não existe para este usuário'
-          });
+          return res.status(404).json({ status: 'erro', titulo: 'Tag não encontrada', mensagem: 'Tag selecionada não existe para este usuário' });
         }
 
         updatePayload.tags = tagEncontrada;
       }
 
-      const codigoAtualizado = await codigo.findOneAndUpdate({ _id: id, idUsuario: req.usuario.id_usuario },updatePayload, { new: true }, {returnDocument: 'after'});
-
-      if (!codigoAtualizado) {
-        return res.status(403).json({
-          status: 'erro',
-          mensagem: 'Acesso não autorizado'
-        });
+      if (Object.keys(updatePayload).length === 0) {
+        return res.status(400).json({ status: 'erro', titulo: 'Dados inválidos', mensagem: 'Nenhum campo válido foi enviado para atualização' });
       }
 
-      return res.status(200).json({ status: 'sucesso', titulo: 'Código atualizado', mensagem: "Código atualizado com sucesso!" });
+      const codigoAtualizado = await codigo.findOneAndUpdate(
+        { _id: id, idUsuario: req.usuario.id_usuario },
+        updatePayload,
+        { new: true }
+      );
+
+      if (!codigoAtualizado) {
+        return res.status(403).json({ status: 'erro', mensagem: 'Acesso não autorizado' });
+      }
+
+      return res.status(200).json({ status: 'sucesso', titulo: 'Código atualizado', mensagem: 'Código atualizado com sucesso!' });
     } catch (erro) {
       res.status(500).json({ status: 'erro', titulo: 'Erro na atualização', mensagem: `${erro} - falha ao atualizar código` });
     }
@@ -71,15 +120,18 @@ class CodigoController {
 
   static async excluirCodigo(req, res) {
     try {
-      const codigoExcluido = await codigo.findByIdAndDelete({
-        _id: req.params.id,
-        idUsuario: req.usuario.id_usuario
-      });
-      if (!codigoExcluido) {
-        return res.status(404).json({ status: 'erro', titulo: 'Erro na exclusão', mensagem: "Código não encontrado" })
+      const { id } = req.params;
+
+      if (!mongoose.isValidObjectId(id)) {
+        return res.status(400).json({ status: 'erro', titulo: 'ID inválido', mensagem: 'O ID do código é inválido' });
       }
 
-      res.status(200).json({ status: 'sucesso', titulo: 'Código excluido', mensagem: "Código excluido com sucesso!" });
+      const codigoExcluido = await codigo.findOneAndDelete({ _id: id, idUsuario: req.usuario.id_usuario });
+      if (!codigoExcluido) {
+        return res.status(404).json({ status: 'erro', titulo: 'Erro na exclusão', mensagem: 'Código não encontrado' });
+      }
+
+      res.status(200).json({ status: 'sucesso', titulo: 'Código excluido', mensagem: 'Código excluido com sucesso!' });
     } catch (erro) {
       res.status(500).json({ status: 'erro', titulo: 'Erro na exclusão', mensagem: `${erro} - falha ao excluir código` });
     }
@@ -90,23 +142,39 @@ class CodigoController {
       const usuario = req.usuario.id_usuario;
       const { titulo, linguagem, codigo: conteudo, tag } = req.body;
 
-      const tagEncontrada = await TagsModel.findOne({ _id: tag, idUsuario: usuario });
+      if (!req.body) {
+        return res.status(400).json({ status: 'erro', titulo: 'Body ausente', mensagem: 'O corpo da requisição não foi enviado' });
+      }
 
+      if (!this.stringCerta(titulo)) {
+        return res.status(400).json({ status: 'erro', titulo: 'Título inválido', mensagem: 'O título é obrigatório' });
+      }
+      if (!this.stringCerta(linguagem)) {
+        return res.status(400).json({ status: 'erro', titulo: 'Linguagem inválida', mensagem: 'A linguagem é obrigatória' });
+      }
+      if (!this.stringCerta(conteudo)) {
+        return res.status(400).json({ status: 'erro', titulo: 'Código inválido', mensagem: 'O conteúdo do código é obrigatório' });
+      }
+      if (!this.stringCerta(tag) || !mongoose.isValidObjectId(tag)) {
+        return res.status(400).json({ status: 'erro', titulo: 'Tag inválida', mensagem: 'O ID da tag deve ser válido' });
+      }
+
+      const tagEncontrada = await this.encontrarTag(tag, usuario);
       if (!tagEncontrada) {
         return res.status(404).json({ status: 'erro', titulo: 'Tag não encontrada', mensagem: 'Tag selecionada não existe para este usuário' });
       }
 
       const codigoCompleto = {
-        titulo,
-        codigo: conteudo,
-        linguagem,
+        titulo: titulo.trim(),
+        codigo: conteudo.trim(),
+        linguagem: linguagem.trim(),
         tags: tagEncontrada,
         idUsuario: usuario
       };
 
       const codigoCriado = await codigo.create(codigoCompleto);
 
-      return res.status(201).json({ status: 'sucesso', titulo: 'Código criado', mensagem: "Código criado com sucesso", codigo: codigoCriado });
+      return res.status(201).json({ status: 'sucesso', titulo: 'Código criado', mensagem: 'Código criado com sucesso', codigo: codigoCriado });
     } catch (erro) {
       res.status(500).json({ status: 'erro', titulo: 'Erro na criação', mensagem: `${erro} - falha ao inserir novo código` });
     }

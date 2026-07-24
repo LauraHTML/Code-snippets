@@ -4,8 +4,10 @@ import usuario from '../models/Usuario.js';
 
 const JWT_CONFIG = {
     secret: process.env.JWT_SECRET,
-    expiresIn: '24h'
+    expiresIn: '24h',
 };
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 class UsuarioController {
     static async CadastrarUsuario(req, res) {
@@ -131,14 +133,14 @@ class UsuarioController {
 
             res.clearCookie('token', {
                 httpOnly: true,
-                secure: true,
+                secure: isProduction,
                 sameSite: 'Lax'
             });
 
             res.cookie('token', token, {
                 maxAge: 24 * 60 * 60 * 1000,
                 httpOnly: true,
-                secure: true,
+                secure: isProduction,
                 sameSite: 'Lax'
             });
 
@@ -186,7 +188,7 @@ class UsuarioController {
             // Limpar o cookie do token
             res.clearCookie('token', {
                 httpOnly: true,
-                secure: true,
+                secure: isProduction,
                 sameSite: 'Lax'
             });
 

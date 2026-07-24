@@ -5,7 +5,6 @@ dotenv.config();
 
 async function conectaDatabase() {
     try {
-        // Fail-fast
         const opcoes = {
             connectTimeoutMS: 5000,      // Falha rápido se não conectar em 5s
             socketTimeoutMS: 45000,      // Timeout para operações
@@ -25,7 +24,7 @@ async function conectaDatabase() {
         return mongoose.connection;
     } catch (erro) {
         console.error("Erro de conexão com banco de dados:", erro.message);
-        // Re-lançar o erro para que a aplicação falhe na inicialização
+        // Relançar o erro para que a aplicação falhe na inicialização
         throw erro;
     }
 }
