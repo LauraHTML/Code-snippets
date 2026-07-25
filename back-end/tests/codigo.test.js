@@ -3,6 +3,7 @@ import request from "supertest";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import { MongoMemoryServer } from "mongodb-memory-server";
+import { bancoMongoDb, finalizarBancoMongoDb } from "./testSetup.js";
 
 import Codigo from "../src/models/Codigo.js";
 import { tags as TagsModel } from "../src/models/Tags.js";
@@ -16,15 +17,15 @@ let codigoCriado;
 
 describe("GET /codigos", () => {
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
+        await bancoMongoDb();
 
         const { default: appModule } = await import("../src/app.js");
         app = appModule;
     });
+
+    afterAll(async () => {
+            await finalizarBancoMongoDb();
+        });
 
     beforeEach(async () => {
         await Promise.all([
@@ -70,15 +71,15 @@ describe("GET /codigos", () => {
 
 describe("GET /codigos", () => {
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
+        await bancoMongoDb();
 
         const { default: appModule } = await import("../src/app.js");
         app = appModule;
     });
+
+    afterAll(async () => {
+            await finalizarBancoMongoDb();
+        });
 
     beforeEach(async () => {
         await Promise.all([
@@ -122,15 +123,15 @@ describe("GET /codigos", () => {
 
 describe("GET /codigos", () => {
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
+        await bancoMongoDb();
 
         const { default: appModule } = await import("../src/app.js");
         app = appModule;
     });
+
+    afterAll(async () => {
+            await finalizarBancoMongoDb();
+        });
 
     beforeEach(async () => {
         await Promise.all([
@@ -174,14 +175,14 @@ describe("GET /codigos", () => {
 
 describe("POST /codigos", () => {
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
+        await bancoMongoDb();
 
         const { default: appModule } = await import("../src/app.js");
         app = appModule;
+    });
+
+    afterAll(async () => {
+        await finalizarBancoMongoDb();
     });
 
     beforeEach(async () => {
@@ -216,7 +217,7 @@ describe("POST /codigos", () => {
                 codigo: "const mensagem = 'teste';",
                 tag: tagCriada._id.toString()
             });
-
+            console.log(response);
         expect(response.status).toBe(201);
         expect(response.body.status).toBe("sucesso");
         expect(response.body.codigo.titulo).toBe("Exemplo de integração");
@@ -229,15 +230,15 @@ describe("POST /codigos", () => {
 
 describe("POST /codigos", () => {
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
+        await bancoMongoDb();
 
         const { default: appModule } = await import("../src/app.js");
         app = appModule;
     });
+
+    afterAll(async () => {
+            await finalizarBancoMongoDb();
+        });
 
     beforeEach(async () => {
         await Promise.all([
@@ -278,16 +279,15 @@ describe("POST /codigos", () => {
 
 describe("PUT /codigos", () => {
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
+        await bancoMongoDb();
 
         const { default: appModule } = await import("../src/app.js");
         app = appModule;
     });
 
+    afterAll(async () => {
+            await finalizarBancoMongoDb();
+        });
 
     beforeEach(async () => {
         await Promise.all([
@@ -342,15 +342,15 @@ describe("PUT /codigos", () => {
 
 describe("DELETE /codigos", () => {
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
+        await bancoMongoDb();
 
         const { default: appModule } = await import("../src/app.js");
         app = appModule;
     });
+
+    afterAll(async () => {
+            await finalizarBancoMongoDb();
+        });
 
     beforeEach(async () => {
         await Promise.all([

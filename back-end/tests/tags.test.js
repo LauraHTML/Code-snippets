@@ -2,7 +2,7 @@ import { beforeAll, afterAll, beforeEach, describe, expect, it } from "vitest";
 import request from "supertest";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
-import { MongoMemoryServer } from "mongodb-memory-server";
+import { bancoMongoDb, finalizarBancoMongoDb } from "./testSetup.js";
 
 import Codigo from "../src/models/Codigo.js";
 import { tags as TagsModel } from "../src/models/Tags.js";
@@ -16,14 +16,14 @@ let codigoCriado;
 
 describe("GET /tags", () => {
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
+        await bancoMongoDb();
 
         const { default: appModule } = await import("../src/app.js");
         app = appModule;
+    });
+
+    afterAll(async () => {
+        await finalizarBancoMongoDb();
     });
 
     beforeEach(async () => {
@@ -59,14 +59,14 @@ describe("GET /tags", () => {
 
 describe("GET /tags", () => {
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
+        await bancoMongoDb();
 
         const { default: appModule } = await import("../src/app.js");
         app = appModule;
+    });
+
+    afterAll(async () => {
+        await finalizarBancoMongoDb();
     });
 
     beforeEach(async () => {
@@ -102,14 +102,14 @@ describe("GET /tags", () => {
 
 describe("POST /tags", () => {
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
+        await bancoMongoDb();
 
         const { default: appModule } = await import("../src/app.js");
         app = appModule;
+    });
+
+    afterAll(async () => {
+        await finalizarBancoMongoDb();
     });
 
     beforeEach(async () => {
@@ -147,14 +147,14 @@ describe("POST /tags", () => {
 
 describe("POST /tags", () => {
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
+        await bancoMongoDb();
 
         const { default: appModule } = await import("../src/app.js");
         app = appModule;
+    });
+
+    afterAll(async () => {
+        await finalizarBancoMongoDb();
     });
 
     beforeEach(async () => {
@@ -192,14 +192,14 @@ describe("POST /tags", () => {
 
 describe("PUT /tags", () => {
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
+        await bancoMongoDb();
 
         const { default: appModule } = await import("../src/app.js");
         app = appModule;
+    });
+
+    afterAll(async () => {
+        await finalizarBancoMongoDb();
     });
 
     beforeEach(async () => {
@@ -221,10 +221,8 @@ describe("PUT /tags", () => {
         });
     })
 
-
     it("atualiza uma tag existente", async () => {
         const token = jwt.sign({ id: usuarioCriado._id.toString() }, process.env.JWT_SECRET);
-
 
         const response = await request(app)
             .put(`/tags/${tagCriada._id.toString()}`)
@@ -244,14 +242,14 @@ describe("PUT /tags", () => {
 
 describe("PUT /tags", () => {
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
+        await bancoMongoDb();
 
         const { default: appModule } = await import("../src/app.js");
         app = appModule;
+    });
+
+    afterAll(async () => {
+        await finalizarBancoMongoDb();
     });
 
     beforeEach(async () => {
@@ -292,14 +290,14 @@ describe("PUT /tags", () => {
 
 describe("DELETE /tags", () => {
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
+        await bancoMongoDb();
 
         const { default: appModule } = await import("../src/app.js");
         app = appModule;
+    });
+
+    afterAll(async () => {
+        await finalizarBancoMongoDb();
     });
 
     beforeEach(async () => {
@@ -314,7 +312,7 @@ describe("DELETE /tags", () => {
             senha: "123456"
         });
 
-        const tagCriada = await TagsModel.create({
+        tagCriada = await TagsModel.create({
             titulo: "deletar",
             cor: "#f1e05a",
             idUsuario: usuarioCriado._id
@@ -330,44 +328,13 @@ describe("DELETE /tags", () => {
             .set("Cookie", [`token=${token}`]);
 
         expect(response.status).toBe(200);
+        expect(response.body.status).toBe("sucesso");
+        console.log(`DELETE: ${response}`)
+        console.log(response.body);
         expect(Array.isArray(response.body)).toBe(false);
-    });
-});
-
-describe("DELETE /tags", () => {
-    beforeAll(async () => {
-        process.env.JWT_SECRET = "test-secret";
-        process.env.CLIENT_URL ??= "http://localhost:3000";
-
-        mongoServer = await MongoMemoryServer.create();
-        process.env.DB_CONNECTION_STRING = mongoServer.getUri();
-
-        const { default: appModule } = await import("../src/app.js");
-        app = appModule;
-    });
-
-    beforeEach(async () => {
-        await Promise.all([
-            TagsModel.deleteMany({}),
-            Usuario.deleteMany({})
-        ]);
-
-        usuarioCriado = await Usuario.create({
-            nome: "Tags",
-            email: "tags@email.com",
-            senha: "123456"
-        });
-
-        const tagCriada = await TagsModel.create({
-            titulo: "deletar",
-            cor: "#f1e05a",
-            idUsuario: usuarioCriado._id
-        });
-
     });
 
     it("Acessso negado para deletar tag", async () => {
-
         const response = await request(app)
             .delete(`/tags/${tagCriada._id.toString()}`)
             .set("Cookie", [`token`]);
