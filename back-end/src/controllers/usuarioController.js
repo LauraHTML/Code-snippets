@@ -32,11 +32,6 @@ class UsuarioController {
                 return res.status(400).json({ status: 'erro', titulo: 'O campo senha está vazio', mensagem: 'A senha é obrigatória' });
             }
 
-            const emailCadastrado = await usuario.find({ email: emailSanitizado })
-            if(emailCadastrado === email){
-                return res.status(400).json({ status: 'erro', titulo: 'Email já cadastrado', mensagem: 'O email informado já está sendo usado' });
-            }
-
             //validar formato
             if (nomeSanitizado.length < 2) {
                 return res.status(400).json({ status: 'erro', titulo: 'Nome curto', mensagem: 'O nome deve ter pelo menos 2 caracteres' })

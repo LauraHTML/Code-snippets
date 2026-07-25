@@ -52,6 +52,7 @@ describe("GET /tags", () => {
             .get("/tags")
             .set("Cookie", [`token=${token}`]);
 
+        console.log(response.body);
         expect(response.status).toBe(200);
         expect(response.body).toHaveLength(1);
     });
@@ -329,8 +330,6 @@ describe("DELETE /tags", () => {
 
         expect(response.status).toBe(200);
         expect(response.body.status).toBe("sucesso");
-        console.log(`DELETE: ${response}`)
-        console.log(response.body);
         expect(Array.isArray(response.body)).toBe(false);
     });
 

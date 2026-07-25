@@ -13,13 +13,13 @@ class TagController {
     if (!TagController.stringCerta(tagId) || !mongoose.isValidObjectId(tagId)) {
       return null;
     }
-    return TagsModel.findOne({ _id: tagId, idUsuario: userId });
+    return tags.findOne({ _id: tagId, idUsuario: userId });
   }
 
   static async listarTags(req, res) {
     try {
       const listarTags = await tags.find({ idUsuario: req.usuario.id_usuario });
-      res.status(200).json(listarTags, { status: 'sucesso', titulo: 'Tag encontrada', mensagem: "Tag encontrada com sucesso!" });
+      res.status(200).json({ status: 'sucesso', titulo: 'Tag encontrada', mensagem: "Tag encontrada com sucesso!", tags: listarTags });
     } catch (erro) {
       res.status(500).json({ status: 'erro', titulo: 'Erro ao listar tags', mensagem: `${erro.mensagem} - falha na requisição` });
     }
