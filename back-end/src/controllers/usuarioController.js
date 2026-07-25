@@ -2,12 +2,12 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import usuario from '../models/Usuario.js';
 
+import config from '../config/config.js';
+
 const JWT_CONFIG = {
     secret: process.env.JWT_SECRET,
     expiresIn: '24h',
 };
-
-const isProduction = process.env.NODE_ENV === 'production';
 
 class UsuarioController {
     static async CadastrarUsuario(req, res) {
@@ -127,15 +127,16 @@ class UsuarioController {
             );
 
             res.clearCookie('token', {
+                maxAge: 24 * 60 * 60 * 1000,
                 httpOnly: true,
-                secure: isProduction,
+                secure: config.isProduction,
                 sameSite: 'Lax'
             });
 
             res.cookie('token', token, {
                 maxAge: 24 * 60 * 60 * 1000,
                 httpOnly: true,
-                secure: isProduction,
+                secure: config.isProduction,
                 sameSite: 'Lax'
             });
 
