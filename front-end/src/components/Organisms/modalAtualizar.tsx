@@ -142,22 +142,18 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
         async function fetchTags() {
             try {
                 const res = await fetch("http://localhost:8080/tags")
-
                 if (!res.ok) {
                     throw new Error("Erro na resposta da API")
                 }
-
                 const tags: Tags[] = await res.json()
                 setListaTags(tags)
 
             } catch (error) {
                 console.error("Erro detalhado:", error)
             }
-
         }
         fetchTags()
     }, []);
-
 
     const enviar = handleSubmit((formData) => {
         const tagCompleta = listaTags.find(t => t._id === formData.tag);

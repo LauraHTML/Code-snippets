@@ -1,7 +1,6 @@
 import express from "express";
 import CodigoController from "../controllers/codigoController.js";
 import { verificarToken } from "../middleware/autenticacao.js";
-import { logger } from "../logger.js";
 
 const routes = express.Router();
 
