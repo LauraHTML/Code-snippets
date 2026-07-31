@@ -13,8 +13,8 @@ export async function listarTags() {
 
         if (tags.status === 'erro') {
             throw {
-                titulo: tags.titulo || 'Erro ao listar',
-                mensagem: tags.mensagem || 'Falha ao buscar tags',
+                titulo: tags.titulo,
+                mensagem: tags.mensagem,
                 status: tags.status
             };
         }
@@ -22,8 +22,14 @@ export async function listarTags() {
         if (!res.ok) {
             throw new Error(`Erro HTTP ${res.status}`);
         }
-       console.log(tags)
-        return tags;
+        if (!tags.tags) {
+            throw {
+                titulo: 'Formato inesperado',
+                mensagem: 'Resposta da API não contém o array de tags',
+                status: 'erro'
+            };
+        }
+        return tags.tags;
 
     } catch (erro: any) {
         throw {

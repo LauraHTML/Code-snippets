@@ -337,6 +337,7 @@ describe("PUT /codigos", () => {
         expect(codigoAtualizado?.titulo).toBe("conexao com banco");
         expect(codigoAtualizado?.linguagem).toBe("javascript");
         expect(codigoAtualizado?.codigo).toBe("const conexao = true;");
+
     });
 });
 

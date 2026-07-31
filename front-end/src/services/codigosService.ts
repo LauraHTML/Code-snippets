@@ -1,3 +1,4 @@
+import { Tags } from "@/src/app/(privada)/codigos/page";
 
 export async function listarCodigos() {
     try {
@@ -65,7 +66,7 @@ export async function criarCodigo(titulo: string, linguagem: string, codigo: str
     }
 }
 
-export async function atualizarCodigo(id: string, titulo: string, descricao: string, linguagem: string, codigo: string) {
+export async function atualizarCodigo(id: string, titulo: string, linguagem: string, codigo: string, tag: string ) {
     try {
         const res = await fetch(`http://localhost:8080/codigos/${id}`, {
             method: "PUT",
@@ -73,7 +74,7 @@ export async function atualizarCodigo(id: string, titulo: string, descricao: str
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ titulo, descricao, linguagem, codigo })
+            body: JSON.stringify({ titulo, linguagem, codigo, tag })
         });
 
         const dados = await res.json();

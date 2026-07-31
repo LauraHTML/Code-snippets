@@ -48,11 +48,11 @@ export default function NovoCodigo() {
         php: '',
     };
 
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
 
     //codigos
     const [codigo, setCodigo] = useState<string>("");
-    const [linguagem, setLinguagem] = useState("javascript")
+    const [linguagem, setLinguagem] = useState("javascript");
     const [titulo, setTitulo] = useState<string>("");
 
     const [tagIdSelecionada, setTagIdSelecionada] = useState<string>("");
@@ -64,215 +64,209 @@ export default function NovoCodigo() {
 
     const fetchTags = async () => {
         try {
-            const tags = await listarTags();
-            setListaTags(tags);
-            console.log(tags)
+            const tagsArray = await listarTags();
+            setListaTags(tagsArray);
+            console.log("tags carregadas:", tagsArray);
         } catch (erro) {
-            console.error("Erro ao carregar tags:", erro);
-        }
-    };
 
-    useEffect(() => {
-        fetchTags();
-    }, []);
+            useEffect(() => {
+                fetchTags();
+            }, []);
 
 
-    //cor
-    type Cor = "azul" | "amarelo" | "verde" | "roxo";
-    const [cor, setCor] = useState<Cor>('azul');
+            //cor
+            type Cor = "azul" | "amarelo" | "verde" | "roxo";
+            const [cor, setCor] = useState<Cor>('azul');
 
-    const coresTag = {
-        azul: "#2f81f7",
-        amarelo: "#d2991d",
-        verde: "#3fb950",
-        roxo: "#a371f7"
-    }
+            const coresTag = {
+                azul: "#2f81f7",
+                amarelo: "#d2991d",
+                verde: "#3fb950",
+                roxo: "#a371f7"
+            }
 
-    async function handleCriarTag(e: React.MouseEvent<HTMLButtonElement>) {
-        e.preventDefault()
+            async function handleCriarTag(e: React.MouseEvent<HTMLButtonElement>) {
+                e.preventDefault()
 
-        if (!novaTag.trim()) toast.error(`Dê um título a nova tag`, {
-            description: `Campo para nome da tag está vazio`, position: "top-center", style: {
-                '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
-                '--normal-text': 'var(--destructive)',
-                '--normal-border': 'var(--destructive)'
-            } as React.CSSProperties
-        })
+                if (!novaTag.trim()) toast.error(`Dê um título a nova tag`, {
+                    description: `Campo para nome da tag está vazio`, position: "top-center", style: {
+                        '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                        '--normal-text': 'var(--destructive)',
+                        '--normal-border': 'var(--destructive)'
+                    } as React.CSSProperties
+                })
 
-        setLoading(true)
-        try {
-            const response = await criarTag(novaTag, cor)
+                setLoading(true)
+                try {
+                    const response = await criarTag(novaTag, cor)
 
-            toast.success(response.titulo || 'Tag criada', {
-                description: `${response.mensagem}`,
-                position: "top-center", style: {
-                    '--normal-bg':
-                        'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
-                    '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
-                    '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
-                } as React.CSSProperties
-            })
-            setNovaTag("")
-            await fetchTags();
+                    toast.success(response.titulo || 'Tag criada', {
+                        description: `${response.mensagem}`,
+                        position: "top-center", style: {
+                            '--normal-bg':
+                                'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
+                            '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
+                            '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
+                        } as React.CSSProperties
+                    })
+                    setNovaTag("")
+                    await fetchTags();
 
-        } catch (erro: any) {
+                } catch (erro: any) {
 
-            toast.error(`Erro no cadastro: ${erro.titulo}`, {
-                description: `${erro.mensagem}`, position: "top-center", style: erro.status === 'erro' ? {
-                    '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
-                    '--normal-text': 'var(--destructive)',
-                    '--normal-border': 'var(--destructive)'
-                } as React.CSSProperties : {
-                    '--normal-bg':
-                        'color-mix(in oklab, light-dark(var(--color-amber-600), var(--color-amber-400)) 10%, var(--background))',
-                    '--normal-text': 'light-dark(var(--color-amber-600), var(--color-amber-400))',
-                    '--normal-border': 'light-dark(var(--color-amber-600), var(--color-amber-400))'
-                } as React.CSSProperties
-            },)
-        } finally {
-            setLoading(false)
-        }
-    }
+                    toast.error(`Erro no cadastro: ${erro.titulo}`, {
+                        description: `${erro.mensagem}`, position: "top-center", style: erro.status === 'erro' ? {
+                            '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                            '--normal-text': 'var(--destructive)',
+                            '--normal-border': 'var(--destructive)'
+                        } as React.CSSProperties : {
+                            '--normal-bg':
+                                'color-mix(in oklab, light-dark(var(--color-amber-600), var(--color-amber-400)) 10%, var(--background))',
+                            '--normal-text': 'light-dark(var(--color-amber-600), var(--color-amber-400))',
+                            '--normal-border': 'light-dark(var(--color-amber-600), var(--color-amber-400))'
+                        } as React.CSSProperties
+                    },)
+                } finally {
+                    setLoading(false)
+                }
+            }
 
-    async function handleCriarCodigo(e: React.MouseEvent<HTMLButtonElement>) {
-        e.preventDefault()
+            async function handleCriarCodigo(e: React.MouseEvent<HTMLButtonElement>) {
+                e.preventDefault();
 
-        if (!tagIdSelecionada.trim()) toast.error(`Selecione uma tag`, {
-            description: `Selecione uma tag para vincular ao seu código atual`, position: "top-center", style: {
-                '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
-                '--normal-text': 'var(--destructive)',
-                '--normal-border': 'var(--destructive)'
-            } as React.CSSProperties
-        })
+                if (!tagIdSelecionada.trim()) toast.error(`Selecione uma tag`, {
+                    description: `Selecione uma tag para vincular ao seu código atual`, position: "top-center", style: {
+                        '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                        '--normal-text': 'var(--destructive)',
+                        '--normal-border': 'var(--destructive)'
+                    } as React.CSSProperties
+                })
 
-        if (!linguagem) toast.error(`Selecione uma linguagem`, {
-            description: `Selecione uma linguagem para vincular ao seu código atual`, position: "top-center", style: {
-                '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
-                '--normal-text': 'var(--destructive)',
-                '--normal-border': 'var(--destructive)'
-            } as React.CSSProperties
-        })
+                if (!linguagem) toast.error(`Selecione uma linguagem`, {
+                    description: `Selecione uma linguagem para vincular ao seu código atual`, position: "top-center", style: {
+                        '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                        '--normal-text': 'var(--destructive)',
+                        '--normal-border': 'var(--destructive)'
+                    } as React.CSSProperties
+                })
 
-        setLoading(true)
-        try {
-
-            const response = await criarCodigo(titulo, linguagem, codigo, tagIdSelecionada)
-            toast.success(response.titulo, {
-                description: `${response.mensagem}`,
-                position: "top-center", style: {
-                    '--normal-bg':
-                        'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
-                    '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
-                    '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
-                } as React.CSSProperties
-            })
-
-
-        } catch (erro: any) {
-            toast.error(`Erro ao criar código: ${erro.titulo}`, {
-                description: `${erro.mensagem}`, position: "top-center", style: erro.status === 'erro' ? {
-                    '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
-                    '--normal-text': 'var(--destructive)',
-                    '--normal-border': 'var(--destructive)'
-                } as React.CSSProperties : {
-                    '--normal-bg':
-                        'color-mix(in oklab, light-dark(var(--color-amber-600), var(--color-amber-400)) 10%, var(--background))',
-                    '--normal-text': 'light-dark(var(--color-amber-600), var(--color-amber-400))',
-                    '--normal-border': 'light-dark(var(--color-amber-600), var(--color-amber-400))'
-                } as React.CSSProperties
-            },)
-        } finally {
-            setLoading(false)
-        }
-    }
+                setLoading(true)
+                try {
+                    const response = await criarCodigo(titulo, linguagem, codigo, tagIdSelecionada)
+                    toast.success(response.titulo, {
+                        description: `${response.mensagem}`,
+                        position: "top-center", style: {
+                            '--normal-bg':
+                                'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
+                            '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
+                            '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
+                        } as React.CSSProperties
+                    });
+                } catch (erro: any) {
+                    toast.error(`Erro ao criar código: ${erro.titulo}`, {
+                        description: `${erro.mensagem}`, position: "top-center", style: erro.status === 'erro' ? {
+                            '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                            '--normal-text': 'var(--destructive)',
+                            '--normal-border': 'var(--destructive)'
+                        } as React.CSSProperties : {
+                            '--normal-bg':
+                                'color-mix(in oklab, light-dark(var(--color-amber-600), var(--color-amber-400)) 10%, var(--background))',
+                            '--normal-text': 'light-dark(var(--color-amber-600), var(--color-amber-400))',
+                            '--normal-border': 'light-dark(var(--color-amber-600), var(--color-amber-400))'
+                        } as React.CSSProperties
+                    },)
+                } finally {
+                    setLoading(false)
+                }
+            }
 
 
-    return (<>
-        <SidebarProvider
-            style={{ "--sidebar-width": "calc(var(--spacing) * 72)", "--header-height": "calc(var(--spacing) * 12)", } as React.CSSProperties}>
-            <AppSidebar variant="inset" />
-            <SidebarInset>
-                <SiteHeader />
-                <div className="flex flex-1 flex-col">
-                    <div className="@container/main flex flex-1 flex-col gap-2">
-                        <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+            return (<>
+                <SidebarProvider
+                    style={{ "--sidebar-width": "calc(var(--spacing) * 72)", "--header-height": "calc(var(--spacing) * 12)", } as React.CSSProperties}>
+                    <AppSidebar variant="inset" />
+                    <SidebarInset>
+                        <SiteHeader />
+                        <div className="flex flex-1 flex-col">
+                            <div className="@container/main flex flex-1 flex-col gap-2">
+                                <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
 
-                            <div className="px-4 lg:px-5">
+                                    <div className="px-4 lg:px-5">
 
-                                <FieldSet >
-                                    <Field>
-                                        <FieldLabel htmlFor="titulo">Título para o trecho de código</FieldLabel>
-                                        <Input
-                                            id="titulo"
-                                            placeholder="Ex: Exercício de python"
-                                            onChange={(e) => setTitulo(e.target.value)}
-                                        />
-                                        <FieldDescription>Dê um nome para o trecho de código.</FieldDescription>
-
-                                    </Field>
-                                    <Field>
-                                        <FieldLabel htmlFor="tags">Selecione uma tag: </FieldLabel>
-                                        <Select onValueChange={(value: string) => setTagIdSelecionada(value)}>
-                                            <SelectTrigger className="w-[180px]">
-                                                <SelectValue placeholder="Selecione uma tag" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    {listaTags.length === 0 && <p>Crie uma tag</p>}
-
-                                                    {listaTags.map((tag) => (
-                                                        <SelectItem key={tag._id} value={tag._id}>
-                                                            {tag.titulo}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-
-                                        <FieldDescription>Use as tags para organizar seus códigos.</FieldDescription>
-
-                                    </Field>
-                                    <Field>
-                                        <FieldLabel htmlFor="tags">Título da tag</FieldLabel>
-                                        <Input className="w-1/2" type="text" id="tags" value={novaTag} onChange={(e) => setNovaTag(e.target.value)} placeholder="Ex: MySql" />
-                                        <FieldLabel htmlFor="tags">Cor da tag</FieldLabel>
-                                        <div className="grid grid-cols-4 grid-rows-flow w-1/2 bg-input border p-2 rounded-md ">
-                                            {Object.values(coresTag).map((corHex, index) => (
-                                                <Button
-                                                    key={index}
-                                                    type="button"
-                                                    onClick={() => setCor(corHex as Cor)}
-                                                    className="w-full h-8 rounded border-2"
-                                                    style={{
-                                                        backgroundColor: corHex as Cor,
-                                                        borderColor: corHex === coresTag[cor] ? '#FFFFFF' : '#21262d'
-                                                    }}
-                                                    title={corHex}
+                                        <FieldSet >
+                                            <Field>
+                                                <FieldLabel htmlFor="titulo">Título para o trecho de código</FieldLabel>
+                                                <Input
+                                                    id="titulo"
+                                                    placeholder="Ex: Exercício de python"
+                                                    onChange={(e) => setTitulo(e.target.value)}
                                                 />
-                                            ))}
-                                        </div>
-                                        <Button onClick={handleCriarTag} type="button">Criar tag</Button>
-                                    </Field>
+                                                <FieldDescription>Dê um nome para o trecho de código.</FieldDescription>
 
-                                    <Field>
-                                        <FieldLabel htmlFor="titulo">Selecione uma linguagem</FieldLabel>
-                                        <CodeEditor
-                                            codeSnippets={codeSnippets}
-                                            onChange={(novoCodigo: string, novaLinguagem: string) => {
-                                                setCodigo(novoCodigo);
-                                                setLinguagem(novaLinguagem);
-                                            }}
-                                        />
+                                            </Field>
+                                            <Field>
+                                                <FieldLabel htmlFor="tags">Selecione uma tag: </FieldLabel>
+                                                <Select onValueChange={(value: string) => setTagIdSelecionada(value)}>
+                                                    <SelectTrigger className="w-[180px]">
+                                                        <SelectValue placeholder="Selecione uma tag" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectGroup>
+                                                            {listaTags.length === 0 && <p>Crie uma tag</p>}
 
-                                    </Field>
+                                                            {listaTags.map((tag) => (
+                                                                <SelectItem key={tag._id} value={tag._id}>
+                                                                    {tag.titulo}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectGroup>
+                                                    </SelectContent>
+                                                </Select>
 
-                                    <Button onClick={handleCriarCodigo} >Criar novo código</Button>
-                                </FieldSet>
+                                                <FieldDescription>Use as tags para organizar seus códigos.</FieldDescription>
+
+                                            </Field>
+                                            <Field>
+                                                <FieldLabel htmlFor="tags">Título da tag</FieldLabel>
+                                                <Input className="w-1/2" type="text" id="tags" value={novaTag} onChange={(e) => setNovaTag(e.target.value)} placeholder="Ex: MySql" />
+                                                <FieldLabel htmlFor="tags">Cor da tag</FieldLabel>
+                                                <div className="grid grid-cols-4 grid-rows-flow w-1/2 bg-input border p-2 rounded-md ">
+                                                    {Object.values(coresTag).map((corHex, index) => (
+                                                        <Button
+                                                            key={index}
+                                                            type="button"
+                                                            onClick={() => setCor(corHex as Cor)}
+                                                            className="w-full h-8 rounded border-2"
+                                                            style={{
+                                                                backgroundColor: corHex as Cor,
+                                                                borderColor: corHex === coresTag[cor] ? '#FFFFFF' : '#21262d'
+                                                            }}
+                                                            title={corHex}
+                                                        />
+                                                    ))}
+                                                </div>
+                                                <Button onClick={handleCriarTag} type="button">Criar tag</Button>
+                                            </Field>
+
+                                            <Field>
+                                                <FieldLabel htmlFor="titulo">Selecione uma linguagem</FieldLabel>
+                                                <CodeEditor
+                                                    codeSnippets={codeSnippets}
+                                                    onChange={(novoCodigo: string, novaLinguagem: string) => {
+                                                        setCodigo(novoCodigo);
+                                                        setLinguagem(novaLinguagem);
+                                                    }}/>
+                                            </Field>
+
+                                            <Button onClick={handleCriarCodigo}>Criar novo código</Button>
+                                        </FieldSet>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </SidebarInset>
-        </SidebarProvider>
-    </>)
+                    </SidebarInset>
+                </SidebarProvider>
+            </>)
+        }
+    }
 }

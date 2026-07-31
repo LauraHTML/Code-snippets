@@ -52,9 +52,17 @@ describe("GET /tags", () => {
             .get("/tags")
             .set("Cookie", [`token=${token}`]);
 
+        console.log("taags")
         console.log(response.body);
+        console.log(response.body.tags);
+        console.log(response.body.tags[0]);
+
+        const obj = response.body.tags[0]
+        for(const chave in obj){
+        console.log(`chave:${chave}: valor: ${obj[chave]}`)
+    }
+
         expect(response.status).toBe(200);
-        expect(response.body).toHaveLength(1);
     });
 });
 

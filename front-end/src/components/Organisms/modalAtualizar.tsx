@@ -1,8 +1,9 @@
 //modal
 "use client";
 import { useEffect, useState } from "react";
+import { atualizarCodigo } from "@/src/services/codigosService";
 
-import { Tags } from "@/src/app/(privada)/codigos/page"
+import { Tags } from "@/src/app/(privada)/codigos/page";
 import {
     Dialog,
     DialogContent,
@@ -14,7 +15,7 @@ import {
 
 //formulário
 import { TCodigos } from "@/src/components/Molecules/colunas";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Form } from "@/src/components/ui/form";
 import {
@@ -36,9 +37,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/src/components/ui/select";
-import { Pencil, Trash } from "lucide-react"
+import { Pencil } from "lucide-react"
 import { CodeEditor } from "@/src/components/Organisms/codeEditor";
-import { criarTag } from "@/src/services/tagsServices";
+import { criarTag, listarTags } from "@/src/services/tagsServices";
 
 interface ModalAtualizar {
     codigoSelecionado: TCodigos
@@ -48,33 +49,61 @@ interface ModalAtualizar {
 export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar) {
     //codigos
     const [codigo, setCodigo] = useState<string>("");
-    const [linguagem, setLinguagem] = useState("javascript")
+    const [linguagem, setLinguagem] = useState("javascript");
+    const [titulo, setTitulo] = useState<string>("");
+
+    const [loading, setLoading] = useState(false);
 
     //tags
     const [novaTag, setNovaTag] = useState<string>("")
     const [listaTags, setListaTags] = useState<Tags[]>([])
+    const [tagIdSelecionada, setTagIdSelecionada] = useState<string>("")
     const [dadosFormulario, setDadosFormulario] = useState<Partial<TCodigos>>({});
 
-    useEffect(() => {
-        if (codigoSelecionado) setDadosFormulario(codigoSelecionado);
-        else setDadosFormulario({});
-    }, [codigoSelecionado]);
-
-    const { register, reset, handleSubmit, control, formState: { errors } } = useForm({
+    const { register, reset, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             titulo: "",
             tag: ""
         }
     });
 
+    const fetchTags = async () => {
+        try {
+            const tags = await listarTags();
+            setListaTags(tags);
+
+        } catch (erro) {
+            console.error("Erro ao carregar tags:", erro);
+        }
+    };
+
+    // Carrega as tags assim que o modal monta
+    useEffect(() => {
+        fetchTags();
+    }, []);
+
+    // Sincroniza a tag selecionada quando tanto a listaTags quanto o codigoSelecionado estiverem prontos
+    useEffect(() => {
+        if (codigoSelecionado && listaTags.length > 0) {
+            // Extrai o ID da tag do código selecionado
+            const tagId = typeof codigoSelecionado.tags === "string"
+                ? codigoSelecionado.tags
+                : codigoSelecionado.tags?.[0]?._id ?? "";
+
+            // Verifica se essa tag realmente existe na lista carregada
+            const tagExiste = listaTags.some(t => t._id === tagId);
+            if (tagExiste) {
+                setTagIdSelecionada(tagId);
+            }
+        }
+    }, [codigoSelecionado, listaTags]);
+
     useEffect(() => {
         if (codigoSelecionado) {
             reset({
                 titulo: codigoSelecionado.titulo,
-                tag: typeof codigoSelecionado.tags === "string"
-                    ? codigoSelecionado.tags
-                    : codigoSelecionado.tags?.[0]?._id ?? ""
             });
+            setTitulo(codigoSelecionado.titulo);
             setCodigo(codigoSelecionado.codigo);
             setLinguagem(codigoSelecionado.linguagem);
         }
@@ -83,42 +112,102 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
     //linguagens
     type Linguagem = 'javascript' | 'typescript' | 'python' | 'java' | 'csharp' | 'php';
     const codeSnippets = {
-        javascript: `\nfunction greet(name) {\n\tconsole.log("Hello, " + name + "!");\n}\n\ngreet("Alex");\n`,
-        typescript: `\ntype Params = {\n\tname: string;\n}\n\nfunction greet(data: Params) {\n\tconsole.log("Hello, " + data.name + "!");\n}\n\ngreet({ name: "Alex" });\n`,
-        python: `\ndef greet(name):\n\tprint("Hello, " + name + "!")\n\ngreet("Alex")\n`,
-        java: `\npublic class HelloWorld {\n\tpublic static void main(String[] args) {\n\t\tSystem.out.println("Hello World");\n\t}\n}\n`,
-        csharp:
-            'using System;\n\nnamespace HelloWorld\n{\n\tclass Hello { \n\t\tstatic void Main(string[] args) {\n\t\t\tConsole.WriteLine("Hello World in C#");\n\t\t}\n\t}\n}\n',
-        php: "<?php\n\n$name = 'Alex';\necho $name;\n",
+        javascript: '',
+        typescript: '',
+        python: '',
+        java: '',
+        csharp: '',
+        php: '',
     };
 
+    //cor
+    type Cor = "azul" | "amarelo" | "verde" | "roxo";
+    const [cor, setCor] = useState<Cor>('azul');
 
-    const CriarTags = async () => {
-        if (!novaTag.trim()) {
-            toast.error("Dê um título para a tag", {
+    const coresTag = {
+        azul: "#2f81f7",
+        amarelo: "#d2991d",
+        verde: "#3fb950",
+        roxo: "#a371f7"
+    }
+
+    async function handleCriarTag(e: React.MouseEvent<HTMLButtonElement>) {
+        e.preventDefault()
+
+        if (!novaTag.trim()) toast.error(`Dê um título a nova tag`, {
+            description: `Campo para nome da tag está vazio`, position: "top-center", style: {
+                '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                '--normal-text': 'var(--destructive)',
+                '--normal-border': 'var(--destructive)'
+            } as React.CSSProperties
+        })
+
+        setLoading(true)
+        try {
+            const response = await criarTag(novaTag, cor)
+
+            toast.success(response.titulo || 'Tag criada', {
+                description: `${response.mensagem}`,
                 position: "top-center", style: {
+                    '--normal-bg':
+                        'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
+                    '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
+                    '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
+                } as React.CSSProperties
+            })
+            setNovaTag("")
+            await fetchTags();
+
+        } catch (erro: any) {
+
+            toast.error(`Erro no cadastro: ${erro.titulo}`, {
+                description: `${erro.mensagem}`, position: "top-center", style: erro.status === 'erro' ? {
                     '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
                     '--normal-text': 'var(--destructive)',
                     '--normal-border': 'var(--destructive)'
+                } as React.CSSProperties : {
+                    '--normal-bg':
+                        'color-mix(in oklab, light-dark(var(--color-amber-600), var(--color-amber-400)) 10%, var(--background))',
+                    '--normal-text': 'light-dark(var(--color-amber-600), var(--color-amber-400))',
+                    '--normal-border': 'light-dark(var(--color-amber-600), var(--color-amber-400))'
                 } as React.CSSProperties
-            });
-            return;
+            },)
+        } finally {
+            setLoading(false)
         }
+    }
+
+
+    async function handleAtualizar(e: React.MouseEvent<HTMLButtonElement>) {
+        e.preventDefault();
+
+        if (!tagIdSelecionada.trim()) toast.error(`Selecione uma tag`, {
+            description: `Selecione uma tag para vincular ao seu código atual`, position: "top-center", style: {
+                '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                '--normal-text': 'var(--destructive)',
+                '--normal-border': 'var(--destructive)'
+            } as React.CSSProperties
+        });
+
+        if (!linguagem) toast.error(`Selecione uma linguagem`, {
+            description: `Selecione uma linguagem para vincular ao seu código atual`, position: "top-center", style: {
+                '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+                '--normal-text': 'var(--destructive)',
+                '--normal-border': 'var(--destructive)'
+            } as React.CSSProperties
+        });
+        setLoading(true)
 
         try {
-            const response = await criarTag(novaTag, "#f4d812");
-            const tagCriada = response.tag ?? response.tags ?? response;
+            const res = await atualizarCodigo(
+                codigoSelecionado._id,
+                titulo,
+                linguagem,
+                codigo,
+                tagIdSelecionada);
 
-            setListaTags((prevLista) => {
-                if (prevLista.some((item) => item._id === tagCriada._id)) {
-                    return prevLista;
-                }
-                return [...prevLista, tagCriada];
-            });
-            setNovaTag("");
-
-            toast.success(response.titulo || "Tag criada com sucesso", {
-                description: response.mensagem || "Tag criada com sucesso",
+            toast.success(res.titulo, {
+                description: `${res.mensagem}`,
                 position: "top-center", style: {
                     '--normal-bg':
                         'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
@@ -126,45 +215,39 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
                     '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
                 } as React.CSSProperties
             });
-        } catch (erro: any) {
-            toast.error(`Erro ao criar tag: ${erro.titulo || "Erro"}`, {
-                description: erro.mensagem || "Não foi possível criar a tag",
-                position: "top-center", style: {
+
+            // Monta o objeto atualizado e reflete na tabela via prop `atualizar`
+            const tagAtualizada = listaTags.find(t => t._id === tagIdSelecionada);
+            const dadosAtualizados: TCodigos = {
+                _id: codigoSelecionado._id,
+                titulo: titulo.trim() || codigoSelecionado.titulo,
+                linguagem,
+                codigo,
+                tags: tagAtualizada
+                    ? [{ titulo: tagAtualizada.titulo, cor: tagAtualizada.cor, _id: tagAtualizada._id }]
+                    : codigoSelecionado.tags,
+                dataCriacao: codigoSelecionado.dataCriacao,
+            };
+            atualizar(dadosAtualizados);
+        }
+        catch (erro: any) {
+            toast.error(`Erro ao criar código: ${erro.titulo}`, {
+                description: `${erro.mensagem}`, position: "top-center", style: erro.status === 'erro' ? {
                     '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
                     '--normal-text': 'var(--destructive)',
                     '--normal-border': 'var(--destructive)'
+                } as React.CSSProperties : {
+                    '--normal-bg':
+                        'color-mix(in oklab, light-dark(var(--color-amber-600), var(--color-amber-400)) 10%, var(--background))',
+                    '--normal-text': 'light-dark(var(--color-amber-600), var(--color-amber-400))',
+                    '--normal-border': 'light-dark(var(--color-amber-600), var(--color-amber-400))'
                 } as React.CSSProperties
-            });
+            },);
+        }
+        finally {
+            setLoading(false)
         }
     };
-
-    useEffect(() => {
-        async function fetchTags() {
-            try {
-                const res = await fetch("http://localhost:8080/tags")
-                if (!res.ok) {
-                    throw new Error("Erro na resposta da API")
-                }
-                const tags: Tags[] = await res.json()
-                setListaTags(tags)
-
-            } catch (error) {
-                console.error("Erro detalhado:", error)
-            }
-        }
-        fetchTags()
-    }, []);
-
-    const enviar = handleSubmit((formData) => {
-        const tagCompleta = listaTags.find(t => t._id === formData.tag);
-        atualizar({
-            ...codigoSelecionado,
-            titulo: formData.titulo,
-            tags: tagCompleta,
-            codigo: codigo,
-            linguagem: linguagem,
-        });
-    });
 
 
     return (<>
@@ -182,73 +265,65 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
                             <TabsTrigger value="codigo">Código</TabsTrigger>
                         </TabsList>
                         <TabsContent value="info">
-                            <Form>
-                                <form >
-                                    <Field className="py-2">
-                                        <FieldLabel htmlFor="titulo">Título para o trecho de código</FieldLabel>
-                                        <Input
-                                            id="titulo"
-                                            placeholder="Ex: Exercício de python"
-                                            {...register("titulo", { required: "Título é obrigatório" })}
-                                        />
-                                        <FieldDescription>Dê um nome para o trecho de código.</FieldDescription>
-                                        {errors.titulo && <FieldError>{errors.titulo.mensagem}</FieldError>}
-                                    </Field>
-                                    <Field className="py-2">
-                                        <FieldLabel htmlFor="tags">Tags</FieldLabel>
-                                        <div className="flex flex-row gap-3">
-                                            <Input type="text" id="tags" value={novaTag} onChange={(e) => setNovaTag(e.target.value)} placeholder="Ex: MySql" />
-                                            <Button type="button" onClick={CriarTags}>Criar tag</Button>
-                                        </div>
+                            <Field className="py-2">
+                                <FieldLabel htmlFor="titulo">Título para o trecho de código</FieldLabel>
+                                <Input
+                                    value={titulo}
+                                    onChange={(e) => setTitulo(e.target.value)}
+                                    id="titulo"
+                                    placeholder={codigoSelecionado.titulo}
+                                />
+                                <FieldDescription>Dê um nome para o trecho de código.</FieldDescription>
+                                {/* {errors.titulo && <FieldError>{errors.titulo.mensagem}</FieldError>} */}
+                            </Field>
 
-                                        <Controller
-                                            name="tag"
-                                            control={control}
-                                            rules={{ required: "Selecione uma tag" }}
-                                            render={({ field }) => (
-                                                <Select onValueChange={field.onChange} value={field.value}>
-                                                    <SelectTrigger className="w-[180px]">
-                                                        <SelectValue placeholder="Selecione uma tag" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectGroup>
-                                                            {listaTags && listaTags.length > 0 ? (
-                                                                listaTags.map((item, index) => (
-                                                                    <SelectItem key={index} value={item._id}>{item.titulo}</SelectItem>
-                                                                ))) :
-                                                                (<p>Crie uma tag</p>)}
+                            <Select value={tagIdSelecionada} onValueChange={(value: string) => setTagIdSelecionada(value)}>
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Selecione uma tag" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        {listaTags.length === 0 && <p>Crie uma tag</p>}
 
-                                                        </SelectGroup>
-                                                    </SelectContent>
-                                                </Select>
-                                            )} />
-                                        <FieldDescription>Use as tags para organizar seus códigos.</FieldDescription>
-                                        {errors.tag && <FieldError>{errors.tag.mensagem}</FieldError>}
-                                    </Field>
-                                </form>
-                            </Form>
+                                        {listaTags.map((tag) => (
+                                            <SelectItem key={tag._id} value={tag._id}>
+                                                {tag.titulo}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+
+                            <Field className="py-2">
+                                <FieldLabel htmlFor="tags">Tags</FieldLabel>
+                                <div className="flex flex-row gap-3">
+                                    <Input type="text" id="tags" value={novaTag} onChange={(e) => setNovaTag(e.target.value)} placeholder="Ex: MySql" />
+                                    <Button type="button" onClick={handleCriarTag}>Criar tag</Button>
+                                </div>
+                                <FieldDescription>Use as tags para organizar seus códigos.</FieldDescription>
+                                {/* {errors.tag && <FieldError>{errors.tag.mensagem}</FieldError>} */}
+                            </Field>
+
                         </TabsContent>
                         <TabsContent value="codigo">
-                            <Form>
-                                <form className="space-y-8 w-full py-10 bg-card p-4 rounded-md border">
-                                    <Field>
-                                        <CodeEditor
-                                            codeSnippets={codeSnippets}
-                                            initialCode={codigoSelecionado.codigo}
-                                            initialLang={codigoSelecionado.linguagem as Linguagem}
-                                            onChange={(novoCodigo, novaLinguagem) => {
-                                                setCodigo(novoCodigo);
-                                                setLinguagem(novaLinguagem);
-                                            }}
-                                        />
-                                        <FieldError></FieldError>
-                                    </Field>
-                                </form>
-                            </Form>
+                            <form className="space-y-8 w-full py-10 bg-card p-4 rounded-md border">
+                                <Field>
+                                    <CodeEditor
+                                        codeSnippets={codeSnippets}
+                                        codInicial={codigoSelecionado.codigo}
+                                        lingInicial={codigoSelecionado.linguagem as Linguagem}
+                                        onChange={(novoCodigo, novaLinguagem) => {
+                                            setCodigo(novoCodigo);
+                                            setLinguagem(novaLinguagem);
+                                        }}
+                                    />
+                                    <FieldError></FieldError>
+                                </Field>
+                            </form>
                         </TabsContent>
                     </Tabs>
                 </DialogHeader>
-                <Button onClick={enviar}>Atualizar</Button>
+                <Button onClick={handleAtualizar}>Atualizar</Button>
             </DialogContent>
         </Dialog>
     </>)

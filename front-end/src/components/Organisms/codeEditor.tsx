@@ -17,24 +17,24 @@ type Linguagem = 'javascript' | 'typescript' | 'python' | 'java' | 'csharp' | 'p
 interface CodeEditorProps {
     codeSnippets: Record<Linguagem, string>;
     onChange: (codigo: string, lang: Linguagem) => void;
-    initialCode?: string;
-    initialLang?: Linguagem;
+    codInicial?: string;
+    lingInicial?: Linguagem;
 }
 
-export function CodeEditor({ codeSnippets, onChange, initialCode, initialLang }: CodeEditorProps) {
-    const [linguagem, setLinguagem] = useState<Linguagem>(initialLang ?? "javascript");
-    const [codigoUsuario, setCodigoUsuario] = useState<string>(initialCode ?? codeSnippets.javascript);
+export function CodeEditor({ codeSnippets, onChange, codInicial, lingInicial }: CodeEditorProps) {
+    const [linguagem, setLinguagem] = useState<Linguagem>(lingInicial ?? "javascript");
+    const [codigoUsuario, setCodigoUsuario] = useState<string>(codInicial ?? codeSnippets.javascript);
 
     const selecionado = (novaLinguagem: string) => {
-        const lang = novaLinguagem as Linguagem;
-        setLinguagem(lang);
-        setCodigoUsuario(codeSnippets[lang]);
-        onChange(codeSnippets[lang], lang);
+        const linguagemSelecionada = novaLinguagem as Linguagem;
+        setLinguagem(linguagemSelecionada);
+        setCodigoUsuario(codeSnippets[linguagemSelecionada]);
+        onChange(codeSnippets[linguagemSelecionada], linguagemSelecionada);
     };
 
     return (
         <>
-            <Select onValueChange={selecionado}>
+            <Select value={linguagem} onValueChange={selecionado}>
                 <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="linguagem" />
                 </SelectTrigger>

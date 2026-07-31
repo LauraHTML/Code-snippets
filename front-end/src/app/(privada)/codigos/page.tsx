@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 
-import { listarCodigos } from "@/src/services/codigosService";
+import { listarCodigos, deletarCodigo } from "@/src/services/codigosService";
+import { listarTags } from "@/src/services/tagsServices";
 
 import { AppSidebar } from "@/src/components/appSidebar";
 import { Tabela } from "@/src/components/Organisms/tabela";
@@ -24,6 +25,7 @@ export interface Tags {
 export default function Home() {
 
   const [codigos, setCodigos] = useState<TCodigos[]>([]);
+  const [tags, setTags] = useState<Tags[]>([])
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
 
@@ -33,14 +35,13 @@ export default function Home() {
         setLoading(true);
         const res = await listarCodigos();
         setCodigos(res);
-        console.log(codigos)
 
         if (!res.ok) {
           throw new Error("Erro ao listar códigos");
         }
       }
       catch (erro: any) {
-        setErro(`Erro ao listar códigos: ${erro.mensagem}`);
+        setErro(`Erro ao listar códigos: ${erro}`);
       }
       finally {
         setLoading(false);
@@ -49,13 +50,28 @@ export default function Home() {
     Codigos();
   }, []);
 
-  const DeletarCodigo = async (id: string) => {
-    const res = await fetch(`http://localhost:8080/codigos/${id}`, {
-      method: 'DELETE',
-      credentials: "include",
-    });
+  useEffect(() => {
+    const Tags = async () => {
+      try {
+        setLoading(true);
+        const tagsArray = await listarTags();
+        setTags(tagsArray);
+        console.log("tags legais:", tagsArray);
+      }
+      catch (erro: any) {
+        setErro(`Erro ao listar códigos: ${erro}`);
+      }
+      finally {
+        setLoading(false);
+      }
+    }
+    Tags();
+  }, []);
 
-    if (res.ok) {
+  const DeletarCodigo = async (id: string) => {
+    const res = await deletarCodigo(id)
+
+    if (res.status === "sucesso") {
       toast.success("Código deletado com sucesso!", {
         position: "top-center", style: {
           '--normal-bg':
@@ -77,40 +93,8 @@ export default function Home() {
     }
   }
 
-  const AtualizarCodigo = async (data: TCodigos) => {
-
-    const res = await fetch(`http://localhost:8080/codigos/${data._id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: "include",
-      body: JSON.stringify({
-        titulo: data.titulo,
-        codigo: data.codigo,
-        linguagem: data.linguagem,
-        tags: [data.tags]
-      })
-    });
-
-    if (res.ok) {
-      toast.success("Código atualizado com sucesso!", {
-        position: "top-center", style: {
-          '--normal-bg':
-            'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
-          '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
-          '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
-        } as React.CSSProperties
-      })
-      setCodigos(prev => prev.map(c => c._id === data._id ? data : c))
-
-    } else {
-      toast.error("Erro ao atualizar código", {
-        position: "top-center", style: {
-          '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
-          '--normal-text': 'var(--destructive)',
-          '--normal-border': 'var(--destructive)'
-        } as React.CSSProperties
-      })
-    }
+  const AtualizarCodigo = (data: TCodigos) => {
+    setCodigos(prev => prev.map(c => c._id === data._id ? data : c))
   }
 
   const tableColumns = columns(AtualizarCodigo, DeletarCodigo)
@@ -144,6 +128,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+              <h1>tags</h1>
 
               <Tabela columns={tableColumns} data={codigos} onDelete={DeletarCodigo} atualizar={AtualizarCodigo} />
 

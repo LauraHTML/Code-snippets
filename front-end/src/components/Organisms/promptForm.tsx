@@ -52,7 +52,7 @@ export default function PromptForm({ enviar }: Input) {
                         <Textarea
                             value={conteudo}
                             onChange={(e) => setConteudo(e.target.value)}
-                            placeholder="Descreva o seu projeto para gerar o readme"
+                            placeholder="Descreva o seu projeto para gerar um readme"
                             className="w-full bg-transparent! p-0 border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 text-foreground resize-none border-none outline-none text-sm min-h-10 max-h-[40vh]"
                             rows={1}
                             onInput={(e) => {

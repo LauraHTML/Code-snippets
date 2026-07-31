@@ -60,7 +60,7 @@ export default function Readme() {
                                     </div>
                                 } />
                             </div>) :
-                            (<p>Descreva o seu projeto para gerar o readme</p>)}
+                            (<p>Descreva o seu projeto para gerar um readme para o Github</p>)}
                     <PromptForm enviar={gerarReadme} />
 
                 </div>
