@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 
 import { listarCodigos, deletarCodigo } from "@/src/services/codigosService";
-import { listarTags } from "@/src/services/tagsServices";
 
 import { AppSidebar } from "@/src/components/appSidebar";
 import { Tabela } from "@/src/components/Organisms/tabela";
@@ -25,7 +24,6 @@ export interface Tags {
 export default function Home() {
 
   const [codigos, setCodigos] = useState<TCodigos[]>([]);
-  const [tags, setTags] = useState<Tags[]>([])
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
 
@@ -48,24 +46,6 @@ export default function Home() {
       }
     }
     Codigos();
-  }, []);
-
-  useEffect(() => {
-    const Tags = async () => {
-      try {
-        setLoading(true);
-        const tagsArray = await listarTags();
-        setTags(tagsArray);
-        console.log("tags legais:", tagsArray);
-      }
-      catch (erro: any) {
-        setErro(`Erro ao listar códigos: ${erro}`);
-      }
-      finally {
-        setLoading(false);
-      }
-    }
-    Tags();
   }, []);
 
   const DeletarCodigo = async (id: string) => {
@@ -128,10 +108,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <h1>tags</h1>
-
               <Tabela columns={tableColumns} data={codigos} onDelete={DeletarCodigo} atualizar={AtualizarCodigo} />
-
             </div>
           </div>
         </div>

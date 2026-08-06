@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
 import { login } from "@/src/services/loginService";
-import { cadastro } from "@/src/services/cadastroService";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/src/components/ui/tabs";
-
+import { cadastro } from "@/src/services/cadastroService";
 import { useRouter } from "next/navigation";
+
 
 import {
   Field,
@@ -37,7 +37,7 @@ export default function Home() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
   const [loading, setLoading] = useState(false)
 
-  async function handleCadastro(e) {
+  async function handleCadastro(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
     setErrors({})
 
@@ -90,13 +90,13 @@ export default function Home() {
     }
   }
 
-  async function handleLogin(e) {
-    e.preventDefault()
-    setErrors({})
+  async function handleLogin(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    setErrors({});
 
     const newErrors: any = {}
-    if (!email.trim()) newErrors.email = "Email é obrigatório"
-    if (!senha.trim()) newErrors.senha = "Senha é obrigatória"
+    if (!email.trim()) newErrors.email = "Email é obrigatório";
+    if (!senha.trim()) newErrors.senha = "Senha é obrigatória";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
@@ -144,7 +144,7 @@ export default function Home() {
           <TabsTrigger value="cadastro">Cadastro</TabsTrigger>
         </TabsList>
         <TabsContent value="cadastro">
-          <FieldSet>
+          <FieldSet className="py-4">
             <FieldLegend>Crie sua conta</FieldLegend>
             <FieldDescription></FieldDescription>
             <FieldGroup>
@@ -187,15 +187,7 @@ export default function Home() {
                 />
                 {errors.senha && <FieldError>{errors.senha}</FieldError>}
               </Field>
-              {/* <FieldSeparator />
-              <FieldGroup className="items-center py-4">
-                <FieldLabel>Ou se cadastre com</FieldLabel>
-                <Field orientation={"horizontal"} className="w-full items-center">
-                  <Button className="w-1/2" variant={"secondary"}><IconBrandGithub />Github</Button>
-                  <Button className="w-1/2" variant={"secondary"}><IconBrandGoogle />Google</Button>
 
-                </Field>
-              </FieldGroup> */}
             </FieldGroup>
           </FieldSet>
           <Button className="w-full my-2" onClick={handleCadastro} disabled={loading}>
@@ -203,7 +195,7 @@ export default function Home() {
           </Button>
         </TabsContent>
         <TabsContent value="login">
-          <FieldSet>
+          <FieldSet className="py-4">
             <FieldLegend>Faça Login</FieldLegend>
             <FieldDescription></FieldDescription>
             <FieldGroup>
@@ -233,15 +225,7 @@ export default function Home() {
                 />
                 {errors.senha && <FieldError>{errors.senha}</FieldError>}
               </Field>
-              <FieldSeparator />
-              {/* <FieldGroup className="items-center py-4">
-                <FieldLabel>Ou se cadastre com</FieldLabel>
-                <Field orientation={"horizontal"} className="w-full items-center">
-                  <Button className="w-1/2" variant={"secondary"}><IconBrandGithub />Github</Button>
-                  <Button className="w-1/2" variant={"secondary"}><IconBrandGoogle />Google</Button>
 
-                </Field>
-              </FieldGroup> */}
             </FieldGroup>
           </FieldSet>
           <Button className="w-full" onClick={handleLogin} disabled={loading}>
