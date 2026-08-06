@@ -25,12 +25,18 @@
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.1.0",
     "mongoose": "^9.4.1",
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "passport-google-oauth20": "^2.0.0"
   },
   "devDependencies": {
     "cross-env": "^10.1.0",
     "mongodb-memory-server": "^10.0.0",
     "supertest": "^7.0.0",
     "vitest": "^2.0.0"
+  },
+  "allowScripts": {
+    "esbuild@0.21.5": true,
+    "mongodb-memory-server@10.4.3": true,
+    "sharp@0.34.5": true
   }
 }
