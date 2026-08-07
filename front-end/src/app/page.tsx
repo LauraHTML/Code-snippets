@@ -29,7 +29,7 @@ import {
 } from "@tabler/icons-react"
 
 export default function Home() {
-  const router = useRouter()
+  const router = useRouter();
 
   const [email, setEmail] = useState<string>("")
   const [nome, setNome] = useState<string>("")
@@ -62,11 +62,11 @@ export default function Home() {
           '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
         } as React.CSSProperties
       })
-      setNome("")
-      setEmail("")
-      setSenha("")
+      setNome("");
+      setEmail("");
+      setSenha("");
 
-      router.replace("/codigos")
+      router.replace("/codigos");
 
     } catch (erro: any) {
       toast.error(`Erro no cadastro: ${erro.titulo}`, {

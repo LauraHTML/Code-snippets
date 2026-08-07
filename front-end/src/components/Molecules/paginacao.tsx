@@ -74,6 +74,12 @@ export function ControlePaginacao<T>({
         );
     }
 
+    const handlePageChange = (page: number | string) => {
+        if (typeof page === 'number') {
+            setCurrentPage(page);
+        }
+    };
+
     return (
         <div className="space-y-6">
             {/* Grid de itens */}
@@ -105,7 +111,7 @@ export function ControlePaginacao<T>({
                                     <PaginationEllipsis />
                                 ) : (
                                     <PaginationLink
-                                        onClick={() => setCurrentPage(page)}
+                                        onClick={() => handlePageChange(page)}
                                         isActive={currentPage === page}
                                         className="cursor-pointer"
                                     >
