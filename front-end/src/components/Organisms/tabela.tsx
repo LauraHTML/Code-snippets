@@ -35,7 +35,7 @@ interface DataTableProps<TData, TValue> {
 
 export type TCodigosProps = TCodigos & {
   onDelete: (id: string) => void
-  onAtualizar: (codigo: TCodigos) => void 
+  onAtualizar: (codigo: TCodigos) => void
 }
 
 export function Tabela<TData, TValue>({
@@ -44,11 +44,13 @@ export function Tabela<TData, TValue>({
   onDelete,
   atualizar,
 }: DataTableProps<TData, TValue>) {
+  const [selecaoLinha, setSelecaoLinha] = React.useState({});
+
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
   const [rowSelection, setRowSelection] = React.useState({})
-    const table = useReactTable({
+  const table = useReactTable({
     data,
     columns,
     meta: {
@@ -64,12 +66,23 @@ export function Tabela<TData, TValue>({
       columnFilters: columnFilters,
       rowSelection,
     },
+  });
 
-  })
+  const linhasSelecionadas = table.getFilteredSelectedRowModel().rows;
+  const idCodigoSelecionado = linhasSelecionadas.map(linha => linha.original);
 
+  // console.log('linhas: ', linhasSelecionadas.original);
+
+  console.log('id selecionado: ', idCodigoSelecionado);
+  if (linhasSelecionadas) {
+    for (const item in idCodigoSelecionado) {
+      console.log('linha selecionada: ', idCodigoSelecionado[item]._id);
+    }
+  };
 
   return (
     <div className="overflow-hidden rounded-md border bg-card p-4">
+
       <div className="flex items-center py-4">
         <Input
           placeholder="Filtrar códigos..."
@@ -110,8 +123,10 @@ export function Tabela<TData, TValue>({
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
+
                   </TableCell>
                 ))}
+
               </TableRow>
             ))
           ) : (

@@ -39,11 +39,6 @@ const navMain: Array<LinkData> = [
     icone: FilePlus,
   },
   {
-    titulo: "Favoritados (em breve)",
-    url: "#",
-    icone: Bookmark,
-  },
-  {
     titulo: "ReadMe",
     url: "/readme",
     icone: BookOpen,
@@ -54,7 +49,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [user, setUser] = useState({
     name: "Usuário",
     email: "Carregando...",
-    avatar: "/img/icone.jpg",
   });
   const [iniciaisNome, setIniciasNome] = useState("")
 
@@ -74,7 +68,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         setUser({
           name: formatarPrimeiroNome(res?.usuario?.nome),
           email: res?.usuario?.email ?? "Email não disponível",
-          avatar: "/img/icone.jpg",
         });
       } catch (erro: any) {
         console.error("Erro ao carregar usuário da sidebar:", erro);

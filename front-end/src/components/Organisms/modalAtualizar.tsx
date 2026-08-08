@@ -252,7 +252,7 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
 
     return (<>
         <Dialog>
-            <DialogTrigger className="px-4 py-2 hover:bg-accent inline-flex items-center justify-center gap-2 [&_svg:not([class*='size-'])]:size-4"><Pencil />Atualizar</DialogTrigger>
+            <DialogTrigger className="text-sm whitespace-nowrap px-4 py-2 hover:bg-accent flex items-center justify-start gap-2 [&_svg:not([class*='size-'])]:size-4"><Pencil />Atualizar</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Atualizar código selecionado</DialogTitle>
@@ -274,7 +274,7 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
                                     placeholder={codigoSelecionado.titulo}
                                 />
                                 <FieldDescription>Dê um nome para o trecho de código.</FieldDescription>
-                                {/* {errors.titulo && <FieldError>{errors.titulo.mensagem}</FieldError>} */}
+
                             </Field>
 
                             <Select value={tagIdSelecionada} onValueChange={(value: string) => setTagIdSelecionada(value)}>

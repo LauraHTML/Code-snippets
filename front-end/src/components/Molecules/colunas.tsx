@@ -6,7 +6,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/src/components/ui/badge";
 import { MoreHorizontal } from "lucide-react"
 import { Checkbox } from "@/src/components/ui/checkbox"
-
 import { Button } from "@/src/components/ui/button"
 import {
   DropdownMenu,
@@ -16,8 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/src/components/ui/dropdown-menu"
-import { Pencil,Trash } from "lucide-react"
-
+import { Pencil, Trash } from "lucide-react"
 //atualizar
 import { ModalAtualizar } from "../Organisms/modalAtualizar";
 
@@ -39,14 +37,37 @@ export type TCodigos = {
   titulo: string
   linguagem: string
   codigo: string
-  tags?: string | { titulo: string; cor: string; _id: string }[]
+  tags?: string | { titulo: string; cor: string; _id: string }
   dataCriacao: string,
 }
 
 
-export const columns = ( atualizar: (codigos: TCodigos) => void, onDelete: (id: string) => void): ColumnDef<TCodigos>[] => [
+export const columns = (atualizar: (codigos: TCodigos) => void, onDelete: (id: string) => void): ColumnDef<TCodigos>[] => [
   //selecionar
-  
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Selecionar tudo"
+      />
+    ),
+    cell: ({ row }) => {
+      const codigos: TCodigos = row.original;
+      const id = codigos._id;
+      return (<Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Selecionar linha"
+      />)
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "titulo",
     header: "Titulo",
@@ -89,8 +110,13 @@ export const columns = ( atualizar: (codigos: TCodigos) => void, onDelete: (id: 
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
       const codigos: TCodigos = row.original  // Dados da linha
+
+      const deletarSelecionados = () => {
+        const selecionados = table.getFilteredSelectedRowModel().rows
+        selecionados.forEach((linha) => onDelete((linha.original as TCodigos)._id))
+      }
 
       return (
         <DropdownMenu>
@@ -101,12 +127,31 @@ export const columns = ( atualizar: (codigos: TCodigos) => void, onDelete: (id: 
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <ModalAtualizar atualizar={atualizar} codigoSelecionado={codigos}/>
+            <ModalAtualizar atualizar={atualizar} codigoSelecionado={codigos} />
 
-            {/* confirmar deletar código */}
+            {table.getIsSomeRowsSelected() && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button aligment={"left"} variant={"destructive"}><Trash />Excluir</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Excluir código ?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Essa ação não pode ser desfeita. O código será excluído permanentemente. Tem certeza de que deseja continuar?
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction onClick={deletarSelecionados}>Excluir</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
+
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant={"destructive"}><Trash />Excluir</Button>
+                <Button aligment={"left"} variant={"destructive"}><Trash />Excluir</Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
