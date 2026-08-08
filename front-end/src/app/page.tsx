@@ -39,19 +39,8 @@ export default function Home() {
 
   async function handleCadastro(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
-    setErrors({})
 
-    const newErrors: any = {}
-    if (!nome.trim()) newErrors.nome = "Nome é obrigatório"
-    if (!email.trim()) newErrors.email = "Email é obrigatório"
-    if (!senha.trim()) newErrors.senha = "Senha é obrigatória"
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
-
-    setLoading(true)
+    setLoading(true);
     try {
       const response = await cadastro(email, senha, nome)
       toast.success(response.titulo, {
@@ -81,10 +70,7 @@ export default function Home() {
           '--normal-border': 'light-dark(var(--color-amber-600), var(--color-amber-400))'
         } as React.CSSProperties
       },)
-      // Se for erro de email, colocar abaixo do campo
-      if (erro.mensagem?.includes("email")) {
-        setErrors({ email: erro.mensagem })
-      }
+
     } finally {
       setLoading(false)
     }
@@ -92,16 +78,6 @@ export default function Home() {
 
   async function handleLogin(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-    setErrors({});
-
-    const newErrors: any = {}
-    if (!email.trim()) newErrors.email = "Email é obrigatório";
-    if (!senha.trim()) newErrors.senha = "Senha é obrigatória";
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
 
     setLoading(true)
     try {
@@ -210,7 +186,7 @@ export default function Home() {
                   autoComplete="off"
                   placeholder="nome@gmail.com"
                 />
-                {errors.email && <FieldError>{errors.email}</FieldError>}
+
               </Field>
               <Field>
                 <FieldLabel htmlFor="loginSenha">Senha</FieldLabel>
@@ -223,7 +199,7 @@ export default function Home() {
                   autoComplete="off"
                   placeholder="********"
                 />
-                {errors.senha && <FieldError>{errors.senha}</FieldError>}
+
               </Field>
 
             </FieldGroup>

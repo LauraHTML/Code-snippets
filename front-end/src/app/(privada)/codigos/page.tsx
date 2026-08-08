@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import dynamic from 'next/dynamic';
 
 import { listarCodigos, deletarCodigo } from "@/src/services/codigosService";
 
@@ -97,7 +98,6 @@ export default function Home() {
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
 
               <div className="grid grid-cols-1 md:grid-cols-[50%_50%] gap-4">
-                {/* <TagsSection /> */}
 
                 <div className="bg-card p-4 rounded-md border">
                   <h1 className="text-xl mb-3">Linguagens utilizadas</h1>
@@ -111,6 +111,9 @@ export default function Home() {
               <Tabela columns={tableColumns} data={codigos} onDelete={DeletarCodigo} atualizar={AtualizarCodigo} />
             </div>
           </div>
+          {loading && (
+            <p>Loading...</p>
+          )}
         </div>
       </SidebarInset>
     </SidebarProvider>

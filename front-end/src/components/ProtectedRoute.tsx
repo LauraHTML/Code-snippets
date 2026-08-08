@@ -1,7 +1,8 @@
 "use client"
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { verificarAutenticacao } from "@/src/services/authService";
+import { TriangleAlert, X, Square, SquareTerminal, Minus } from "lucide-react";
+import "@/src/app/globals.css";
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     const router = useRouter();
@@ -30,7 +31,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
                     return;
                 }
                 else {
-                   setIsAutenticado(true); 
+                    setIsAutenticado(true);
                 }
 
             } catch (erro) {
@@ -46,9 +47,36 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
     if (carregando) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
-                <p>Verificando acesso...</p>
-            </div>
+            <section className="flex flex-col w-full md:w-1/2 items-center mx-4">
+
+                <div className="flex flex-row justify-between bg-primary rounded-t-md border border-border w-full p-2">
+                    <div className="flex flex-row gap-2">
+                        <Minus />
+                        <X />
+                        <Square />
+
+                    </div>
+                </div>
+                <div className="overflow-hidden p-4 rounded-b-md flex flex-col items-center justify-around bg-background border border-border w-full gap-3 h-50">
+
+                    <div className="spinner center m-4">
+                        <div className="spinner-blade"></div>
+                        <div className="spinner-blade"></div>
+                        <div className="spinner-blade"></div>
+                        <div className="spinner-blade"></div>
+                        <div className="spinner-blade"></div>
+                        <div className="spinner-blade"></div>
+                        <div className="spinner-blade"></div>
+                        <div className="spinner-blade"></div>
+                        <div className="spinner-blade"></div>
+                        <div className="spinner-blade"></div>
+                        <div className="spinner-blade"></div>
+                        <div className="spinner-blade"></div>
+                    </div>
+                    <h3>Verificando acesso...</h3>
+                </div>
+
+            </section>
         );
     }
 

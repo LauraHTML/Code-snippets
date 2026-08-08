@@ -9,7 +9,7 @@ type objReadmeType = {
 }
 
 const ButtonCopiar = (objReadme: objReadmeType) => {
-  console.log("olaa", objReadme)
+
   const copiarTexto = async () => {
     try {
       await navigator.clipboard.writeText(objReadme.readme || '');

@@ -18,7 +18,7 @@ export async function POST(req: Request): Promise<Response> {
         });
 
         const text = result.text;
-        // console.log("resposta do gemini: ", text);
+
         return NextResponse.json({ readme: text });
     } catch (error: any) {
         console.error("Erro ao gerar README:", error);

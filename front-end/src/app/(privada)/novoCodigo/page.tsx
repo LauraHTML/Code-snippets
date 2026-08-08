@@ -66,7 +66,7 @@ export default function NovoCodigo() {
         try {
             const tagsArray = await listarTags();
             setListaTags(tagsArray);
-            console.log("tags carregadas:", tagsArray);
+
         } catch (erro) {
 
             useEffect(() => {
@@ -255,7 +255,7 @@ export default function NovoCodigo() {
                                                     onChange={(novoCodigo: string, novaLinguagem: string) => {
                                                         setCodigo(novoCodigo);
                                                         setLinguagem(novaLinguagem);
-                                                    }}/>
+                                                    }} />
                                             </Field>
 
                                             <Button onClick={handleCriarCodigo}>Criar novo código</Button>
