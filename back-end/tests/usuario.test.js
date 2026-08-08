@@ -169,7 +169,5 @@ describe("GET /logout", () => {
 
         expect(response.status).toBe(200);
         expect(response.body.status).toBe("sucesso");
-
-        console.log(response)
     });
 });

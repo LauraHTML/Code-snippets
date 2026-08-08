@@ -42,3 +42,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+back-end/src/config/codedb-945a6-firebase-adminsdk-fbsvc-8b134d7311.json
