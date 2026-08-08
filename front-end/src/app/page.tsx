@@ -34,45 +34,49 @@ export default function Home() {
   const [email, setEmail] = useState<string>("")
   const [nome, setNome] = useState<string>("")
   const [senha, setSenha] = useState<string>("")
-  const [errors, setErrors] = useState<{ [key: string]: string }>({})
   const [loading, setLoading] = useState(false)
 
   async function handleCadastro(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault()
+    e.preventDefault();
 
     setLoading(true);
     try {
-      const response = await cadastro(email, senha, nome)
-      toast.success(response.titulo, {
-        position: "top-center", style: {
-          '--normal-bg':
-            'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
-          '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
-          '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
-        } as React.CSSProperties
-      })
-      setNome("");
-      setEmail("");
-      setSenha("");
-
-      router.replace("/codigos");
+      const response = await cadastro(email, senha, nome);
+      if (response.status === 'sucesso') {
+        toast.success(response.titulo, {
+          position: "top-center", style: {
+            '--normal-bg':
+              'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
+            '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
+            '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
+          } as React.CSSProperties
+        })
+        setNome("");
+        setEmail("");
+        setSenha("");
+        router.replace("/codigos")
+      }
+      else {
+        toast.error(`Erro no cadastro: ${response.titulo}`, {
+          description: `${response.mensagem}`, position: "top-center", style: {
+            '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+            '--normal-text': 'var(--destructive)',
+            '--normal-border': 'var(--destructive)'
+          } as React.CSSProperties
+        },)
+      };
 
     } catch (erro: any) {
       toast.error(`Erro no cadastro: ${erro.titulo}`, {
-        description: `${erro.mensagem}`, position: "top-center", style: erro.status === 'erro' ? {
+        description: `${erro.mensagem}`, position: "top-center", style: {
           '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
           '--normal-text': 'var(--destructive)',
           '--normal-border': 'var(--destructive)'
-        } as React.CSSProperties : {
-          '--normal-bg':
-            'color-mix(in oklab, light-dark(var(--color-amber-600), var(--color-amber-400)) 10%, var(--background))',
-          '--normal-text': 'light-dark(var(--color-amber-600), var(--color-amber-400))',
-          '--normal-border': 'light-dark(var(--color-amber-600), var(--color-amber-400))'
         } as React.CSSProperties
-      },)
+      },);
 
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -80,31 +84,37 @@ export default function Home() {
     e.preventDefault();
 
     setLoading(true)
+    const response = await login(email, senha);
     try {
-      const response = await login(email, senha)
-      toast.success(response.titulo, {
-        description: `${response.mensagem}`,
-        position: "top-center", style: {
-          '--normal-bg':
-            'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
-          '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
-          '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
-        } as React.CSSProperties
-      })
-
-      router.replace("/codigos")
+      console.log(response);
+      if (response.status === 'sucesso') {
+        toast.success(response.titulo, {
+          description: `${response.mensagem}`,
+          position: "top-center", style: {
+            '--normal-bg':
+              'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
+            '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
+            '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
+          } as React.CSSProperties
+        });
+        router.replace("/codigos");
+      }
+      else {
+        toast.error(`${response.titulo}`, {
+          description: `${response.mensagem}`, position: "top-center", style: {
+            '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+            '--normal-text': 'var(--destructive)',
+            '--normal-border': 'var(--destructive)'
+          } as React.CSSProperties
+        },)
+      }
 
     } catch (erro: any) {
-      toast.error(`${erro.titulo}`, {
-        description: `${erro.mensagem}`, position: "top-center", style: erro.status === 'erro' ? {
+      toast.error(`Erro inesperado`, {
+        description: `${erro.mensagem}`, position: "top-center", style: {
           '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
           '--normal-text': 'var(--destructive)',
           '--normal-border': 'var(--destructive)'
-        } as React.CSSProperties : {
-          '--normal-bg':
-            'color-mix(in oklab, light-dark(var(--color-amber-600), var(--color-amber-400)) 10%, var(--background))',
-          '--normal-text': 'light-dark(var(--color-amber-600), var(--color-amber-400))',
-          '--normal-border': 'light-dark(var(--color-amber-600), var(--color-amber-400))'
         } as React.CSSProperties
       },)
     } finally {
@@ -135,7 +145,7 @@ export default function Home() {
                   autoComplete="none"
                   placeholder="seu nome"
                 />
-                {errors.nome && <FieldError>{errors.nome}</FieldError>}
+
               </Field>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -148,7 +158,7 @@ export default function Home() {
                   autoComplete="none"
                   placeholder="nome@gmail.com"
                 />
-                {errors.email && <FieldError>{errors.email}</FieldError>}
+
               </Field>
               <Field>
                 <FieldLabel htmlFor="senha">Senha</FieldLabel>
@@ -161,7 +171,7 @@ export default function Home() {
                   autoComplete="none"
                   placeholder="********"
                 />
-                {errors.senha && <FieldError>{errors.senha}</FieldError>}
+
               </Field>
 
             </FieldGroup>
