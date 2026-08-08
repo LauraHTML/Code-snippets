@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
 import { login } from "@/src/services/loginService";
-import { cadastro } from "@/src/services/cadastroService";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/src/components/ui/tabs";
-
+import { cadastro } from "@/src/services/cadastroService";
 import { useRouter } from "next/navigation";
+
 
 import {
   Field,
@@ -29,106 +29,92 @@ import {
 } from "@tabler/icons-react"
 
 export default function Home() {
-  const router = useRouter()
+  const router = useRouter();
 
   const [email, setEmail] = useState<string>("")
   const [nome, setNome] = useState<string>("")
   const [senha, setSenha] = useState<string>("")
-  const [errors, setErrors] = useState<{ [key: string]: string }>({})
   const [loading, setLoading] = useState(false)
 
-  async function handleCadastro(e) {
-    e.preventDefault()
-    setErrors({})
+  async function handleCadastro(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
 
-    const newErrors: any = {}
-    if (!nome.trim()) newErrors.nome = "Nome é obrigatório"
-    if (!email.trim()) newErrors.email = "Email é obrigatório"
-    if (!senha.trim()) newErrors.senha = "Senha é obrigatória"
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
-
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await cadastro(email, senha, nome)
-      toast.success(response.titulo, {
-        position: "top-center", style: {
-          '--normal-bg':
-            'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
-          '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
-          '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
-        } as React.CSSProperties
-      })
-      setNome("")
-      setEmail("")
-      setSenha("")
-
-      router.replace("/codigos")
+      const response = await cadastro(email, senha, nome);
+      if (response.status === 'sucesso') {
+        toast.success(response.titulo, {
+          position: "top-center", style: {
+            '--normal-bg':
+              'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
+            '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
+            '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
+          } as React.CSSProperties
+        })
+        setNome("");
+        setEmail("");
+        setSenha("");
+        router.replace("/codigos")
+      }
+      else {
+        toast.error(`Erro no cadastro: ${response.titulo}`, {
+          description: `${response.mensagem}`, position: "top-center", style: {
+            '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+            '--normal-text': 'var(--destructive)',
+            '--normal-border': 'var(--destructive)'
+          } as React.CSSProperties
+        },)
+      };
 
     } catch (erro: any) {
       toast.error(`Erro no cadastro: ${erro.titulo}`, {
-        description: `${erro.mensagem}`, position: "top-center", style: erro.status === 'erro' ? {
+        description: `${erro.mensagem}`, position: "top-center", style: {
           '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
           '--normal-text': 'var(--destructive)',
           '--normal-border': 'var(--destructive)'
-        } as React.CSSProperties : {
-          '--normal-bg':
-            'color-mix(in oklab, light-dark(var(--color-amber-600), var(--color-amber-400)) 10%, var(--background))',
-          '--normal-text': 'light-dark(var(--color-amber-600), var(--color-amber-400))',
-          '--normal-border': 'light-dark(var(--color-amber-600), var(--color-amber-400))'
         } as React.CSSProperties
-      },)
-      // Se for erro de email, colocar abaixo do campo
-      if (erro.mensagem?.includes("email")) {
-        setErrors({ email: erro.mensagem })
-      }
+      },);
+
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
-  async function handleLogin(e) {
-    e.preventDefault()
-    setErrors({})
-
-    const newErrors: any = {}
-    if (!email.trim()) newErrors.email = "Email é obrigatório"
-    if (!senha.trim()) newErrors.senha = "Senha é obrigatória"
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
+  async function handleLogin(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
 
     setLoading(true)
+    const response = await login(email, senha);
     try {
-      const response = await login(email, senha)
-      toast.success(response.titulo, {
-        description: `${response.mensagem}`,
-        position: "top-center", style: {
-          '--normal-bg':
-            'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
-          '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
-          '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
-        } as React.CSSProperties
-      })
-
-      router.replace("/codigos")
+      console.log(response);
+      if (response.status === 'sucesso') {
+        toast.success(response.titulo, {
+          description: `${response.mensagem}`,
+          position: "top-center", style: {
+            '--normal-bg':
+              'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
+            '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
+            '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
+          } as React.CSSProperties
+        });
+        router.replace("/codigos");
+      }
+      else {
+        toast.error(`${response.titulo}`, {
+          description: `${response.mensagem}`, position: "top-center", style: {
+            '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+            '--normal-text': 'var(--destructive)',
+            '--normal-border': 'var(--destructive)'
+          } as React.CSSProperties
+        },)
+      }
 
     } catch (erro: any) {
-      toast.error(`${erro.titulo}`, {
-        description: `${erro.mensagem}`, position: "top-center", style: erro.status === 'erro' ? {
+      toast.error(`Erro inesperado`, {
+        description: `${erro.mensagem}`, position: "top-center", style: {
           '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
           '--normal-text': 'var(--destructive)',
           '--normal-border': 'var(--destructive)'
-        } as React.CSSProperties : {
-          '--normal-bg':
-            'color-mix(in oklab, light-dark(var(--color-amber-600), var(--color-amber-400)) 10%, var(--background))',
-          '--normal-text': 'light-dark(var(--color-amber-600), var(--color-amber-400))',
-          '--normal-border': 'light-dark(var(--color-amber-600), var(--color-amber-400))'
         } as React.CSSProperties
       },)
     } finally {
@@ -144,7 +130,7 @@ export default function Home() {
           <TabsTrigger value="cadastro">Cadastro</TabsTrigger>
         </TabsList>
         <TabsContent value="cadastro">
-          <FieldSet>
+          <FieldSet className="py-4">
             <FieldLegend>Crie sua conta</FieldLegend>
             <FieldDescription></FieldDescription>
             <FieldGroup>
@@ -159,7 +145,7 @@ export default function Home() {
                   autoComplete="none"
                   placeholder="seu nome"
                 />
-                {errors.nome && <FieldError>{errors.nome}</FieldError>}
+
               </Field>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -172,7 +158,7 @@ export default function Home() {
                   autoComplete="none"
                   placeholder="nome@gmail.com"
                 />
-                {errors.email && <FieldError>{errors.email}</FieldError>}
+
               </Field>
               <Field>
                 <FieldLabel htmlFor="senha">Senha</FieldLabel>
@@ -185,17 +171,9 @@ export default function Home() {
                   autoComplete="none"
                   placeholder="********"
                 />
-                {errors.senha && <FieldError>{errors.senha}</FieldError>}
-              </Field>
-              {/* <FieldSeparator />
-              <FieldGroup className="items-center py-4">
-                <FieldLabel>Ou se cadastre com</FieldLabel>
-                <Field orientation={"horizontal"} className="w-full items-center">
-                  <Button className="w-1/2" variant={"secondary"}><IconBrandGithub />Github</Button>
-                  <Button className="w-1/2" variant={"secondary"}><IconBrandGoogle />Google</Button>
 
-                </Field>
-              </FieldGroup> */}
+              </Field>
+
             </FieldGroup>
           </FieldSet>
           <Button className="w-full my-2" onClick={handleCadastro} disabled={loading}>
@@ -203,7 +181,7 @@ export default function Home() {
           </Button>
         </TabsContent>
         <TabsContent value="login">
-          <FieldSet>
+          <FieldSet className="py-4">
             <FieldLegend>Faça Login</FieldLegend>
             <FieldDescription></FieldDescription>
             <FieldGroup>
@@ -218,7 +196,7 @@ export default function Home() {
                   autoComplete="off"
                   placeholder="nome@gmail.com"
                 />
-                {errors.email && <FieldError>{errors.email}</FieldError>}
+
               </Field>
               <Field>
                 <FieldLabel htmlFor="loginSenha">Senha</FieldLabel>
@@ -231,17 +209,9 @@ export default function Home() {
                   autoComplete="off"
                   placeholder="********"
                 />
-                {errors.senha && <FieldError>{errors.senha}</FieldError>}
-              </Field>
-              <FieldSeparator />
-              {/* <FieldGroup className="items-center py-4">
-                <FieldLabel>Ou se cadastre com</FieldLabel>
-                <Field orientation={"horizontal"} className="w-full items-center">
-                  <Button className="w-1/2" variant={"secondary"}><IconBrandGithub />Github</Button>
-                  <Button className="w-1/2" variant={"secondary"}><IconBrandGoogle />Google</Button>
 
-                </Field>
-              </FieldGroup> */}
+              </Field>
+
             </FieldGroup>
           </FieldSet>
           <Button className="w-full" onClick={handleLogin} disabled={loading}>

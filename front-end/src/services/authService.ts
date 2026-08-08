@@ -20,22 +20,3 @@ export async function verificarAutenticacao() {
 }
 
 
-export async function logout() {
-    try {
-        const res = await fetch("http://localhost:8080/logout", {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-
-        if (res.ok) {
-            return true;
-        }
-        return false;
-    } catch (erro) {
-        console.error("Erro ao fazer logout:", erro);
-        return false;
-    }
-}

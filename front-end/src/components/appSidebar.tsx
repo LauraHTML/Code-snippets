@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import * as React from "react"
 
 import { BookOpen, Keyboard, Bookmark, FilePlus, LayoutGrid } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 import { usuario } from "@/src/services/userService";
 
@@ -20,30 +21,34 @@ import {
   SidebarMenuItem,
 } from "@/src/components/ui/sidebar"
 
-const data = {
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/codigos",
-      icon: LayoutGrid,
-    },
-    {
-      title: "Novo código",
-      url: "/novoCodigo",
-      icon: FilePlus,
-    },
-    {
-      title: "Favoritados (em breve)",
-      url: "#",
-      icon: Bookmark,
-    },
-    {
-      title: "ReadMe",
-      url: "/readme",
-      icon: BookOpen,
-    },
-  ],
+type LinkData = {
+  titulo: string,
+  icone: LucideIcon,
+  url: string
 }
+
+const navMain: Array<LinkData> = [
+  {
+    titulo: "Dashboard",
+    url: "/codigos",
+    icone: LayoutGrid,
+  },
+  {
+    titulo: "Novo código",
+    url: "/novoCodigo",
+    icone: FilePlus,
+  },
+  {
+    titulo: "Favoritados (em breve)",
+    url: "#",
+    icone: Bookmark,
+  },
+  {
+    titulo: "ReadMe",
+    url: "/readme",
+    icone: BookOpen,
+  },
+]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [user, setUser] = useState({
@@ -62,7 +67,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const carregarUsuario = async () => {
       try {
         const res = await usuario();
-        
+
         const nomeUsuario = res?.usuario?.nome;
         setIniciasNome(typeof nomeUsuario === "string" && nomeUsuario.trim() ? nomeUsuario.trim().slice(0, 2).toUpperCase() : "US");
 
@@ -103,7 +108,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navMain} />
 
       </SidebarContent>
       <SidebarFooter>

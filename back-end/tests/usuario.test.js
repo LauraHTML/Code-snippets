@@ -132,3 +132,42 @@ describe("GET /usuario", () => {
         expect(response.body.status).toBe("sucesso");
     });
 });
+
+
+describe("GET /logout", () => {
+    beforeAll(async () => {
+        await bancoMongoDb();
+
+        const { default: appModule } = await import("../src/app.js");
+        app = appModule;
+    });
+
+    afterAll(async () => {
+        await finalizarBancoMongoDb();
+    });
+
+    beforeEach(async () => {
+        await Promise.all([
+            Usuario.deleteMany({})
+        ]);
+
+        const senhaHash = await bcrypt.hash("senha123", 10);
+
+        usuarioCriado = await Usuario.create({
+            nome: "Usuário Teste",
+            email: "teste@email.com",
+            senha: senhaHash
+        });
+    });
+
+    it("Fazer logout", async () => {
+        const token = jwt.sign({ id: usuarioCriado._id.toString() }, process.env.JWT_SECRET);
+
+        const response = await request(app)
+            .post(`/logout`)
+            .set("Cookie", [`token=${token}`]);
+
+        expect(response.status).toBe(200);
+        expect(response.body.status).toBe("sucesso");
+    });
+});

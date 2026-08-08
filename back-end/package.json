@@ -21,16 +21,26 @@
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "express-validator": "^7.3.2",
+    "firebase": "^12.17.1",
+    "firebase-admin": "^14.2.0",
     "helmet": "^8.2.0",
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.1.0",
     "mongoose": "^9.4.1",
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "passport-google-oauth20": "^2.0.0"
   },
   "devDependencies": {
     "cross-env": "^10.1.0",
     "mongodb-memory-server": "^10.0.0",
     "supertest": "^7.0.0",
     "vitest": "^2.0.0"
+  },
+  "allowScripts": {
+    "esbuild@0.21.5": true,
+    "mongodb-memory-server@10.4.3": true,
+    "sharp@0.34.5": true,
+    "@firebase/util@1.15.2": true,
+    "protobufjs@7.6.5": true
   }
 }

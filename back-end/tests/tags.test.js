@@ -52,15 +52,9 @@ describe("GET /tags", () => {
             .get("/tags")
             .set("Cookie", [`token=${token}`]);
 
-        console.log("taags")
-        console.log(response.body);
-        console.log(response.body.tags);
-        console.log(response.body.tags[0]);
-
         const obj = response.body.tags[0]
-        for(const chave in obj){
-        console.log(`chave:${chave}: valor: ${obj[chave]}`)
-    }
+        for (const chave in obj) {
+        }
 
         expect(response.status).toBe(200);
     });

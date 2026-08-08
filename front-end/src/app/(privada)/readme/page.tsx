@@ -52,7 +52,7 @@ export default function Readme() {
                             <Resposta resposta={resposta} />
                         </div>) : loading ?
                             (<div className="flex flex-col gap-2">
-                                <Resposta children={
+                                <Resposta resposta={''} children={
                                     <div className="flex flex-col gap-4 py-2">
                                         <Skeleton className="h-4 w-full" />
                                         <Skeleton className="h-4 w-full" />

@@ -24,8 +24,8 @@ describe("GET /codigos", () => {
     });
 
     afterAll(async () => {
-            await finalizarBancoMongoDb();
-        });
+        await finalizarBancoMongoDb();
+    });
 
     beforeEach(async () => {
         await Promise.all([
@@ -78,8 +78,8 @@ describe("GET /codigos", () => {
     });
 
     afterAll(async () => {
-            await finalizarBancoMongoDb();
-        });
+        await finalizarBancoMongoDb();
+    });
 
     beforeEach(async () => {
         await Promise.all([
@@ -130,8 +130,8 @@ describe("GET /codigos", () => {
     });
 
     afterAll(async () => {
-            await finalizarBancoMongoDb();
-        });
+        await finalizarBancoMongoDb();
+    });
 
     beforeEach(async () => {
         await Promise.all([
@@ -162,7 +162,7 @@ describe("GET /codigos", () => {
     });
 
     it("Busca um código específico pelo id", async () => {
-        const token = jwt.sign({ id: usuarioCriado._id.toString() }, process.env.JWT_SECRET); 
+        const token = jwt.sign({ id: usuarioCriado._id.toString() }, process.env.JWT_SECRET);
 
         const response = await request(app)
             .get(`/codigos/${codigoCriado._id.toString()}`)
@@ -217,7 +217,6 @@ describe("POST /codigos", () => {
                 codigo: "const mensagem = 'teste';",
                 tag: tagCriada._id.toString()
             });
-            console.log(response);
         expect(response.status).toBe(201);
         expect(response.body.status).toBe("sucesso");
         expect(response.body.codigo.titulo).toBe("Exemplo de integração");
@@ -237,8 +236,8 @@ describe("POST /codigos", () => {
     });
 
     afterAll(async () => {
-            await finalizarBancoMongoDb();
-        });
+        await finalizarBancoMongoDb();
+    });
 
     beforeEach(async () => {
         await Promise.all([
@@ -286,8 +285,8 @@ describe("PUT /codigos", () => {
     });
 
     afterAll(async () => {
-            await finalizarBancoMongoDb();
-        });
+        await finalizarBancoMongoDb();
+    });
 
     beforeEach(async () => {
         await Promise.all([
@@ -350,8 +349,8 @@ describe("DELETE /codigos", () => {
     });
 
     afterAll(async () => {
-            await finalizarBancoMongoDb();
-        });
+        await finalizarBancoMongoDb();
+    });
 
     beforeEach(async () => {
         await Promise.all([

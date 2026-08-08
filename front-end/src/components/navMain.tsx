@@ -16,7 +16,7 @@ export function NavMain({
   items,
 }: {
   items: {
-    title: string
+    titulo: string
     url: string
     icon?: Icon
   }[]
@@ -25,14 +25,14 @@ export function NavMain({
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
-        
+
         </SidebarMenu>
         <SidebarMenu>
           {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title}>
+            <SidebarMenuItem key={item.titulo}>
+              <SidebarMenuButton tooltip={item.titulo}>
                 {item.icon && <item.icon />}
-                <Link href={item.url}><span>{item.title}</span></Link>
+                <Link href={item.url}><span>{item.titulo}</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}

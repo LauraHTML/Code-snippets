@@ -12,11 +12,11 @@ import { LogOut } from "lucide-react";
 import { toast } from "sonner"
 
 export function NavLogout() {
-    const router = useRouter();
+  const router = useRouter();
 
-  async function handleLogout(e) {
+  async function handleLogout(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
-  try {
+    try {
       const response = await logout()
       toast.success(response.titulo, {
         position: "top-center", style: {
@@ -26,7 +26,7 @@ export function NavLogout() {
           '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
         } as React.CSSProperties
       })
-    
+
 
       router.replace("/")
 
@@ -43,17 +43,17 @@ export function NavLogout() {
           '--normal-border': 'light-dark(var(--color-amber-600), var(--color-amber-400))'
         } as React.CSSProperties
       },)
-    
+
     }
-}
+  }
 
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-          <div className="grid flex-1 text-left text-sm leading-tight p-4 gap-2">
-            
-            <Button onClick={handleLogout} size={"lg"}>Sair da conta<LogOut /></Button>
-          </div>
+        <div className="grid flex-1 text-left text-sm leading-tight p-4 gap-2">
+
+          <Button onClick={handleLogout} size={"lg"}>Sair da conta<LogOut /></Button>
+        </div>
 
       </SidebarMenuItem>
     </SidebarMenu>

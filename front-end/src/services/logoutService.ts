@@ -7,7 +7,7 @@ export async function logout() {
             },
             credentials: "include",
             method: "POST",
-            
+
         })
 
         const dados = await res.json();
@@ -27,9 +27,9 @@ export async function logout() {
     }
     catch (erro: any) {
         throw {
-            titulo: erro.titulo || 'Erro ao fazer logout',
-            mensagem: erro.mensagem || 'Falha ao fazer logout',
-            status: erro.status || 'erro'
+            titulo: erro.titulo,
+            mensagem: erro.mensagem,
+            status: erro.status
         };
     }
 }

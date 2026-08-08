@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
+import dynamic from 'next/dynamic';
 
 import { listarCodigos, deletarCodigo } from "@/src/services/codigosService";
-import { listarTags } from "@/src/services/tagsServices";
 
 import { AppSidebar } from "@/src/components/appSidebar";
 import { Tabela } from "@/src/components/Organisms/tabela";
@@ -25,7 +25,6 @@ export interface Tags {
 export default function Home() {
 
   const [codigos, setCodigos] = useState<TCodigos[]>([]);
-  const [tags, setTags] = useState<Tags[]>([])
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
 
@@ -48,24 +47,6 @@ export default function Home() {
       }
     }
     Codigos();
-  }, []);
-
-  useEffect(() => {
-    const Tags = async () => {
-      try {
-        setLoading(true);
-        const tagsArray = await listarTags();
-        setTags(tagsArray);
-        console.log("tags legais:", tagsArray);
-      }
-      catch (erro: any) {
-        setErro(`Erro ao listar códigos: ${erro}`);
-      }
-      finally {
-        setLoading(false);
-      }
-    }
-    Tags();
   }, []);
 
   const DeletarCodigo = async (id: string) => {
@@ -117,7 +98,6 @@ export default function Home() {
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
 
               <div className="grid grid-cols-1 md:grid-cols-[50%_50%] gap-4">
-                {/* <TagsSection /> */}
 
                 <div className="bg-card p-4 rounded-md border">
                   <h1 className="text-xl mb-3">Linguagens utilizadas</h1>
@@ -128,12 +108,12 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <h1>tags</h1>
-
               <Tabela columns={tableColumns} data={codigos} onDelete={DeletarCodigo} atualizar={AtualizarCodigo} />
-
             </div>
           </div>
+          {loading && (
+            <p>Loading...</p>
+          )}
         </div>
       </SidebarInset>
     </SidebarProvider>

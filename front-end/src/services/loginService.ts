@@ -12,25 +12,24 @@ export async function login(email: string, senha: string) {
 
         const dados = await res.json();
 
-        // Verificar se há erro na resposta
-        if (dados.status === 'erro' || dados.status === 'aviso') {
-            const erro = new Error(dados.mensagem);
-            (erro as any).titulo = dados.titulo;
-            (erro as any).status = dados.status;
-            throw erro;
-        }
-
         if (!res.ok) {
-            throw new Error(`Erro HTTP ${res.status}`);
+            const erro = new Error(dados?.mensagem || `Erro HTTP: ${res.status}`) as Error & {
+                titulo?: string;
+                mensagem?: string;
+                status?: string;
+            };
+            erro.titulo = dados?.titulo || 'Erro no login';
+            erro.mensagem = dados?.mensagem || 'Não foi possível concluir o login';
+            erro.status = dados?.status || 'erro';
         }
 
         return dados;
     }
     catch (erro: any) {
         throw {
-            titulo: erro.titulo || 'Erro ao fazer login',
-            mensagem: erro.mensagem || 'Falha ao fazer login',
-            status: erro.status || 'erro'
+            titulo: erro.titulo,
+            mensagem: erro.mensagem,
+            status: erro.status
         };
     }
 }

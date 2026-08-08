@@ -4,31 +4,30 @@ export async function cadastro(email: string, senha: string, nome: string) {
             headers: {
                 "Content-Type": "application/json"
             },
+            credentials: "include",
             method: "POST",
             body: JSON.stringify({ email, senha, nome }),
         })
 
         const dados = await res.json();
-
-        // Verificar se há erro na resposta
-        if (dados.status === 'erro' || dados.status === 'aviso') {
-            const erro = new Error(dados.mensagem);
-            (erro as any).titulo = dados.titulo;
-            (erro as any).status = dados.status;
-            throw erro;
-        }
-
         if (!res.ok) {
-            throw new Error(`Erro HTTP ${res.status}`);
+            const erro = new Error(dados?.mensagem || `Erro HTTP: ${res.status}`) as Error & {
+                titulo?: string;
+                mensagem?: string;
+                status?: string;
+            };
+            erro.titulo = dados?.titulo || 'Erro no cadastro';
+            erro.mensagem = dados?.mensagem || 'Não foi possível concluir o cadastro';
+            erro.status = dados?.status || 'erro';
         }
 
         return dados;
     }
     catch (erro: any) {
         throw {
-            titulo: erro.titulo || 'Erro ao cadastrar',
-            mensagem: erro.mensagem || 'Falha ao criar novo usuário',
-            status: erro.status || 'erro'
+            titulo: 'Erro inesperado',
+            mensagem: erro?.message || 'Não foi possível concluir cadastro',
+            status: 'erro'
         };
     }
 }
