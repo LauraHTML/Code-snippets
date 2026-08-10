@@ -86,7 +86,9 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
             // Extrai o ID da tag do código selecionado
             const tagId = typeof codigoSelecionado.tags === "string"
                 ? codigoSelecionado.tags
-                : codigoSelecionado.tags?.[0]?._id ?? "";
+                : Array.isArray(codigoSelecionado.tags)
+                    ? codigoSelecionado.tags[0]?._id ?? ""
+                    : codigoSelecionado.tags?._id ?? "";
 
             // Verifica se essa tag realmente existe na lista carregada
             const tagExiste = listaTags.some(t => t._id === tagId);
@@ -221,9 +223,7 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
                 titulo: titulo.trim() || codigoSelecionado.titulo,
                 linguagem,
                 codigo,
-                tags: tagAtualizada
-                    ? [{ titulo: tagAtualizada.titulo, cor: tagAtualizada.cor, _id: tagAtualizada._id }]
-                    : codigoSelecionado.tags,
+                tags: codigoSelecionado.tags,
                 dataCriacao: codigoSelecionado.dataCriacao,
             };
             atualizar(dadosAtualizados);
