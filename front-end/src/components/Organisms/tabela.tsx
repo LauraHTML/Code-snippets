@@ -69,16 +69,6 @@ export function Tabela<TData, TValue>({
   });
 
   const linhasSelecionadas = table.getFilteredSelectedRowModel().rows;
-  const idCodigoSelecionado = linhasSelecionadas.map(linha => linha.original);
-
-  // console.log('linhas: ', linhasSelecionadas.original);
-
-  console.log('id selecionado: ', idCodigoSelecionado);
-  if (linhasSelecionadas) {
-    for (const item in idCodigoSelecionado) {
-      console.log('linha selecionada: ', idCodigoSelecionado[item]._id);
-    }
-  };
 
   return (
     <div className="overflow-hidden rounded-md border bg-card p-4">

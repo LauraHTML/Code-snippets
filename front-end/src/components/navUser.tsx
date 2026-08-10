@@ -33,7 +33,7 @@ export function NavUser({
   return (
     <SidebarMenu className="flex border rounded-xl data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground p-2">
       <SidebarMenuItem className="flex gap-4">
-        <Avatar className="h-8 w-8 rounded-lg grayscale bg-foreground text-sm text-[#2f81f7] rounded-lg">
+        <Avatar className="h-8 w-8 rounded-lg grayscale bg-foreground text-sm text-[#2f81f7]">
 
           <AvatarFallback className="bg-foreground text-sm text-primary rounded-lg">{iniciais}</AvatarFallback>
         </Avatar>
