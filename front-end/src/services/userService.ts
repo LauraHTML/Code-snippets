@@ -1,6 +1,6 @@
 export async function usuario() {
     try {
-        const res = await fetch("http://localhost:8080/usuario", {
+        const res = await fetch(`${process.env.APP_BASE_URL}/usuario`, {
             headers: {
                 "Content-Type": "application/json"
             },

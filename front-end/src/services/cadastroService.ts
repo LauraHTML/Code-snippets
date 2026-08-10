@@ -1,6 +1,6 @@
 export async function cadastro(email: string, senha: string, nome: string) {
     try {
-        const res = await fetch("http://localhost:8080/cadastro", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/cadastro`, {
             headers: {
                 "Content-Type": "application/json"
             },

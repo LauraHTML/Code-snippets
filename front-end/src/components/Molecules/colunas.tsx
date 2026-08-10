@@ -10,12 +10,9 @@ import { Button } from "@/src/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/src/components/ui/dropdown-menu"
-import { Pencil, Trash } from "lucide-react"
+import { Trash } from "lucide-react"
 //atualizar
 import { ModalAtualizar } from "../Organisms/modalAtualizar";
 
@@ -46,6 +43,7 @@ export const columns = (atualizar: (codigos: TCodigos) => void, onDelete: (id: s
   //selecionar
   {
     id: "select",
+    accessorKey: "ações",
     header: ({ table }) => (
       <Checkbox
         checked={
@@ -70,7 +68,7 @@ export const columns = (atualizar: (codigos: TCodigos) => void, onDelete: (id: s
   },
   {
     accessorKey: "titulo",
-    header: "Titulo",
+    header: "Título",
   },
   {
     accessorKey: "linguagem",
@@ -109,6 +107,8 @@ export const columns = (atualizar: (codigos: TCodigos) => void, onDelete: (id: s
   },
   {
     id: "actions",
+    accessorKey: "ações",
+    header: "Ações",
     enableHiding: false,
     cell: ({ row, table }) => {
       const codigos: TCodigos = row.original  // Dados da linha

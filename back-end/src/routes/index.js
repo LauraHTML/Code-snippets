@@ -6,7 +6,10 @@ import usuario from "./usuarioRotas.js";
 import cors from "cors"
 import "dotenv/config";
 
-const allowedOrigins = process.env.CLIENT_URL?.split(',') || []
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://front-end-5xu1.onrender.com',
+];
 
 const routes = (app) => {
   app.route("/").get((req, res) => res.status(200).send("Code Snippets"));

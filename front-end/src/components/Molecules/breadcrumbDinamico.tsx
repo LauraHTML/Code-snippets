@@ -9,7 +9,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+} from "@/src/components/ui/breadcrumb"
 
 const labels: Record<string, string> = {
   codigos: "Meus códigos",

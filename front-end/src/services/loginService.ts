@@ -1,7 +1,7 @@
 
 export async function login(email: string, senha: string) {
     try {
-        const res = await fetch("http://localhost:8080/login", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/login`, {
             headers: {
                 "Content-Type": "application/json"
             },

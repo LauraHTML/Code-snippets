@@ -1,7 +1,7 @@
 
 export async function logout() {
     try {
-        const res = await fetch("http://localhost:8080/logout", {
+        const res = await fetch(`${process.env.APP_BASE_URL}/logout`, {
             headers: {
                 "Content-Type": "application/json"
             },

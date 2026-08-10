@@ -2,9 +2,9 @@ import { Tags } from "@/src/app/(privada)/codigos/page";
 
 export async function listarCodigos() {
     try {
-        const res = await fetch("http://localhost:8080/codigos", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/codigos`, {
             method: "GET",
-            credentials: "include", 
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json"
             }
@@ -37,9 +37,9 @@ export async function listarCodigos() {
 
 export async function criarCodigo(titulo: string, linguagem: string, codigo: string, tag: string) {
     try {
-        const res = await fetch("http://localhost:8080/codigos", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/codigos`, {
             method: "POST",
-            credentials: "include", 
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json"
             },
@@ -66,9 +66,9 @@ export async function criarCodigo(titulo: string, linguagem: string, codigo: str
     }
 }
 
-export async function atualizarCodigo(id: string, titulo: string, linguagem: string, codigo: string, tag: string ) {
+export async function atualizarCodigo(id: string, titulo: string, linguagem: string, codigo: string, tag: string) {
     try {
-        const res = await fetch(`http://localhost:8080/codigos/${id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/codigos/${id}`, {
             method: "PUT",
             credentials: "include",
             headers: {
@@ -99,7 +99,7 @@ export async function atualizarCodigo(id: string, titulo: string, linguagem: str
 
 export async function deletarCodigo(id: string) {
     try {
-        const res = await fetch(`http://localhost:8080/codigos/${id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/codigos/${id}`, {
             method: "DELETE",
             credentials: "include",
             headers: {

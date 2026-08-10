@@ -17,7 +17,6 @@ import {
 import { TCodigos } from "@/src/components/Molecules/colunas";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Form } from "@/src/components/ui/form";
 import {
     Field,
     FieldLabel,
@@ -37,7 +36,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/src/components/ui/select";
-import { Pencil } from "lucide-react"
+import { SquarePen } from "lucide-react";
 import { CodeEditor } from "@/src/components/Organisms/codeEditor";
 import { criarTag, listarTags } from "@/src/services/tagsServices";
 
@@ -58,7 +57,6 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
     const [novaTag, setNovaTag] = useState<string>("")
     const [listaTags, setListaTags] = useState<Tags[]>([])
     const [tagIdSelecionada, setTagIdSelecionada] = useState<string>("")
-    const [dadosFormulario, setDadosFormulario] = useState<Partial<TCodigos>>({});
 
     const { register, reset, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
@@ -252,7 +250,7 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
 
     return (<>
         <Dialog>
-            <DialogTrigger className="text-sm whitespace-nowrap px-4 py-2 hover:bg-accent flex items-center justify-start gap-2 [&_svg:not([class*='size-'])]:size-4"><Pencil />Atualizar</DialogTrigger>
+            <DialogTrigger className="text-sm whitespace-nowrap px-4 py-2 hover:bg-accent flex items-center justify-start gap-2 [&_svg:not([class*='size-'])]:size-4"><SquarePen />Atualizar</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Atualizar código selecionado</DialogTitle>
@@ -301,7 +299,7 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
                                     <Button type="button" onClick={handleCriarTag}>Criar tag</Button>
                                 </div>
                                 <FieldDescription>Use as tags para organizar seus códigos.</FieldDescription>
-                                {/* {errors.tag && <FieldError>{errors.tag.mensagem}</FieldError>} */}
+
                             </Field>
 
                         </TabsContent>

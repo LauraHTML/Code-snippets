@@ -10,18 +10,8 @@ import {
 
 import {
   Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/src/components/ui/dropdown-menu"
+  AvatarFallback
+} from "@/src/components/ui/avatar";
 import {
   SidebarMenu,
   SidebarMenuButton,
