@@ -8,7 +8,7 @@ import "dotenv/config";
 
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://front-end-5xu1.onrender.com',
+  process.env.CLIENT_URL,
 ];
 
 const routes = (app) => {
