@@ -130,93 +130,98 @@ export default function Home() {
           <TabsTrigger value="cadastro">Cadastro</TabsTrigger>
         </TabsList>
         <TabsContent value="cadastro">
-          <FieldSet className="py-4">
-            <FieldLegend>Crie sua conta</FieldLegend>
-            <FieldDescription></FieldDescription>
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="nome">Nome</FieldLabel>
-                <Input
-                  name="nome"
-                  id="nome"
-                  value={nome}
-                  onChange={(e) => setNome(e.target.value)}
-                  type="text"
-                  autoComplete="none"
-                  placeholder="seu nome"
-                />
+          <form action="">
+            <FieldSet className="py-4">
+              <FieldLegend>Crie sua conta</FieldLegend>
+              <FieldDescription></FieldDescription>
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="nome">Nome</FieldLabel>
+                  <Input
+                    name="nome"
+                    id="nome"
+                    value={nome}
+                    onChange={(e) => setNome(e.target.value)}
+                    type="text"
+                    autoComplete="none"
+                    placeholder="seu nome"
+                  />
 
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input
-                  name="email"
-                  id="email"
-                  value={email}
-                  type="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                  autoComplete="none"
-                  placeholder="nome@gmail.com"
-                />
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="email">Email</FieldLabel>
+                  <Input
+                    name="email"
+                    id="email"
+                    value={email}
+                    type="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    autoComplete="none"
+                    placeholder="nome@gmail.com"
+                  />
 
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="senha">Senha</FieldLabel>
-                <Input
-                  name="senha"
-                  id="senha"
-                  value={senha}
-                  type="password"
-                  onChange={(e) => setSenha(e.target.value)}
-                  autoComplete="none"
-                  placeholder="********"
-                />
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="senha">Senha</FieldLabel>
+                  <Input
+                    name="senha"
+                    id="senha"
+                    value={senha}
+                    type="password"
+                    onChange={(e) => setSenha(e.target.value)}
+                    autoComplete="none"
+                    placeholder="********"
+                  />
+                </Field>
 
-              </Field>
+              </FieldGroup>
+            </FieldSet>
+            <Button className="w-full my-2" onClick={handleCadastro} disabled={loading}>
+              {loading ? "Cadastrando..." : "Cadastrar"}
+            </Button>
+          </form>
 
-            </FieldGroup>
-          </FieldSet>
-          <Button className="w-full my-2" onClick={handleCadastro} disabled={loading}>
-            {loading ? "Cadastrando..." : "Cadastrar"}
-          </Button>
         </TabsContent>
         <TabsContent value="login">
-          <FieldSet className="py-4">
-            <FieldLegend>Faça Login</FieldLegend>
-            <FieldDescription></FieldDescription>
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="loginEmail">Email</FieldLabel>
-                <Input
-                  name="email"
-                  id="loginEmail"
-                  value={email}
-                  type="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                  autoComplete="off"
-                  placeholder="nome@gmail.com"
-                />
+          <form action="">
+            <FieldSet className="py-4">
+              <FieldLegend>Faça Login</FieldLegend>
+              <FieldDescription></FieldDescription>
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="loginEmail">Email</FieldLabel>
+                  <Input
+                    name="email"
+                    id="loginEmail"
+                    value={email}
+                    type="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    autoComplete="off"
+                    placeholder="nome@gmail.com"
+                  />
 
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="loginSenha">Senha</FieldLabel>
-                <Input
-                  name="senha"
-                  id="loginSenha"
-                  value={senha}
-                  type="password"
-                  onChange={(e) => setSenha(e.target.value)}
-                  autoComplete="off"
-                  placeholder="********"
-                />
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="loginSenha">Senha</FieldLabel>
+                  <Input
+                    name="senha"
+                    id="loginSenha"
+                    value={senha}
+                    type="password"
+                    onChange={(e) => setSenha(e.target.value)}
+                    autoComplete="off"
+                    placeholder="********"
+                  />
 
-              </Field>
+                </Field>
 
-            </FieldGroup>
-          </FieldSet>
-          <Button className="w-full" onClick={handleLogin} disabled={loading}>
-            {loading ? "Entrando..." : "Entrar"}
-          </Button>
+              </FieldGroup>
+            </FieldSet>
+            <Button className="w-full" onClick={handleLogin} disabled={loading}>
+              {loading ? "Entrando..." : "Entrar"}
+            </Button>
+          </form>
+
         </TabsContent>
       </Tabs>
 

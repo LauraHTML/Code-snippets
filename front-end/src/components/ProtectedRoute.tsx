@@ -13,7 +13,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         async function verificar() {
             try {
-                const res = await fetch("http://localhost:8080/usuario", {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/usuario`, {
                     method: "GET",
                     credentials: "include",
                     headers: {

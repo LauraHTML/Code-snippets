@@ -84,7 +84,7 @@ export async function criarTag(titulo: string, cor: string) {
 
 export async function atualizarTag(id: string, titulo: string, cor: string) {
     try {
-        const res = await fetch(`http://localhost:8080/tags/${id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/tags/${id}`, {
             method: "PUT",
             credentials: "include",
             headers: {
@@ -115,7 +115,7 @@ export async function atualizarTag(id: string, titulo: string, cor: string) {
 
 export async function deletarTag(id: string) {
     try {
-        const res = await fetch(`http://localhost:8080/tags/${id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/tags/${id}`, {
             method: "DELETE",
             credentials: "include",
             headers: {

@@ -5,7 +5,7 @@ let mongoServer;
 
 export async function bancoMongoDb() {
     process.env.JWT_SECRET = process.env.JWT_SECRET || "test-secret";
-    process.env.CLIENT_URL ??= "http://localhost:3000";
+    process.env.CLIENT_URL ??= process.env.CLIENT_URL;
 
     if (!mongoServer) {
         mongoServer = await MongoMemoryServer.create();
