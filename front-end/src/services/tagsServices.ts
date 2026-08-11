@@ -1,7 +1,7 @@
 
 export async function listarTags() {
     try {
-        const res = await fetch(`${process.env.APP_BASE_URL}/tags`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/tags`, {
             method: "GET",
             credentials: "include",
             headers: {
@@ -43,7 +43,7 @@ export async function listarTags() {
 
 export async function criarTag(titulo: string, cor: string) {
     try {
-        const res = await fetch(`${process.env.APP_BASE_URL}/tags`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/tags`, {
             method: "POST",
             credentials: "include",
             headers: {

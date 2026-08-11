@@ -1,27 +1,28 @@
 
 export async function logout() {
     try {
-        const res = await fetch(`${process.env.APP_BASE_URL}/logout`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/logout`, {
             headers: {
                 "Content-Type": "application/json"
             },
             credentials: "include",
             method: "POST",
 
-        })
+        });
 
         const dados = await res.json();
 
-        if (dados.status === 'erro' || dados.status === 'aviso') {
-            const erro = new Error(dados.mensagem);
-            (erro as any).titulo = dados.titulo;
-            (erro as any).status = dados.status;
-            throw erro;
-        }
-
         if (!res.ok) {
-            throw new Error(`Erro HTTP ${res.status}`);
-        }
+            const erro = new Error(dados?.mensagem || `Erro HTTP: ${res.status}`) as Error & {
+                titulo?: string;
+                mensagem?: string;
+                status?: string;
+            };
+            erro.titulo = dados?.titulo || 'Erro no login';
+            erro.mensagem = dados?.mensagem || 'Não foi possível concluir o login';
+            erro.status = dados?.status || 'erro';
+            throw erro;
+        };
 
         return dados;
     }
