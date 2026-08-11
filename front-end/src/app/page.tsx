@@ -97,6 +97,7 @@ export default function Home() {
             '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
           } as React.CSSProperties
         });
+
         router.replace("/codigos");
       }
       else {

@@ -77,15 +77,15 @@ class UsuarioController {
             res.clearCookie('token', {
                 maxAge: 24 * 60 * 60 * 1000,
                 httpOnly: true,
-                secure: config.isProduction,
-                sameSite: 'Lax'
+                secure: true,
+                sameSite: 'None'
             });
 
             res.cookie('token', token, {
                 maxAge: 24 * 60 * 60 * 1000,
                 httpOnly: true,
-                secure: config.isProduction,
-                sameSite: 'Lax'
+                secure: true,
+                sameSite: 'None'
             });
 
             res.status(201).json({ status: 'sucesso', titulo: 'Cadastro concluído', mensagem: "Usuário criado com sucesso", usuario: { nome: novoUsuario.nome, email: novoUsuario.email } });
@@ -159,15 +159,15 @@ class UsuarioController {
             res.clearCookie('token', {
                 maxAge: 24 * 60 * 60 * 1000,
                 httpOnly: true,
-                secure: config.isProduction,
-                sameSite: 'Lax'
+                secure: true,
+                sameSite: 'None'
             });
 
             res.cookie('token', token, {
                 maxAge: 24 * 60 * 60 * 1000,
                 httpOnly: true,
-                secure: config.isProduction,
-                sameSite: 'Lax'
+                secure: true,
+                sameSite: 'None'
             });
 
             return res.status(200).json({
@@ -212,9 +212,10 @@ class UsuarioController {
     static async Logout(req, res) {
         try {
             res.clearCookie('token', {
+                maxAge: 24 * 60 * 60 * 1000,
                 httpOnly: true,
-                secure: config.isProduction,
-                sameSite: 'Lax'
+                secure: true,
+                sameSite: 'None'
             });
 
             return res.status(200).json({

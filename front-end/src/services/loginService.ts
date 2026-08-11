@@ -21,7 +21,8 @@ export async function login(email: string, senha: string) {
             erro.titulo = dados?.titulo || 'Erro no login';
             erro.mensagem = dados?.mensagem || 'Não foi possível concluir o login';
             erro.status = dados?.status || 'erro';
-        }
+            throw erro;
+        };
 
         return dados;
     }
