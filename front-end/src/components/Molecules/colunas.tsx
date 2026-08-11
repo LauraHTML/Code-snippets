@@ -4,15 +4,15 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/src/components/ui/badge";
-import { MoreHorizontal } from "lucide-react"
-import { Checkbox } from "@/src/components/ui/checkbox"
-import { Button } from "@/src/components/ui/button"
+import { MoreHorizontal } from "lucide-react";
+import { Checkbox } from "@/src/components/ui/checkbox";
+import { Button } from "@/src/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/src/components/ui/dropdown-menu"
-import { Trash } from "lucide-react"
+} from "@/src/components/ui/dropdown-menu";
+import { Trash } from "lucide-react";
 //atualizar
 import { ModalAtualizar } from "../Organisms/modalAtualizar";
 
@@ -27,7 +27,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/src/components/ui/alert-dialog"
+} from "@/src/components/ui/alert-dialog";
 
 export type TCodigos = {
   _id: string

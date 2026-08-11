@@ -217,7 +217,6 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
             });
 
             // Monta o objeto atualizado e reflete na tabela via prop `atualizar`
-            const tagAtualizada = listaTags.find(t => t._id === tagIdSelecionada);
             const dadosAtualizados: TCodigos = {
                 _id: codigoSelecionado._id,
                 titulo: titulo.trim() || codigoSelecionado.titulo,

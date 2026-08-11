@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import * as React from "react"
 
-import { BookOpen, Keyboard, Bookmark, FilePlus, LayoutGrid } from "lucide-react";
+import { BookOpen, Keyboard, Tag, FilePlus, LayoutGrid } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { usuario } from "@/src/services/userService";
@@ -37,6 +37,11 @@ const navMain: Array<LinkData> = [
     titulo: "Novo código",
     url: "/novoCodigo",
     icone: FilePlus,
+  },
+  {
+    titulo: "Tags",
+    url: "/tags",
+    icone: Tag,
   },
   {
     titulo: "ReadMe",
