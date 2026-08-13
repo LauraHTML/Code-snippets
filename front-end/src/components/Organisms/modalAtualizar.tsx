@@ -15,7 +15,6 @@ import {
 
 //formulário
 import { TCodigos } from "@/src/components/Molecules/colunas";
-import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
     Field,
@@ -58,13 +57,6 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
     const [listaTags, setListaTags] = useState<Tags[]>([])
     const [tagIdSelecionada, setTagIdSelecionada] = useState<string>("")
 
-    const { register, reset, handleSubmit, formState: { errors } } = useForm({
-        defaultValues: {
-            titulo: "",
-            tag: ""
-        }
-    });
-
     const fetchTags = async () => {
         try {
             const tags = await listarTags();
@@ -100,9 +92,6 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
 
     useEffect(() => {
         if (codigoSelecionado) {
-            reset({
-                titulo: codigoSelecionado.titulo,
-            });
             setTitulo(codigoSelecionado.titulo);
             setCodigo(codigoSelecionado.codigo);
             setLinguagem(codigoSelecionado.linguagem);

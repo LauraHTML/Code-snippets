@@ -81,41 +81,26 @@ export default function Home() {
   const tableColumns = columns(AtualizarCodigo, DeletarCodigo)
 
   return (
-    <SidebarProvider
-      style={
-        {
-          "--sidebar-width": "calc(var(--spacing) * 72)",
-          "--header-height": "calc(var(--spacing) * 12)",
-        } as React.CSSProperties
-      }
-    >
-      <AppSidebar variant="inset" />
-      <SidebarInset>
-        <SiteHeader />
-        <div className="flex flex-1 flex-col">
-          <div className="@container/main flex flex-1 flex-col gap-2 px-4 lg:px-5">
+    <>
 
-            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+      <div className="flex flex-col gap-4 md:gap-6 md:py-2 @container/main flex-1">
 
-              <div className="grid grid-cols-1 md:grid-cols-[50%_50%] gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-[50%_50%] gap-4">
 
-                <div className="bg-card p-4 rounded-md border">
-                  <h1 className="text-xl mb-3">Linguagens utilizadas</h1>
-                  <div className="flex flex-row w-auto flex-wrap gap-3 rounded-xl">
-                    {codigos.map(codigo =>
-                      <LinguagensBadge key={codigo._id} linguagem={codigo.linguagem} />
-                    )}
-                  </div>
-                </div>
-              </div>
-              <Tabela columns={tableColumns} data={codigos} onDelete={DeletarCodigo} atualizar={AtualizarCodigo} />
+          <div className="bg-card p-4 rounded-md border">
+            <h1 className="text-xl mb-3">Linguagens utilizadas</h1>
+            <div className="flex flex-row w-auto flex-wrap gap-3 rounded-xl">
+              {codigos.map(codigo =>
+                <LinguagensBadge key={codigo._id} linguagem={codigo.linguagem} />
+              )}
             </div>
           </div>
-          {loading && (
-            <p>Loading...</p>
-          )}
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+        <Tabela columns={tableColumns} data={codigos} onDelete={DeletarCodigo} atualizar={AtualizarCodigo} />
+      </div>
+      {loading && (
+        <p>Loading...</p>
+      )}
+    </>
   )
 }

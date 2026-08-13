@@ -37,32 +37,22 @@ export default function Home() {
     setLoading(true);
     try {
       const response = await cadastro(email, senha, nome);
-      if (response.status === 'sucesso') {
-        toast.success(response.titulo, {
-          position: "top-center", style: {
-            '--normal-bg':
-              'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
-            '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
-            '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
-          } as React.CSSProperties
-        })
-        setNome("");
-        setEmail("");
-        setSenha("");
-        router.replace("/codigos")
-      }
-      else {
-        toast.error(`Erro no cadastro: ${response.titulo}`, {
-          description: `${response.mensagem}`, position: "top-center", style: {
-            '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
-            '--normal-text': 'var(--destructive)',
-            '--normal-border': 'var(--destructive)'
-          } as React.CSSProperties
-        },)
-      };
+      toast.success(response.titulo, {
+        position: "top-center", style: {
+          '--normal-bg':
+            'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
+          '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
+          '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
+        } as React.CSSProperties
+      })
+      setNome("");
+      setEmail("");
+      setSenha("");
+      router.replace("/codigos")
+
 
     } catch (erro: any) {
-      toast.error(`Erro no cadastro: ${erro.titulo}`, {
+      toast.error(`Erro no cadastro: ${erro}`, {
         description: `${erro.mensagem}`, position: "top-center", style: {
           '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
           '--normal-text': 'var(--destructive)',
@@ -79,34 +69,23 @@ export default function Home() {
     e.preventDefault();
 
     setLoading(true)
-    const response = await login(email, senha);
     try {
+      const response = await login(email, senha);
       console.log(response);
-      if (response.status === 'sucesso') {
-        toast.success(response.titulo, {
-          description: `${response.mensagem}`,
-          position: "top-center", style: {
-            '--normal-bg':
-              'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
-            '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
-            '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
-          } as React.CSSProperties
-        });
+      toast.success(response.titulo, {
+        description: `${response.mensagem}`,
+        position: "top-center", style: {
+          '--normal-bg':
+            'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
+          '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
+          '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
+        } as React.CSSProperties
+      });
+      router.replace("/codigos");
 
-        router.replace("/codigos");
-      }
-      else {
-        toast.error(`${response.titulo}`, {
-          description: `${response.mensagem}`, position: "top-center", style: {
-            '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
-            '--normal-text': 'var(--destructive)',
-            '--normal-border': 'var(--destructive)'
-          } as React.CSSProperties
-        },)
-      }
 
     } catch (erro: any) {
-      toast.error(`Erro inesperado`, {
+      toast.error(`Erro inesperado ${erro}`, {
         description: `${erro.mensagem}`, position: "top-center", style: {
           '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
           '--normal-text': 'var(--destructive)',

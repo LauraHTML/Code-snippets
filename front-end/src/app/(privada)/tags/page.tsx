@@ -3,13 +3,6 @@ import { useState, useEffect } from "react";
 import { criarTag, listarTags, deletarTag, atualizarTag } from "@/src/services/tagsServices";
 import { Tags } from "@/src/types";
 
-import { SiteHeader } from "@/src/components/site-header";
-import {
-    SidebarInset,
-    SidebarProvider,
-} from "@/src/components/ui/sidebar";
-import { AppSidebar } from "@/src/components/appSidebar";
-
 import { Trash, Plus, Tag as TagIcon } from "lucide-react";
 import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
@@ -179,103 +172,93 @@ export default function TagsPage() {
     }
 
     return (<>
-        <SidebarProvider style={{ "--sidebar-width": "calc(var(--spacing) * 72)", "--header-height": "calc(var(--spacing) * 12)", } as React.CSSProperties}>
-            <AppSidebar variant="inset" />
-            <SidebarInset>
-                <SiteHeader />
-                <main className="min-h-screen">
-                    <div className="flex flex-1 flex-col @container/main gap-4 py-4 md:gap-6 md:py-6 px-4 lg:px-5">
 
-                        {/* Cabeçalho da Página */}
-                        <header className="space-y-2 border-b border-card">
-                            <h1 className="text-3xl font-bold tracking-tight">Minhas Tags</h1>
-                            <p>Gerencie as tags usadas para organizar seus trechos de código.</p>
-                        </header>
+        <header className="space-y-2 border-b border-card">
+            <h1 className="text-3xl font-bold tracking-tight">Minhas Tags</h1>
+            <p>Gerencie as tags usadas para organizar seus trechos de código.</p>
+        </header>
 
 
-                        <section className="p-6 rounded-xl border border-card">
-                            <div className="grid grid-cols-4 grid-rows-auto gap-5 w-full bg-input py-2 rounded-md ">
-                                {Object.values(coresTag).map((corHex, index) => (
-                                    <Button
-                                        key={index}
-                                        type="button"
-                                        onClick={() => setCor(corHex as Cor)}
-                                        className="w-full h-8 border-2 rounded-full"
-                                        style={{
-                                            backgroundColor: corHex as Cor,
-                                            borderColor: corHex === coresTag[cor] ? '#FFFFFF' : '#21262d'
-                                        }}
-                                        title={corHex}>
-                                        teste
+        <section className="p-6 rounded-xl border bg-card">
+            <div className="grid grid-cols-4 grid-rows-auto gap-5 w-full bg-card py-2 rounded-md ">
+                {Object.values(coresTag).map((corHex, index) => (
+                    <Button
+                        key={index}
+                        type="button"
+                        onClick={() => setCor(corHex as Cor)}
+                        className="w-full h-8 border-2 rounded-full"
+                        style={{
+                            backgroundColor: corHex as Cor,
+                            borderColor: corHex === coresTag[cor] ? '#FFFFFF' : '#21262d'
+                        }}
+                        title={corHex}>
+                        teste
+                    </Button>
+                ))}
+            </div>
+            <div className="flex gap-2">
+                <div className="relative flex-1">
+                    <TagIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" />
+                    <Input
+                        type="text"
+                        value={novaTag}
+                        onChange={(e) => setNovaTag(e.target.value)}
+                        onKeyDown={handleCriarTag}
+                        placeholder="Adicionar nova tag (pressione Enter)"
+                        className="w-full pl-9 pr-4 py-2 rounded-md text-sm focus:outline-none focus:ring-2 transition-all"
+                    />
+                </div>
+                <Button
+                    onClick={handleCriarTag}
+                    className="px-4 py-2 rounded-pill text-sm font-medium transition-colors flex items-center gap-2"
+                >
+                    <Plus className="w-4 h-4" />
+                    Criar
+                </Button>
+            </div>
+            <div className="grid grid-flow-col grid-rows-4 gap-8 py-4 min-h-[100px] rounded-lg">
+                {listaTags.length === 0 ? (
+                    <p className="text-sm w-full text-center my-auto">
+                        Nenhuma tag criada ainda.
+                    </p>
+                ) : (
+                    listaTags.map((tag) => (
+                        <div key={tag._id} className="flex flex-row justify-between items-center bg-sidebar-accent w-full px-4 py-2 rounded-full">
+                            <h2>{tag.titulo}</h2>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon-xs">
+                                        <span className="sr-only">Abrir menu</span>
+                                        <MoreHorizontal />
                                     </Button>
-                                ))}
-                            </div>
-                            <div className="flex gap-2">
-                                <div className="relative flex-1">
-                                    <TagIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" />
-                                    <Input
-                                        type="text"
-                                        value={novaTag}
-                                        onChange={(e) => setNovaTag(e.target.value)}
-                                        onKeyDown={handleCriarTag}
-                                        placeholder="Adicionar nova tag (pressione Enter)"
-                                        className="w-full pl-9 pr-4 py-2 rounded-md text-sm focus:outline-none focus:ring-2 transition-all"
-                                    />
-                                </div>
-                                <Button
-                                    onClick={handleCriarTag}
-                                    className="px-4 py-2 rounded-pill text-sm font-medium transition-colors flex items-center gap-2"
-                                >
-                                    <Plus className="w-4 h-4" />
-                                    Criar
-                                </Button>
-                            </div>
-                            <div className="grid grid-flow-col grid-rows-4 gap-8 py-4 min-h-[100px] rounded-lg">
-                                {listaTags.length === 0 ? (
-                                    <p className="text-sm w-full text-center my-auto">
-                                        Nenhuma tag criada ainda.
-                                    </p>
-                                ) : (
-                                    listaTags.map((tag) => (
-                                        <div key={tag._id} className="flex flex-row justify-between items-center bg-sidebar-accent w-full px-4 py-2 rounded-full">
-                                            <h2>{tag.titulo}</h2>
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" size="icon-xs">
-                                                        <span className="sr-only">Abrir menu</span>
-                                                        <MoreHorizontal />
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
-                                                    <ModalTag atualizar={handleAtualizarTag} tagSelecionada={tag} />
-                                                    <AlertDialog>
-                                                        <AlertDialogTrigger asChild>
-                                                            <Button aligment={"left"} variant={"destructive"}><Trash />Excluir</Button>
-                                                        </AlertDialogTrigger>
-                                                        <AlertDialogContent>
-                                                            <AlertDialogHeader>
-                                                                <AlertDialogTitle>Excluir código ?</AlertDialogTitle>
-                                                                <AlertDialogDescription>
-                                                                    Essa ação não pode ser desfeita. O código será excluído permanentemente. Tem certeza de que deseja continuar?
-                                                                </AlertDialogDescription>
-                                                            </AlertDialogHeader>
-                                                            <AlertDialogFooter>
-                                                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                                                <AlertDialogAction onClick={() => handleDeletar(tag._id)}>Excluir</AlertDialogAction>
-                                                            </AlertDialogFooter>
-                                                        </AlertDialogContent>
-                                                    </AlertDialog>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-                        </section>
-                    </div>
-                </main>
-            </SidebarInset>
-        </SidebarProvider>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <ModalTag atualizar={handleAtualizarTag} tagSelecionada={tag} />
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button aligment={"left"} variant={"destructive"}><Trash />Excluir</Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>Excluir código ?</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    Essa ação não pode ser desfeita. O código será excluído permanentemente. Tem certeza de que deseja continuar?
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                <AlertDialogAction onClick={() => handleDeletar(tag._id)}>Excluir</AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                    ))
+                )}
+            </div>
+        </section>
+
     </>
     );
 }

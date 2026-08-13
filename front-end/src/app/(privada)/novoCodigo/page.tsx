@@ -36,7 +36,6 @@ import {
 import { CodeEditor } from "@/src/components/Organisms/codeEditor";
 
 export default function NovoCodigo() {
-
     //linguagens
     const codeSnippets = {
         javascript: ``,
@@ -172,81 +171,79 @@ export default function NovoCodigo() {
 
 
     return (<>
-        <SidebarProvider
-            style={{ "--sidebar-width": "calc(var(--spacing) * 72)", "--header-height": "calc(var(--spacing) * 12)", } as React.CSSProperties}>
-            <AppSidebar variant="inset" />
-            <SidebarInset>
-                <SiteHeader />
-                <div className="flex flex-1 flex-col @container/main gap-4 py-4 md:gap-6 md:py-6 px-4 lg:px-5">
-                    <FieldSet >
-                        <Field>
-                            <FieldLabel htmlFor="titulo">Título para o trecho de código</FieldLabel>
-                            <Input
-                                id="titulo"
-                                placeholder="Ex: Exercício de python"
-                                onChange={(e) => setTitulo(e.target.value)}
-                            />
-                            <FieldDescription>Dê um nome para o trecho de código.</FieldDescription>
+        <header className="space-y-2 border-b border-card">
+            <h1 className="text-3xl font-bold tracking-tight">Adicionar código</h1>
+            <p>Adicione um novo trecho de código.</p>
+        </header>
+        <FieldSet className="w-full max-w-4xl">
+            <Field>
+                <FieldLabel htmlFor="titulo">Título para o trecho de código</FieldLabel>
+                <Input
+                    id="titulo"
+                    className="w-full"
+                    placeholder="Ex: Exercício de python"
+                    onChange={(e) => setTitulo(e.target.value)}
+                />
+                <FieldDescription>Dê um nome para o trecho de código.</FieldDescription>
 
-                        </Field>
-                        <Field>
-                            <FieldLabel htmlFor="tags">Selecione uma tag: </FieldLabel>
-                            <Select onValueChange={(value: string) => setTagIdSelecionada(value)}>
-                                <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Selecione uma tag" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        {listaTags.length === 0 && <p>Crie uma tag</p>}
+            </Field>
+            <Field>
+                <FieldLabel htmlFor="tags">Selecione uma tag: </FieldLabel>
+                <Select onValueChange={(value: string) => setTagIdSelecionada(value)}>
+                    <SelectTrigger className="w-full max-w-md">
+                        <SelectValue placeholder="Selecione uma tag" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup className="w-full p-2 m-0">
+                            {listaTags.length === 0 && <p>Crie uma tag</p>}
 
-                                        {listaTags.map((tag) => (
-                                            <SelectItem key={tag._id} value={tag._id}>
-                                                {tag.titulo}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
+                            {listaTags.map((tag) => (
+                                <SelectItem key={tag._id} value={tag._id}>
+                                    {tag.titulo}
+                                </SelectItem>
+                            ))}
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
 
-                            <FieldDescription>Use as tags para organizar seus códigos.</FieldDescription>
+                <FieldDescription>Use as tags para organizar seus códigos.</FieldDescription>
 
-                        </Field>
-                        <Field>
-                            <FieldLabel htmlFor="tags">Título da tag</FieldLabel>
-                            <Input className="w-1/2" type="text" id="tags" value={novaTag} onChange={(e) => setNovaTag(e.target.value)} placeholder="Ex: MySql" />
-                            <FieldLabel htmlFor="tags">Cor da tag</FieldLabel>
-                            <div className="grid grid-cols-4 grid-rows-flow w-1/2 bg-input border p-2 rounded-md ">
-                                {Object.values(coresTag).map((corHex, index) => (
-                                    <Button
-                                        key={index}
-                                        type="button"
-                                        onClick={() => setCor(corHex as Cor)}
-                                        className="w-full h-8 rounded border-2"
-                                        style={{
-                                            backgroundColor: corHex as Cor,
-                                            borderColor: corHex === coresTag[cor] ? '#FFFFFF' : '#21262d'
-                                        }}
-                                        title={corHex}
-                                    />
-                                ))}
-                            </div>
-                            <Button onClick={handleCriarTag} type="button">Criar tag</Button>
-                        </Field>
-
-                        <Field>
-                            <FieldLabel htmlFor="titulo">Selecione uma linguagem</FieldLabel>
-                            <CodeEditor
-                                codeSnippets={codeSnippets}
-                                onChange={(novoCodigo: string, novaLinguagem: string) => {
-                                    setCodigo(novoCodigo);
-                                    setLinguagem(novaLinguagem);
-                                }} />
-                        </Field>
-
-                        <Button onClick={handleCriarCodigo}>Criar novo código</Button>
-                    </FieldSet>
+            </Field>
+            <Field>
+                <FieldLabel htmlFor="tags">Título da tag</FieldLabel>
+                <Input className="w-full max-w-md" type="text" id="tags" value={novaTag} onChange={(e) => setNovaTag(e.target.value)} placeholder="Ex: MySql" />
+                <FieldLabel htmlFor="tags">Cor da tag</FieldLabel>
+                <div className="grid w-full max-w-md grid-cols-4 gap-2 rounded-md border bg-input p-2">
+                    {Object.values(coresTag).map((corHex, index) => (
+                        <Button
+                            key={index}
+                            type="button"
+                            onClick={() => setCor(corHex as Cor)}
+                            className="h-8 w-full rounded border-2 active:bg-violet-700 hover:bg-violet-600 focus:outline-2 focus:outline-offset-2 focus:outline-violet-500"
+                            style={{
+                                backgroundColor: corHex as Cor,
+                                borderColor: corHex === coresTag[cor] ? '#FFFFFF' : '#21262d'
+                            }}
+                            title={corHex}
+                        />
+                    ))}
                 </div>
-            </SidebarInset>
-        </SidebarProvider>
+                <Button onClick={handleCriarTag} type="button">Criar tag</Button>
+            </Field>
+
+            <Field>
+                <FieldLabel htmlFor="titulo">Selecione uma linguagem</FieldLabel>
+                <div className="w-full min-w-0">
+                    <CodeEditor
+                        codeSnippets={codeSnippets}
+                        onChange={(novoCodigo: string, novaLinguagem: string) => {
+                            setCodigo(novoCodigo);
+                            setLinguagem(novaLinguagem);
+                        }} />
+                </div>
+            </Field>
+
+            <Button onClick={handleCriarCodigo}>Criar novo código</Button>
+        </FieldSet>
     </>)
 }
