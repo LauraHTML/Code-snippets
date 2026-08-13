@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
 import { login } from "@/src/services/loginService";
+import { cadastro } from "@/src/services/cadastroService";
+
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/src/components/ui/tabs";
-import { cadastro } from "@/src/services/cadastroService";
 import { useRouter } from "next/navigation";
 
 

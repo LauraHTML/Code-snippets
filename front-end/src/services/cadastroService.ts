@@ -25,7 +25,7 @@ export async function cadastro(email: string, senha: string, nome: string) {
     }
     catch (erro: any) {
         throw {
-            titulo: 'Erro inesperado',
+            titulo: 'Erro no login',
             mensagem: erro?.message || 'Não foi possível concluir cadastro',
             status: 'erro'
         };

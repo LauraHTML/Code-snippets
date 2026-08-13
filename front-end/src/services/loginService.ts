@@ -28,9 +28,9 @@ export async function login(email: string, senha: string) {
     }
     catch (erro: any) {
         throw {
-            titulo: erro.titulo,
+            titulo: 'Erro no cadastro',
             mensagem: erro.mensagem,
-            status: erro.status
+            status: 'erro'
         };
     }
 }
