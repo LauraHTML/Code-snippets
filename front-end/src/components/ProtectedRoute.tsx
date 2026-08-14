@@ -6,7 +6,6 @@ import "@/src/app/globals.css";
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     const router = useRouter();
-    const routerRef = useRef(router);
     const [isAutenticado, setIsAutenticado] = useState(false);
     const [carregando, setCarregando] = useState(true);
 
@@ -21,29 +20,43 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
                     },
                 });
 
-                if (res.status === 401) return false;
-                if (!res.ok) return false;
+                const dados = await res.json().catch(() => null);
 
-                const data = await res.json();
-
-                if (!data?.autenticado === true) {
+                if (res.status === 401 || res.status === 403) {
+                    console.warn("Usuário não autorizado:", dados);
+                    setIsAutenticado(false);
                     router.push("/");
                     return;
                 }
-                else {
-                    setIsAutenticado(true);
+
+                if (!res.ok) {
+                    console.warn("Erro ao verificar autenticação:", dados);
+                    setIsAutenticado(false);
+                    router.push("/");
+                    return;
                 }
 
+                if (dados?.autenticado !== true) {
+                    console.warn("Resposta de autenticação inválida:", dados);
+                    setIsAutenticado(false);
+                    router.push("/");
+                    return;
+                }
+
+                setIsAutenticado(true);
             } catch (erro) {
-                console.error("route: Erro ao verificar autenticação:", erro);
+                console.error("Erro ao verificar autenticação:", erro);
+                setIsAutenticado(false);
                 router.push("/");
             } finally {
                 setCarregando(false);
             }
-        }
+        };
+
+        console.log('protected route');
 
         verificar();
-    }, []);
+    }, [router]);
 
     if (carregando) {
         return (

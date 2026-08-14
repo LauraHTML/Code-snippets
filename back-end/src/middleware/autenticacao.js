@@ -9,11 +9,10 @@ export const verificarToken = (req, res, next) => {
             titulo: 'Não autorizado',
             mensagem: 'Token não fornecido'
         });
-    }
+    };
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
         req.usuario = {
             ...decoded,
             id_usuario: decoded.id ?? decoded._id
@@ -27,7 +26,7 @@ export const verificarToken = (req, res, next) => {
                 titulo: 'Sessão expirada',
                 mensagem: 'Seu token expirou, faça login novamente'
             });
-        }
+        };
 
         return res.status(401).json({
             status: 'erro',

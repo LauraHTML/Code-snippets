@@ -8,6 +8,7 @@ export function useAuthCheck() {
     const verificarAuth = useCallback(async () => {
         try {
             const autenticado = await verificarAutenticacao();
+            console.log('autenticado', autenticado)
             if (!autenticado) {
                 router.push("/");
             }
@@ -21,9 +22,5 @@ export function useAuthCheck() {
         // Verificar ao montar
         verificarAuth();
 
-        // Verificar periodicamente a cada 5 minutos
-        const intervalo = setInterval(verificarAuth, 5 * 60 * 1000);
-
-        return () => clearInterval(intervalo);
     }, [verificarAuth]);
 }

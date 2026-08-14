@@ -25,8 +25,7 @@ export function NavLogout() {
           '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
           '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
         } as React.CSSProperties
-      })
-
+      });
 
       router.replace("/")
 
