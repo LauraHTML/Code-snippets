@@ -7,18 +7,13 @@ import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/src/components/ui/tabs";
 import { useRouter } from "next/navigation";
 
-
 import {
   Field,
-  FieldContent,
   FieldDescription,
-  FieldError,
   FieldGroup,
   FieldLabel,
   FieldLegend,
-  FieldSeparator,
   FieldSet,
-  FieldTitle,
 } from "@/src/components/ui/field"
 
 import { Input } from "@/src/components/ui/input"
@@ -38,22 +33,32 @@ export default function Home() {
     setLoading(true);
     try {
       const response = await cadastro(email, senha, nome);
-      toast.success(response.titulo, {
-        position: "top-center", style: {
-          '--normal-bg':
-            'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
-          '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
-          '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
-        } as React.CSSProperties
-      })
-      setNome("");
-      setEmail("");
-      setSenha("");
-      router.replace("/codigos")
-
+      if (response.status === 'sucesso') {
+        toast.success(response.titulo, {
+          position: "top-center", style: {
+            '--normal-bg':
+              'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
+            '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
+            '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
+          } as React.CSSProperties
+        })
+        setNome("");
+        setEmail("");
+        setSenha("");
+        router.replace("/codigos")
+      }
+      else {
+        toast.error(`Erro no cadastro: ${response.titulo}`, {
+          description: `${response.mensagem}`, position: "top-center", style: {
+            '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+            '--normal-text': 'var(--destructive)',
+            '--normal-border': 'var(--destructive)'
+          } as React.CSSProperties
+        },)
+      };
 
     } catch (erro: any) {
-      toast.error(`Erro no cadastro: ${erro}`, {
+      toast.error(`Erro no cadastro: ${erro.titulo}`, {
         description: `${erro.mensagem}`, position: "top-center", style: {
           '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
           '--normal-text': 'var(--destructive)',
@@ -70,20 +75,31 @@ export default function Home() {
     e.preventDefault();
 
     setLoading(true)
+    const response = await login(email, senha);
     try {
-      const response = await login(email, senha);
       console.log(response);
-      toast.success(response.titulo, {
-        description: `${response.mensagem}`,
-        position: "top-center", style: {
-          '--normal-bg':
-            'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
-          '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
-          '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
-        } as React.CSSProperties
-      });
-      router.replace("/codigos");
+      if (response.status === 'sucesso') {
+        toast.success(response.titulo, {
+          description: `${response.mensagem}`,
+          position: "top-center", style: {
+            '--normal-bg':
+              'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
+            '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
+            '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
+          } as React.CSSProperties
+        });
 
+        router.replace("/codigos");
+      }
+      else {
+        toast.error(`${response.titulo}`, {
+          description: `${response.mensagem}`, position: "top-center", style: {
+            '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
+            '--normal-text': 'var(--destructive)',
+            '--normal-border': 'var(--destructive)'
+          } as React.CSSProperties
+        },)
+      }
 
     } catch (erro: any) {
       toast.error(`Erro no login`, {
@@ -172,7 +188,7 @@ export default function Home() {
                     value={email}
                     type="email"
                     onChange={(e) => setEmail(e.target.value)}
-                    autoComplete="off"
+                    autoComplete="on"
                     placeholder="nome@gmail.com"
                   />
 
@@ -185,7 +201,7 @@ export default function Home() {
                     value={senha}
                     type="password"
                     onChange={(e) => setSenha(e.target.value)}
-                    autoComplete="off"
+                    autoComplete="on"
                     placeholder="********"
                   />
 
