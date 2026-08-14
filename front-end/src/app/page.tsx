@@ -107,7 +107,7 @@ export default function Home() {
       }
 
     } catch (erro: any) {
-      toast.error(`Erro inesperado`, {
+      toast.error(`Erro no login`, {
         description: `${erro.mensagem}`, position: "top-center", style: {
           '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
           '--normal-text': 'var(--destructive)',
