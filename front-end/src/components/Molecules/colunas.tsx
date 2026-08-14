@@ -11,6 +11,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
+  DropdownMenuItem,
 } from "@/src/components/ui/dropdown-menu";
 import { Trash } from "lucide-react";
 //atualizar
@@ -130,9 +131,31 @@ export const columns = (atualizar: (codigos: TCodigos) => void, onDelete: (id: s
             <ModalAtualizar atualizar={atualizar} codigoSelecionado={codigos} />
 
             {table.getIsSomeRowsSelected() && (
+              <DropdownMenuItem asChild>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <button className="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-destructive hover:text-destructive"><Trash />Excluir</button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Excluir código ?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Essa ação não pode ser desfeita. O código será excluído permanentemente. Tem certeza de que deseja continuar?
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction onClick={deletarSelecionados}>Excluir</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </DropdownMenuItem>
+            )}
+
+            <DropdownMenuItem asChild>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button aligment={"left"} variant={"destructive"}><Trash />Excluir</Button>
+                  <button className="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-destructive hover:text-destructive"><Trash />Excluir</button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
@@ -143,30 +166,11 @@ export const columns = (atualizar: (codigos: TCodigos) => void, onDelete: (id: s
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction onClick={deletarSelecionados}>Excluir</AlertDialogAction>
+                    <AlertDialogAction onClick={() => onDelete(codigos._id)}>Excluir</AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
-            )}
-
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button aligment={"left"} variant={"destructive"}><Trash />Excluir</Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Excluir código ?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Essa ação não pode ser desfeita. O código será excluído permanentemente. Tem certeza de que deseja continuar?
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => onDelete(codigos._id)}>Excluir</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-
+            </DropdownMenuItem>
 
           </DropdownMenuContent>
         </DropdownMenu>

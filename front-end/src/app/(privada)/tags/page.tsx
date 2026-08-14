@@ -181,18 +181,18 @@ export default function TagsPage() {
 
         <section className="p-6 rounded-xl border bg-card">
             <div className="grid grid-cols-4 grid-rows-auto gap-5 w-full bg-card py-2 rounded-md ">
-                {Object.values(coresTag).map((corHex, index) => (
+                {(Object.entries(coresTag) as [Cor, string][]).map(([corChave, corHex]) => (
                     <Button
-                        key={index}
+                        key={corChave}
                         type="button"
-                        onClick={() => setCor(corHex as Cor)}
-                        className="w-full h-8 border-2 rounded-full"
+                        onClick={() => setCor(corChave)}
+                        className={`w-full h-8 rounded-full border-2 transition-all m-3 ${corChave === cor ? 'border-white ring-2 ring-white' : 'border-background'
+                            }`}
                         style={{
-                            backgroundColor: corHex as Cor,
-                            borderColor: corHex === coresTag[cor] ? '#FFFFFF' : '#21262d'
+                            backgroundColor: corHex
                         }}
-                        title={corHex}>
-                        teste
+                        title={corChave}>
+                        Cor da tag
                     </Button>
                 ))}
             </div>

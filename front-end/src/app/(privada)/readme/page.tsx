@@ -21,6 +21,7 @@ export default function Readme() {
     const [loading, setLoading] = useState(false);
 
     const respostaGemini = async (conteudo: string) => {
+        setResposta("");
         setLoading(true);
         try {
             const resposta = await gemini(conteudo);
@@ -41,30 +42,23 @@ export default function Readme() {
 
 
     return (<>
-        <SidebarProvider
-            style={{ "--sidebar-width": "calc(var(--spacing) * 72)", "--header-height": "calc(var(--spacing) * 12)", } as React.CSSProperties}>
-            <AppSidebar variant="inset" />
-            <SidebarInset>
-                <SiteHeader />
-                <div className="flex flex-1 flex-col p-4 items-center justify-center gap-4">
-                    {resposta ?
-                        (<div>
-                            <Resposta resposta={resposta} />
-                        </div>) : loading ?
-                            (<div className="flex flex-col gap-2">
-                                <Resposta resposta={''} children={
-                                    <div className="flex flex-col gap-4 py-2">
-                                        <Skeleton className="h-4 w-full" />
-                                        <Skeleton className="h-4 w-full" />
-                                        <Skeleton className="h-4 w-3/4" />
-                                    </div>
-                                } />
-                            </div>) :
-                            (<p>Descreva o seu projeto para gerar um readme para o Github</p>)}
-                    <PromptForm enviar={gerarReadme} />
+        <div className="flex flex-1 flex-col p-4 items-center justify-center gap-4">
+            {resposta ?
+                (<div>
+                    <Resposta resposta={resposta} />
+                </div>) : loading ?
+                    (<div className="flex flex-col gap-2">
+                        <Resposta resposta={''} children={
+                            <div className="flex flex-col gap-4 py-2">
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-3/4" />
+                            </div>
+                        } />
+                    </div>) :
+                    (<p>Descreva o seu projeto para gerar um readme para o Github</p>)}
+            <PromptForm enviar={gerarReadme} />
 
-                </div>
-            </SidebarInset>
-        </SidebarProvider>
+        </div>
     </>)
 }

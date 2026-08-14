@@ -8,7 +8,7 @@ export async function login(email: string, senha: string) {
             credentials: "include",
             method: "POST",
             body: JSON.stringify({ email, senha }),
-        })
+        });
 
         const dados = await res.json();
 
@@ -22,15 +22,18 @@ export async function login(email: string, senha: string) {
             erro.mensagem = dados?.mensagem || 'Não foi possível concluir o login';
             erro.status = dados?.status || 'erro';
             throw erro;
-        };
+        }
 
         return dados;
-    }
-    catch (erro: any) {
+    } catch (erro: any) {
+        const mensagem = erro?.mensagem || erro?.message || 'Não foi possível concluir o login';
+        const titulo = erro?.titulo || 'Erro no login';
+        const status = erro?.status || 'erro';
+
         throw {
-            titulo: 'Erro no cadastro',
-            mensagem: erro.mensagem,
-            status: 'erro'
+            titulo,
+            mensagem,
+            status,
         };
     }
 }

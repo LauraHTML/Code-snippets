@@ -31,8 +31,10 @@ export default function Home() {
     e.preventDefault();
 
     setLoading(true);
+
     try {
       const response = await cadastro(email, senha, nome);
+
       if (response.status === 'sucesso') {
         toast.success(response.titulo, {
           position: "top-center", style: {
@@ -56,7 +58,6 @@ export default function Home() {
           } as React.CSSProperties
         },)
       };
-
     } catch (erro: any) {
       toast.error(`Erro no cadastro: ${erro.titulo}`, {
         description: `${erro.mensagem}`, position: "top-center", style: {
@@ -65,7 +66,6 @@ export default function Home() {
           '--normal-border': 'var(--destructive)'
         } as React.CSSProperties
       },);
-
     } finally {
       setLoading(false);
     }
@@ -75,9 +75,10 @@ export default function Home() {
     e.preventDefault();
 
     setLoading(true)
-    const response = await login(email, senha);
+
     try {
-      console.log(response);
+      const response = await login(email, senha);
+
       if (response.status === 'sucesso') {
         toast.success(response.titulo, {
           description: `${response.mensagem}`,
@@ -100,7 +101,6 @@ export default function Home() {
           } as React.CSSProperties
         },)
       }
-
     } catch (erro: any) {
       toast.error(`Erro no login`, {
         description: `${erro.mensagem}`, position: "top-center", style: {

@@ -43,7 +43,7 @@ export function ModalTag({ tagSelecionada, atualizar }: ModalAtualizar) {
     type Cor = "azul" | "amarelo" | "verde" | "roxo";
     const [cor, setCor] = useState<Cor>('azul');
 
-    const coresTag = {
+    const coresTag: Record<Cor, string> = {
         azul: "#2f81f7",
         amarelo: "#d2991d",
         verde: "#3fb950",
@@ -70,22 +70,22 @@ export function ModalTag({ tagSelecionada, atualizar }: ModalAtualizar) {
                         <FieldDescription>Dê um novo título para a tag selecionada.</FieldDescription>
                     </Field>
                     <Field className="grid grid-cols-4 grid-rows-auto gap-2 w-full bg-input py-2 rounded-md ">
-                        {Object.values(coresTag).map((corHex, index) => (
+                        {(Object.entries(coresTag) as [Cor, string][]).map(([corChave, corHex]) => (
                             <Button
-                                key={index}
+                                key={corChave}
                                 type="button"
-                                onClick={() => setCor(corHex as Cor)}
-                                className="w-full h-8 rounded border-2"
+                                onClick={() => setCor(corChave)}
+                                className={`w-full h-8 rounded border-2 transition-all ${corChave === cor ? 'border-white ring-2 ring-white' : 'border-background'
+                                    }`}
                                 style={{
-                                    backgroundColor: corHex as Cor,
-                                    borderColor: corHex === coresTag[cor] ? '#FFFFFF' : '#21262d'
+                                    backgroundColor: corHex
                                 }}
-                                title={corHex}>
+                                title={corChave}>
                             </Button>
                         ))}
                     </Field>
                 </DialogHeader>
-                <Button onClick={() => atualizar(cor, titulo, tagSelecionada._id)}>Atualizar</Button>
+                <Button onClick={() => atualizar(coresTag[cor], titulo, tagSelecionada._id)}>Atualizar</Button>
             </DialogContent>
         </Dialog>
     </>)
