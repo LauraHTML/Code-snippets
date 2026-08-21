@@ -26,7 +26,6 @@ export function TagManager({ initialTags, onTagsChange }: EdicaoTags) {
         if (e && 'key' in e && e.key !== "Enter") return;
         if (!inputValue.trim()) return;
 
-        // Evita tags duplicadas
         if (tags.some((tag) => tag.name.toLowerCase() === inputValue.toLowerCase())) {
             setInputValue("");
             return;

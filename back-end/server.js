@@ -1,20 +1,20 @@
-import "dotenv/config";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import dotenv from "dotenv";
 import { validateEnv } from "./src/config/validateEnv.js";  
+
 import app from "./src/app.js";
 import mongoose from "mongoose";
 import conectaDatabase from "./src/config/dbConnect.js";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const ambiente = process.env.NODE_ENV || "development";
+
+dotenv.config({ path: path.resolve(__dirname, `.env.${ambiente}`)})
+
 const porta = process.env.PORT || 8080;
 validateEnv(); 
-
-app.post("/", async (req, res) => {
-  try {
-    res.status(200).json({ ok: true });
-  } catch (erro) {
-    console.error("Erro:", erro);
-    res.status(500).json({ erro: erro.mensagem || "Erro interno do servidor" });
-  }
-})
 
 async function iniciarServidor() {
   try {

@@ -1,19 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
 
-import { AppSidebar } from "@/src/components/appSidebar";
 import { Tags } from "@/src/types";
 
 import { criarCodigo } from "@/src/services/codigosService"
 import { criarTag, listarTags } from "@/src/services/tagsServices";
 
-import { SiteHeader } from "@/src/components/site-header";
-import {
-    SidebarInset,
-    SidebarProvider,
-} from "@/src/components/ui/sidebar";
-
-//formulário
 import { toast } from "sonner";
 import {
     FieldSet,
@@ -24,7 +16,6 @@ import {
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 
-//criar tag
 import {
     Select,
     SelectContent,
@@ -36,7 +27,6 @@ import {
 import { CodeEditor } from "@/src/components/Organisms/codeEditor";
 
 export default function NovoCodigo() {
-    //linguagens
     const codeSnippets = {
         javascript: ``,
         typescript: ``,
@@ -48,13 +38,11 @@ export default function NovoCodigo() {
 
     const [loading, setLoading] = useState(false);
 
-    //codigos
     const [codigo, setCodigo] = useState<string>("");
     const [linguagem, setLinguagem] = useState("javascript");
     const [titulo, setTitulo] = useState<string>("");
 
     const [tagIdSelecionada, setTagIdSelecionada] = useState<string>("");
-    //tags
     const [novaTag, setNovaTag] = useState<string>("")
     const [listaTags, setListaTags] = useState<Tags[]>([])
 
@@ -71,7 +59,6 @@ export default function NovoCodigo() {
         fetchTags();
     }, []);
 
-    //cor
     type Cor = "azul" | "amarelo" | "verde" | "roxo";
     const [cor, setCor] = useState<Cor>('azul');
 
@@ -171,16 +158,16 @@ export default function NovoCodigo() {
 
 
     return (<>
-        <header className="space-y-2 border-b border-card">
-            <h1 className="text-3xl font-bold tracking-tight">Adicionar código</h1>
+        <header className="min-w-0 space-y-2 border-b border-card">
+            <h1 className="break-words text-3xl font-bold tracking-tight">Adicionar código</h1>
             <p>Adicione um novo trecho de código.</p>
         </header>
-        <FieldSet className="w-full max-w-4xl">
+
+        <FieldSet className="min-w-0 w-full">
             <Field>
                 <FieldLabel htmlFor="titulo">Título para o trecho de código</FieldLabel>
                 <Input
                     id="titulo"
-                    className="w-full"
                     placeholder="Ex: Exercício de python"
                     onChange={(e) => setTitulo(e.target.value)}
                 />
@@ -190,11 +177,11 @@ export default function NovoCodigo() {
             <Field>
                 <FieldLabel htmlFor="tags">Selecione uma tag: </FieldLabel>
                 <Select onValueChange={(value: string) => setTagIdSelecionada(value)}>
-                    <SelectTrigger className="w-full max-w-md">
+                    <SelectTrigger>
                         <SelectValue placeholder="Selecione uma tag" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectGroup className="w-full p-2 m-0">
+                        <SelectGroup className="p-2 m-0">
                             {listaTags.length === 0 && <p>Crie uma tag</p>}
 
                             {listaTags.map((tag) => (
@@ -211,29 +198,29 @@ export default function NovoCodigo() {
             </Field>
             <Field>
                 <FieldLabel htmlFor="tags">Título da tag</FieldLabel>
-                <Input className="w-full max-w-md" type="text" id="tags" value={novaTag} onChange={(e) => setNovaTag(e.target.value)} placeholder="Ex: MySql" />
+                <Input type="text" id="tags" value={novaTag} onChange={(e) => setNovaTag(e.target.value)} placeholder="Ex: MySql" />
                 <FieldLabel htmlFor="tags">Cor da tag</FieldLabel>
-                <div className="grid w-full max-w-md grid-cols-4 gap-2 rounded-md border bg-input p-2">
-                    {Object.values(coresTag).map((corHex, index) => (
-                        <Button
-                            key={index}
-                            type="button"
-                            onClick={() => setCor(corHex as Cor)}
-                            className="h-8 w-full rounded border-2 active:bg-violet-700 hover:bg-violet-600 focus:outline-2 focus:outline-offset-2 focus:outline-violet-500"
-                            style={{
-                                backgroundColor: corHex as Cor,
-                                borderColor: corHex === coresTag[cor] ? '#FFFFFF' : '#21262d'
-                            }}
-                            title={corHex}
-                        />
-                    ))}
+                <div className="grid grid-cols-4 gap-2 p-2">
+                    {(Object.entries(coresTag) as [Cor, string][]).map(([corChave, corHex]) => (
+                    <Button
+                        key={corChave}
+                        type="button"
+                        onClick={() => setCor(corChave)}
+                        className={`h-8 rounded border transition-all m-3 ${corChave === cor ? 'border-white ring-2 ring-white' : 'border-background'}`}
+                        style={{
+                            backgroundColor: corHex
+                        }}
+                        title={corChave}>
+                        Cor da tag
+                    </Button>
+                ))}
                 </div>
                 <Button onClick={handleCriarTag} type="button">Criar tag</Button>
             </Field>
 
-            <Field>
+            <Field className="gap-2">
                 <FieldLabel htmlFor="titulo">Selecione uma linguagem</FieldLabel>
-                <div className="w-full min-w-0">
+                <div className="w-full min-w-0 overflow-hidden">
                     <CodeEditor
                         codeSnippets={codeSnippets}
                         onChange={(novoCodigo: string, novaLinguagem: string) => {
@@ -243,7 +230,7 @@ export default function NovoCodigo() {
                 </div>
             </Field>
 
-            <Button onClick={handleCriarCodigo}>Criar novo código</Button>
+            <Button onClick={handleCriarCodigo}>{loading ? "Criando código..." : "Criar código"}</Button>
         </FieldSet>
     </>)
 }

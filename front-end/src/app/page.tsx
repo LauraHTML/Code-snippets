@@ -22,10 +22,10 @@ import { Button } from "@/src/components/ui/button"
 export default function Home() {
   const router = useRouter();
 
-  const [email, setEmail] = useState<string>("")
-  const [nome, setNome] = useState<string>("")
-  const [senha, setSenha] = useState<string>("")
-  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState<string>("");
+  const [nome, setNome] = useState<string>("");
+  const [senha, setSenha] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   async function handleCadastro(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
@@ -110,7 +110,7 @@ export default function Home() {
         } as React.CSSProperties
       },)
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 

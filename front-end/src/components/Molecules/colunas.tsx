@@ -1,5 +1,3 @@
-//colunas
-
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table";
@@ -14,10 +12,9 @@ import {
   DropdownMenuItem,
 } from "@/src/components/ui/dropdown-menu";
 import { Trash } from "lucide-react";
-//atualizar
+
 import { ModalAtualizar } from "../Organisms/modalAtualizar";
 
-//deletar
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,7 +38,6 @@ export type TCodigos = {
 
 
 export const columns = (atualizar: (codigos: TCodigos) => void, onDelete: (id: string) => void): ColumnDef<TCodigos>[] => [
-  //selecionar
   {
     id: "select",
     accessorKey: "ações",

@@ -4,16 +4,10 @@ import dynamic from 'next/dynamic';
 
 import { listarCodigos, deletarCodigo } from "@/src/services/codigosService";
 
-import { AppSidebar } from "@/src/components/appSidebar";
 import { Tabela } from "@/src/components/Organisms/tabela";
 import { columns, TCodigos } from "@/src/components/Molecules/colunas";
 import { toast } from "sonner";
 
-import { SiteHeader } from "@/src/components/site-header";
-import {
-  SidebarInset,
-  SidebarProvider,
-} from "@/src/components/ui/sidebar";
 import { LinguagensBadge } from "@/src/components/Molecules/linguagensBadge";
 
 export interface Tags {
@@ -35,9 +29,6 @@ export default function Home() {
         const res = await listarCodigos();
         setCodigos(res);
 
-        if (!res.ok) {
-          throw new Error("Erro ao listar códigos");
-        }
       }
       catch (erro: any) {
         setErro(`Erro ao listar códigos: ${erro}`);
@@ -99,7 +90,7 @@ export default function Home() {
         <Tabela columns={tableColumns} data={codigos} onDelete={DeletarCodigo} atualizar={AtualizarCodigo} />
       </div>
       {loading && (
-        <p>Loading...</p>
+        <p>Carregando...</p>
       )}
     </>
   )

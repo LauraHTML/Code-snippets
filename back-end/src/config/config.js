@@ -1,4 +1,3 @@
-// config.js
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -8,7 +7,7 @@ const __dirname = path.dirname(__filename);
 
 const env = process.env.NODE_ENV || 'development';
 dotenv.config({
-  path: path.resolve(__dirname, `.env.${env}`)
+  path: path.resolve(__dirname, '../../', `.env.${env}`)
 });
 
 export default {

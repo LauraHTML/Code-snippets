@@ -2,10 +2,6 @@ import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_GEMINI_KEY });
-// const response = await ai.models.generateContent({
-//     model: "gemini-3.5-flash",
-//     contents: `Você é um assistente especializado em documentação. Escreva um arquivo README.md completo e em formato Markdown conforme a entrada do usuário: ${conteudo}. Retorne APENAS o código Markdown do README, sem nenhum texto introdutório ou conclusivo.`,
-//   });
 
 export async function POST(req: Request): Promise<Response> {
     try {

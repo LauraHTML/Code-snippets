@@ -35,7 +35,7 @@ export function CodeEditor({ codeSnippets, onChange, codInicial, lingInicial }: 
     return (
         <>
             <Select value={linguagem} onValueChange={selecionado}>
-                <SelectTrigger className="w-full max-w-[220px]">
+                <SelectTrigger className="w-full mb-4">
                     <SelectValue placeholder="linguagem" />
                 </SelectTrigger>
                 <SelectContent>
@@ -50,7 +50,8 @@ export function CodeEditor({ codeSnippets, onChange, codInicial, lingInicial }: 
                 </SelectContent>
             </Select>
             <Editor
-                className="w-full min-w-0"
+                className="mt-4 w-full min-w-0"
+                width="100%"
                 height="300px"
                 language={linguagem}
                 theme="vs-dark"

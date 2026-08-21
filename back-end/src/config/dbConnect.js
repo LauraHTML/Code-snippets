@@ -6,12 +6,12 @@ dotenv.config();
 async function conectaDatabase() {
     try {
         const opcoes = {
-            connectTimeoutMS: 5000,      // Falha rápido se não conectar em 5s
-            socketTimeoutMS: 45000,      // Timeout para operações
-            serverSelectionTimeoutMS: 5000, // Falha rápido na seleção de servidor
-            retryWrites: true,           // Retry automático para writes
-            maxPoolSize: 10,             // Tamanho da pool de conexão
-            minPoolSize: 2,              // Manter mínimo de conexões
+            connectTimeoutMS: 5000,      
+            socketTimeoutMS: 45000,      
+            serverSelectionTimeoutMS: 5000, 
+            retryWrites: true,         
+            maxPoolSize: 10,             
+            minPoolSize: 2,             
         };
 
         if (!process.env.DB_CONNECTION_STRING) {
@@ -24,7 +24,6 @@ async function conectaDatabase() {
         return mongoose.connection;
     } catch (erro) {
         console.error("Erro de conexão com banco de dados:", erro.message);
-        // Relançar o erro para que a aplicação falhe na inicialização
         throw erro;
     }
 }

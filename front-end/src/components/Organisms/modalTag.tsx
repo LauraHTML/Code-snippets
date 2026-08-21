@@ -1,4 +1,3 @@
-//modal
 "use client";
 import { useEffect, useState } from "react";
 
@@ -12,7 +11,6 @@ import {
     DialogTrigger,
 } from "@/src/components/ui/dialog"
 
-//formulário
 import {
     Field,
     FieldLabel,
@@ -39,7 +37,6 @@ export function ModalTag({ tagSelecionada, atualizar }: ModalAtualizar) {
     }, [tagSelecionada])
 
 
-    //cor
     type Cor = "azul" | "amarelo" | "verde" | "roxo";
     const [cor, setCor] = useState<Cor>('azul');
 

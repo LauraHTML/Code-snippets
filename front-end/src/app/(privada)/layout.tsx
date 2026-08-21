@@ -17,7 +17,7 @@ export default function PrivateLayout({
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader />
-        <main className="flex flex-1 flex-col @container/main gap-4 md:gap-6 px-4 py-6">
+        <main className="flex min-w-0 flex-1 flex-col @container/main gap-4 px-4 py-6 md:gap-6">
           <ProtectedRoute>
             {children}
           </ProtectedRoute>

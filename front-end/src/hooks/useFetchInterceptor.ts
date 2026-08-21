@@ -12,14 +12,12 @@ export function useFetchInterceptor() {
                     credentials: "include",
                 });
 
-                // Se receber 401, token expirou
                 if (response.status === 401) {
                     console.warn("Token expirado. Redirecionando para login...");
                     router.push("/");
                     return null;
                 }
 
-                // Se receber outro erro, propagar
                 if (!response.ok) {
                     throw new Error(`Erro HTTP ${response.status}`);
                 }

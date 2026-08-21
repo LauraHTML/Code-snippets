@@ -1,15 +1,15 @@
 export function validateEnv() {
-  const requiredVars = [
+  const var_requeridas = [
     'DB_CONNECTION_STRING',
     'JWT_SECRET',
     'CLIENT_URL'
   ];
 
-  const missing = requiredVars.filter(varName => !process.env[varName]);
+  const faltando = var_requeridas.filter(varName => !process.env[varName]);
 
-  if (missing.length > 0) {
+  if (faltando.length > 0) {
     console.error('Variáveis de ambiente faltando:');
-    missing.forEach(varName => console.error(`  - ${varName}`));
+    faltando.forEach(varName => console.error(`  - ${varName}`));
     process.exit(1);
   }
 

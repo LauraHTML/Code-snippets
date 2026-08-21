@@ -27,20 +27,16 @@ export function ControlePaginacao<T>({
 }: ControlePaginacaoProps<T>) {
     const [currentPage, setCurrentPage] = useState<number>(1);
 
-    // Reset para página 1 quando os itens mudarem(aumentar ou diminuir)
     useEffect(() => {
         setCurrentPage(1);
     }, [items.length]);
 
-    // Calcular índices dos cards
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
 
-    //quantidade de páginas para a quantidade de cards -> Quantidade total de cards pela de cards por página =6;
     const totalPages = Math.ceil(items.length / itemsPerPage);
 
-    // Gerar números de páginas para mostrar na ui de controle de paginação
     const getPageNumbers = (): (number | string)[] => {
         const pages: (number | string)[] = [];
         const maxPagesToShow = 5;
@@ -50,13 +46,12 @@ export function ControlePaginacao<T>({
                 pages.push(i);
             }
         } else {
-            //inicio da paginação
             if (currentPage <= 3) {
                 pages.push(1, 2, 3, 4, '...', totalPages);
-            } //últimas 2 páginas
+            } 
             else if (currentPage >= totalPages - 2) {
                 pages.push(1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
-            } //meio
+            } 
             else {
                 pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
             }
@@ -65,7 +60,6 @@ export function ControlePaginacao<T>({
         return pages;
     };
 
-    // Se não houver itens, mostrar mensagem
     if (items.length === 0) {
         return (
             <div className="flex flex-col gap-3 text-center py-12 text-muted-foreground items-center">
@@ -82,19 +76,16 @@ export function ControlePaginacao<T>({
 
     return (
         <div className="space-y-6">
-            {/* Grid de itens */}
             <div className={gridClassName}>
                 {currentItems.map((item) => renderItem(item))}
             </div>
 
-            {/* Informações de quantidade */}
             {showInfo && items.length > itemsPerPage && (
                 <div className="text-sm text-muted-foreground text-center">
                     Mostrando {indexOfFirstItem + 1} - {Math.min(indexOfLastItem, items.length)} de {items.length} itens
                 </div>
             )}
 
-            {/* Paginação */}
             {items.length > itemsPerPage && (
                 <Pagination>
                     <PaginationContent>

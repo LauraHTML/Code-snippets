@@ -1,7 +1,6 @@
 
 export async function gemini(conteudo: string) {
   try {
-    // Validar que conteudo é uma string
     if (typeof conteudo !== 'string') {
       throw new Error(`Conteúdo deve ser uma string, recebido: ${typeof conteudo}`);
     }

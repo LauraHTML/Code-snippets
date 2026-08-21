@@ -19,7 +19,6 @@ export function useAuthCheck() {
     }, [router]);
 
     useEffect(() => {
-        // Verificar ao montar
         verificarAuth();
 
     }, [verificarAuth]);

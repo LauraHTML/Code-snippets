@@ -320,6 +320,11 @@ describe("PUT /codigos", () => {
     it("atualiza um código existente", async () => {
         const token = jwt.sign({ id: usuarioCriado._id.toString() }, process.env.JWT_SECRET);
 
+        const tagAtualizada = await TagsModel.create({
+            titulo: "nova tag",
+            cor: "#2f81f7",
+            idUsuario: usuarioCriado._id
+        });
 
         const response = await request(app)
             .put(`/codigos/${codigoCriado._id.toString()}`)
@@ -328,7 +333,7 @@ describe("PUT /codigos", () => {
                 titulo: "conexao com banco",
                 linguagem: "javascript",
                 codigo: "const conexao = true;",
-                tag: tagCriada._id.toString()
+                tag: tagAtualizada._id.toString()
             });
 
         const codigoAtualizado = await Codigo.findById(codigoCriado._id);

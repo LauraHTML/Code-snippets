@@ -28,7 +28,6 @@ const routes = (app) => {
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     maxAge: 86400
   }))
-  //rotas
   app.use(express.json(), codigos, tags, usuario, statusRouter);
 };
 

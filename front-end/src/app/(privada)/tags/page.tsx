@@ -32,7 +32,6 @@ export default function TagsPage() {
 
     const [loading, setLoading] = useState(false);
     const [tagIdSelecionada, setTagIdSelecionada] = useState<string>("");
-    //tags
     const [novaTag, setNovaTag] = useState<string>("");
     const [listaTags, setListaTags] = useState<Tags[]>([]);
     type Cor = "azul" | "amarelo" | "verde" | "roxo";
@@ -57,7 +56,7 @@ export default function TagsPage() {
         fetchTags();
     }, []);
 
-    async function handleCriarTag(e?: React.KeyboardEvent | React.MouseEvent | undefined) {
+    async function handleCriarTag(e?: React.MouseEvent<HTMLButtonElement>) {
         e?.preventDefault();
 
         if (!novaTag.trim()) toast.error(`Dê um título a nova tag`, {
@@ -186,8 +185,7 @@ export default function TagsPage() {
                         key={corChave}
                         type="button"
                         onClick={() => setCor(corChave)}
-                        className={`w-full h-8 rounded-full border-2 transition-all m-3 ${corChave === cor ? 'border-white ring-2 ring-white' : 'border-background'
-                            }`}
+                        className={`w-full h-8 rounded-full border-2 transition-all m-3 ${corChave === cor ? 'border-white ring-2 ring-white' : 'border-background'}`}
                         style={{
                             backgroundColor: corHex
                         }}
@@ -203,7 +201,6 @@ export default function TagsPage() {
                         type="text"
                         value={novaTag}
                         onChange={(e) => setNovaTag(e.target.value)}
-                        onKeyDown={handleCriarTag}
                         placeholder="Adicionar nova tag (pressione Enter)"
                         className="w-full pl-9 pr-4 py-2 rounded-md text-sm focus:outline-none focus:ring-2 transition-all"
                     />
@@ -213,7 +210,7 @@ export default function TagsPage() {
                     className="px-4 py-2 rounded-pill text-sm font-medium transition-colors flex items-center gap-2"
                 >
                     <Plus className="w-4 h-4" />
-                    Criar
+                   {loading ? "Criando..." : "Criar tag"}
                 </Button>
             </div>
             <div className="grid grid-flow-col grid-rows-4 gap-8 py-4 min-h-[100px] rounded-lg">

@@ -1,4 +1,3 @@
-//modal
 "use client";
 import { useEffect, useState } from "react";
 import { atualizarCodigo } from "@/src/services/codigosService";
@@ -13,7 +12,6 @@ import {
     DialogTrigger,
 } from "@/src/components/ui/dialog"
 
-//formulário
 import { TCodigos } from "@/src/components/Molecules/colunas";
 import { toast } from "sonner";
 import {
@@ -24,9 +22,7 @@ import {
 } from "@/src/components/ui/field"
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
-//tabs
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/src/components/ui/tabs";
-//criar tag
 import {
     Select,
     SelectContent,
@@ -45,15 +41,11 @@ interface ModalAtualizar {
 }
 
 export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar) {
-    //codigos
     const [codigo, setCodigo] = useState<string>("");
     const [linguagem, setLinguagem] = useState("javascript");
     const [titulo, setTitulo] = useState<string>("");
-
     const [loading, setLoading] = useState(false);
 
-    //tags
-    const [novaTag, setNovaTag] = useState<string>("")
     const [listaTags, setListaTags] = useState<Tags[]>([])
     const [tagIdSelecionada, setTagIdSelecionada] = useState<string>("")
 
@@ -67,22 +59,18 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
         }
     };
 
-    // Carrega as tags assim que o modal monta
     useEffect(() => {
         fetchTags();
     }, []);
 
-    // Sincroniza a tag selecionada quando tanto a listaTags quanto o codigoSelecionado estiverem prontos
     useEffect(() => {
         if (codigoSelecionado && listaTags.length > 0) {
-            // Extrai o ID da tag do código selecionado
             const tagId = typeof codigoSelecionado.tags === "string"
                 ? codigoSelecionado.tags
                 : Array.isArray(codigoSelecionado.tags)
                     ? codigoSelecionado.tags[0]?._id ?? ""
                     : codigoSelecionado.tags?._id ?? "";
 
-            // Verifica se essa tag realmente existe na lista carregada
             const tagExiste = listaTags.some(t => t._id === tagId);
             if (tagExiste) {
                 setTagIdSelecionada(tagId);
@@ -98,7 +86,6 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
         }
     }, [codigoSelecionado])
 
-    //linguagens
     type Linguagem = 'javascript' | 'typescript' | 'python' | 'java' | 'csharp' | 'php';
     const codeSnippets = {
         javascript: '',
@@ -108,64 +95,6 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
         csharp: '',
         php: '',
     };
-
-    //cor
-    type Cor = "azul" | "amarelo" | "verde" | "roxo";
-    const [cor, setCor] = useState<Cor>('azul');
-
-    const coresTag = {
-        azul: "#2f81f7",
-        amarelo: "#d2991d",
-        verde: "#3fb950",
-        roxo: "#a371f7"
-    }
-
-    async function handleCriarTag(e: React.MouseEvent<HTMLButtonElement>) {
-        e.preventDefault()
-
-        if (!novaTag.trim()) toast.error(`Dê um título a nova tag`, {
-            description: `Campo para nome da tag está vazio`, position: "top-center", style: {
-                '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
-                '--normal-text': 'var(--destructive)',
-                '--normal-border': 'var(--destructive)'
-            } as React.CSSProperties
-        })
-
-        setLoading(true)
-        try {
-            const response = await criarTag(novaTag, cor)
-
-            toast.success(response.titulo || 'Tag criada', {
-                description: `${response.mensagem}`,
-                position: "top-center", style: {
-                    '--normal-bg':
-                        'color-mix(in oklab, light-dark(var(--color-green-600), var(--color-green-400)) 10%, var(--background))',
-                    '--normal-text': 'light-dark(var(--color-green-600), var(--color-green-400))',
-                    '--normal-border': 'light-dark(var(--color-green-600), var(--color-green-400))'
-                } as React.CSSProperties
-            })
-            setNovaTag("")
-            await fetchTags();
-
-        } catch (erro: any) {
-
-            toast.error(`Erro no cadastro: ${erro.titulo}`, {
-                description: `${erro.mensagem}`, position: "top-center", style: erro.status === 'erro' ? {
-                    '--normal-bg': 'color-mix(in oklab, var(--destructive) 10%, var(--background))',
-                    '--normal-text': 'var(--destructive)',
-                    '--normal-border': 'var(--destructive)'
-                } as React.CSSProperties : {
-                    '--normal-bg':
-                        'color-mix(in oklab, light-dark(var(--color-amber-600), var(--color-amber-400)) 10%, var(--background))',
-                    '--normal-text': 'light-dark(var(--color-amber-600), var(--color-amber-400))',
-                    '--normal-border': 'light-dark(var(--color-amber-600), var(--color-amber-400))'
-                } as React.CSSProperties
-            },)
-        } finally {
-            setLoading(false)
-        }
-    }
-
 
     async function handleAtualizar(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
@@ -185,7 +114,7 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
                 '--normal-border': 'var(--destructive)'
             } as React.CSSProperties
         });
-        setLoading(true)
+        setLoading(true);
 
         try {
             const res = await atualizarCodigo(
@@ -205,13 +134,12 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
                 } as React.CSSProperties
             });
 
-            // Monta o objeto atualizado e reflete na tabela via prop `atualizar`
             const dadosAtualizados: TCodigos = {
                 _id: codigoSelecionado._id,
                 titulo: titulo.trim() || codigoSelecionado.titulo,
                 linguagem,
                 codigo,
-                tags: codigoSelecionado.tags,
+                tags: tagIdSelecionada,
                 dataCriacao: codigoSelecionado.dataCriacao,
             };
             atualizar(dadosAtualizados);
@@ -231,10 +159,9 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
             },);
         }
         finally {
-            setLoading(false)
+            setLoading(false);
         }
     };
-
 
     return (<>
         <Dialog>
@@ -280,15 +207,6 @@ export function ModalAtualizar({ codigoSelecionado, atualizar }: ModalAtualizar)
                                 </SelectContent>
                             </Select>
 
-                            <Field className="py-2">
-                                <FieldLabel htmlFor="tags">Tags</FieldLabel>
-                                <div className="flex flex-row gap-3">
-                                    <Input type="text" id="tags" value={novaTag} onChange={(e) => setNovaTag(e.target.value)} placeholder="Ex: MySql" />
-                                    <Button type="button" onClick={handleCriarTag}>Criar tag</Button>
-                                </div>
-                                <FieldDescription>Use as tags para organizar seus códigos.</FieldDescription>
-
-                            </Field>
 
                         </TabsContent>
                         <TabsContent value="codigo">

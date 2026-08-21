@@ -5,12 +5,11 @@ import { tags as TagsModel } from "../models/Tags.js";
 class CodigoController {
 
   static stringCerta(value) {
-    //verifica se é valida e não esta vazia
     return typeof value === 'string' && value.trim() !== '';
   };
 
   static async encontrarTag(tagId, userId) {
-    //retorna verdadeiro se tiver um id e se tem o formato certo do mongoose
+    
     if (!CodigoController.stringCerta(tagId) || !mongoose.isValidObjectId(tagId)) {
       return null;
     }
@@ -94,7 +93,7 @@ class CodigoController {
         if (!tagEncontrada) {
           return res.status(404).json({ status: 'erro', titulo: 'Tag não encontrada', mensagem: 'Tag selecionada não existe para este usuário' });
         }
-
+        console.log('tag encontrada:', tagEncontrada);
         payloadAtualizado.tags = tagEncontrada;
       }
 
@@ -102,10 +101,9 @@ class CodigoController {
         return res.status(400).json({ status: 'erro', titulo: 'Dados inválidos', mensagem: 'Nenhum campo válido foi enviado para atualização' });
       }
 
+      //estrutura do finOneAndUpdate, filtro, update e opções (new: true para retornar o documento atualizado)
       const codigoAtualizado = await codigo.findOneAndUpdate(
-        { _id: id, idUsuario: req.usuario.id_usuario },
-        payloadAtualizado,
-        { new: true }
+        { _id: id, idUsuario: req.usuario.id_usuario }, payloadAtualizado,{ new: true, returnDocument: 'after'}
       );
 
       if (!codigoAtualizado) {

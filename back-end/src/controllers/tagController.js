@@ -4,12 +4,10 @@ import mongoose from "mongoose";
 class TagController {
 
   static stringCerta(value) {
-    //verifica se é valida e não esta vazia
     return typeof value === 'string' && value.trim() !== '';
   }
 
   static async encontrarTag(tagId, userId) {
-    //retorna verdadeiro se tiver um id e se tem o formato certo do mongoose
     if (!TagController.stringCerta(tagId) || !mongoose.isValidObjectId(tagId)) {
       return null;
     }
@@ -116,7 +114,6 @@ class TagController {
     try {
       const idUsuario = req.usuario.id_usuario;
       const novaTag = await tags.create({ ...req.body, idUsuario });
-      //verifica se tem metodo toobject do mongoose
       const tag = novaTag.toObject ? novaTag.toObject() : novaTag;
 
       res.status(201).json({ status: 'sucesso', titulo: 'Tag criada', mensagem: 'Tag criada com sucesso', tag: tag, tags: tag });

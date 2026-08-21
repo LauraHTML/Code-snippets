@@ -70,7 +70,6 @@ export async function criarTag(titulo: string, cor: string) {
             };
         }
         // normalizar resposta da tag
-        // ?? escolhe o primeiro valor que não for null ou undefined
         const tagCriada = dados?.tag ?? dados?.tags ?? dados;
         return { ...dados, tag: tagCriada, tags: tagCriada };
     } catch (erro: any) {

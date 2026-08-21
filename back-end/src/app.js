@@ -1,7 +1,6 @@
 import express from "express";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
-import cors from "cors";
 import routes from "./routes/index.js";
 
 const app = express();

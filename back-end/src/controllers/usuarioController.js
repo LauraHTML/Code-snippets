@@ -4,7 +4,7 @@ import usuario from '../models/Usuario.js';
 import config from '../config/config.js';
 
 const JWT_CONFIG = {
-    secret: process.env.JWT_SECRET,
+    secret: config.jwtSecret,
     expiresIn: '24h',
 };
 
@@ -30,7 +30,6 @@ class UsuarioController {
                 return res.status(400).json({ status: 'erro', titulo: 'O campo senha está vazio', mensagem: 'A senha é obrigatória' });
             }
 
-            //validar formato
             if (nomeSanitizado.length < 2) {
                 return res.status(400).json({ status: 'erro', titulo: 'Nome curto', mensagem: 'O nome deve ter pelo menos 2 caracteres' })
             }
@@ -42,14 +41,12 @@ class UsuarioController {
                 return res.status(400).json({ status: 'aviso', titulo: 'Senha curta', mensagem: 'A senha deve ter pelo menos 6 caracteres' });
             }
 
-            //usuário já existe?
             const buscaEmail = await usuario.findOne({ email: emailSanitizado });
 
             if (buscaEmail) {
                 return res.status(409).json({ status: 'aviso', titulo: 'Email inválido', mensagem: 'Email já cadastrado' });
             }
 
-            //hash da senha
             const saltRounds = 10;
             const senhaHash = await bcrypt.hash(senhaSanitizado.trim(), saltRounds);
 
@@ -61,7 +58,6 @@ class UsuarioController {
 
             await usuario.create(novoUsuario);
 
-            //login usuario
             const usuarioLogado = await UsuarioController.verificarCredenciais(emailSanitizado.trim(), senhaSanitizado);
             const token = jwt.sign(
                 {
@@ -106,9 +102,8 @@ class UsuarioController {
 
             if (senhaCorreta === false) {
                 throw new Error("A senha está errada");
-            }
+            };
 
-            // Retornar usuário sem a senha
             const { senha: _, ...usuarioSemSenha } = usuarioEncontrado.toObject ? usuarioEncontrado.toObject() : usuarioEncontrado;
             return usuarioSemSenha;
         } catch (erro) {
@@ -123,7 +118,6 @@ class UsuarioController {
             const emailSanitizado = typeof req.body.email === "string" ? req.body.email.trim().toLowerCase() : "";
             const senhaSanitizado = typeof req.body.senha === "string" ? req.body.senha.trim() : "";
 
-            //validar formato
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(emailSanitizado)) {
                 return res.status(400).json({ status: 'erro', titulo: 'Email inválido', mensagem: 'Formato de email inválido' });

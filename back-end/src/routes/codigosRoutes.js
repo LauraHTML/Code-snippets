@@ -4,7 +4,6 @@ import { verificarToken } from "../middleware/autenticacao.js";
 
 const routes = express.Router();
 
-// Rotas protegidas (com autenticação)
 routes.get("/codigos", verificarToken, CodigoController.listarCodigos);
 routes.get("/codigos/:id", verificarToken, CodigoController.listarCodigoPorId);
 routes.get("/codigos/busca", verificarToken, CodigoController.buscarCodigoPorTitulo);
